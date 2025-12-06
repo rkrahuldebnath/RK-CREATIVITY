@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RK CREATIVITY | About Me</title>
+    <meta name="description" content="Learn more about the developer and mission behind RK CREATIVITY.">
+    <link rel="stylesheet" href="css/styles.about.css">
+</head>
+<body>
+
+    <!-- NAVIGATION -->
+    <nav>
+        <div class="logo">🚀 RK CREATIVITY</div>
+        <div class="hamburger" id="hamburger">☰</div>
+        <ul class="nav-links" id="navLinks">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="apps.html">Apps</a></li>
+            <li><a href="tutorials.html">Tutorials</a></li>
+            <li><a href="about.html" class="active">About</a></li>
+            <li><a href="donate.html">Donate</a></li>
+            <li><a href="contact.html">Contact</a></li>
+            <!-- Dark Mode Toggle -->
+            <li>
+                <div class="theme-switch" id="themeToggle" title="Toggle Dark Mode">
+                    🌙
+                </div>
+            </li>
+        </ul>
+    </nav>
+
+    <!-- HEADER -->
+    <header class="page-header">
+        <h1>About the Creator</h1>
+        <p>The story, mission, and technology behind RK CREATIVITY.</p>
+    </header>
+
+    <!-- MAIN CONTENT -->
+    <section class="content-section">
+        
+        <div class="story-container">
+            <div class="text-block">
+                <h2>Who is RK?</h2>
+                <p>
+                    Hello! I'm the developer behind <strong>RK CREATIVITY</strong>. 
+                    I am a passionate web developer and technology enthusiast dedicated to building 
+                    accessible, functional, and creative web solutions.
+                </p>
+                <p>
+                    My journey started with a simple curiosity about how things work on the internet. 
+                    That curiosity quickly turned into a passion for coding. Despite facing physical challenges, 
+                    I found freedom and infinite possibilities in the world of software development. 
+                    This website is my digital playground—a place where I showcase my experiments with 
+                    Artificial Intelligence, solve problems with custom tools, and create fun experiences through games.
+                </p>
+            </div>
+
+            <div class="text-block">
+                <h2>The Mission</h2>
+                <p>
+                    The goal of RK CREATIVITY is simple: <strong>To create software that matters.</strong>
+                </p>
+                <p>
+                    Whether it's a tool that helps a student organize their schedule, an AI that simplifies complex text, 
+                    or a game that provides a quick break from a busy day, I aim to build applications that add value 
+                    to daily life. I believe in open knowledge, clean code, and user-centric design.
+                </p>
+            </div>
+        </div>
+
+        <!-- Tech Stack / Skills -->
+        <div class="skills-section">
+            <h3>Technologies I Use</h3>
+            <div class="skills-grid">
+                <div class="skill-item">
+                    <span class="skill-icon">🌐</span>
+                    <span class="skill-name">HTML5 & CSS3</span>
+                </div>
+                <div class="skill-item">
+                    <span class="skill-icon">⚡</span>
+                    <span class="skill-name">JavaScript (ES6+)</span>
+                </div>
+                <div class="skill-item">
+                    <span class="skill-icon">🤖</span>
+                    <span class="skill-name">AI Integration</span>
+                </div>
+                <div class="skill-item">
+                    <span class="skill-icon">📱</span>
+                    <span class="skill-name">Responsive UI</span>
+                </div>
+                <div class="skill-item">
+                    <span class="skill-icon">🔥</span>
+                    <span class="skill-name">Firebase</span>
+                </div>
+                <div class="skill-item">
+                    <span class="skill-icon">🐍</span>
+                    <span class="skill-name">Python</span>
+                </div>
+            </div>
+        </div>
+
+    </section>
+
+    <!-- FOOTER -->
+    <footer>
+        <p>&copy; 2025 RK CREATIVITY | All Rights Reserved</p>
+        <div class="links">
+            <a href="privacy.html">Privacy Policy</a>
+            <a href="terms.html">Terms of Service</a>
+            <a href="#">GitHub</a>
+        </div>
+    </footer>
+
+    <!-- JAVASCRIPT LOGIC -->
+    <script>
+        // --- 1. DARK MODE TOGGLE (Shared Logic) ---
+        const themeToggle = document.getElementById('themeToggle');
+        const body = document.body;
+
+        if(localStorage.getItem('theme') === 'dark') {
+            body.classList.add('dark-mode');
+            themeToggle.textContent = '☀️';
+        }
+
+        themeToggle.addEventListener('click', () => {
+            body.classList.toggle('dark-mode');
+            
+            if(body.classList.contains('dark-mode')) {
+                localStorage.setItem('theme', 'dark');
+                themeToggle.textContent = '☀️';
+            } else {
+                localStorage.setItem('theme', 'light');
+                themeToggle.textContent = '🌙';
+            }
+        });
+
+        // --- 2. MOBILE MENU ---
+        const hamburger = document.getElementById('hamburger');
+        const navLinks = document.getElementById('navLinks');
+
+        hamburger.addEventListener('click', () => {
+            navLinks.classList.toggle('active');
+        });
+    </script>
+</body>
+</html>

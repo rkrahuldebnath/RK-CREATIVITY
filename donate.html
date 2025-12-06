@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RK CREATIVITY | Support the Project</title>
+    <meta name="description" content="Support RK CREATIVITY's web development projects and tools.">
+    <link rel="stylesheet" href="css/styles.donate.css">
+</head>
+<body>
+
+    <!-- NAVIGATION -->
+    <nav>
+        <div class="logo">🚀 RK CREATIVITY</div>
+        <div class="hamburger" id="hamburger">☰</div>
+        <ul class="nav-links" id="navLinks">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="apps.html">Apps</a></li>
+            <li><a href="tutorials.html">Tutorials</a></li>
+            <li><a href="about.html">About</a></li>
+            <li><a href="donate.html" class="active">Donate</a></li>
+            <li><a href="contact.html">Contact</a></li>
+            <!-- Dark Mode Toggle -->
+            <li>
+                <div class="theme-switch" id="themeToggle" title="Toggle Dark Mode">
+                    🌙
+                </div>
+            </li>
+        </ul>
+    </nav>
+
+    <!-- DONATE SECTION -->
+    <section class="donate-container">
+        <div class="donate-card">
+            <h1>Support the Project</h1>
+            <p>
+                Developing and maintaining these free tools takes time and resources. 
+                If you find my applications useful and would like to support my work, 
+                consider making a donation. Every contribution helps keep the servers running 
+                and fuels new experiments!
+            </p>
+
+            <div class="donate-methods">
+                <div class="btn-group">
+                    <button class="btn btn-primary" onclick="alert('UPI ID copied to clipboard: wheelchairrk@okicici (simulated)')">
+                        Donate via UPI
+                    </button>
+                    <a href="#" class="btn btn-coffee" target="_blank">
+                        ☕ Buy me a Coffee
+                    </a>
+                </div>
+
+                <div class="qr-section">
+                    <h3>Or Scan to Pay via GPay/Paytm</h3>
+                    <div class="qr-box">
+                        <span class="qr-fallback-text">QR Image Placeholder<br>(img_gpayqr.png)</span>
+                        <!-- The onerror ensures the fallback text above is visible if image is missing -->
+                        <img src="img_gpayqr.png" alt="Payment QR Code" onerror="this.style.opacity='0'">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer>
+        <p>&copy; 2025 RK CREATIVITY | All Rights Reserved</p>
+        <div class="links">
+            <a href="privacy.html">Privacy Policy</a>
+            <a href="terms.html">Terms of Service</a>
+            <a href="#">GitHub</a>
+        </div>
+    </footer>
+
+    <!-- JAVASCRIPT LOGIC -->
+    <script>
+        // --- 1. DARK MODE TOGGLE (Shared Logic) ---
+        const themeToggle = document.getElementById('themeToggle');
+        const body = document.body;
+
+        if(localStorage.getItem('theme') === 'dark') {
+            body.classList.add('dark-mode');
+            themeToggle.textContent = '☀️';
+        }
+
+        themeToggle.addEventListener('click', () => {
+            body.classList.toggle('dark-mode');
+            
+            if(body.classList.contains('dark-mode')) {
+                localStorage.setItem('theme', 'dark');
+                themeToggle.textContent = '☀️';
+            } else {
+                localStorage.setItem('theme', 'light');
+                themeToggle.textContent = '🌙';
+            }
+        });
+
+        // --- 2. MOBILE MENU ---
+        const hamburger = document.getElementById('hamburger');
+        const navLinks = document.getElementById('navLinks');
+
+        hamburger.addEventListener('click', () => {
+            navLinks.classList.toggle('active');
+        });
+    </script>
+</body>
+</html>

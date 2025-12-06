@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RK CREATIVITY | Tutorials</title>
+    <meta name="description" content="Watch tutorials and guides on how to use RK CREATIVITY's web apps and tools.">
+    <link rel="stylesheet" href="css/styles.tutorials.css">
+</head>
+<body>
+
+    <!-- NAVIGATION -->
+    <nav>
+        <div class="logo">🚀 RK CREATIVITY</div>
+        <div class="hamburger" id="hamburger">☰</div>
+        <ul class="nav-links" id="navLinks">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="apps.html">Apps</a></li>
+            <li><a href="tutorials.html" class="active">Tutorials</a></li>
+            <li><a href="about.html">About</a></li>
+            <li><a href="donate.html">Donate</a></li>
+            <li><a href="contact.html">Contact</a></li>
+            <!-- Dark Mode Toggle -->
+            <li>
+                <div class="theme-switch" id="themeToggle" title="Toggle Dark Mode">
+                    🌙
+                </div>
+            </li>
+        </ul>
+    </nav>
+
+    <!-- HEADER -->
+    <header class="page-header">
+        <h1>Video Tutorials</h1>
+        <p>Step-by-step guides on how to use my apps and behind-the-scenes development logs.</p>
+    </header>
+
+    <!-- MAIN CONTENT -->
+    <section class="tutorial-section">
+        <div class="video-grid">
+            
+            <!-- Video 1 -->
+            <div class="video-card">
+                <div class="video-wrapper">
+                    <!-- Placeholder YouTube Embed -->
+                    <iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ?si=placeholder" title="YouTube video player" allowfullscreen></iframe>
+                </div>
+                <div class="video-content">
+                    <div class="video-title">How to use the AI Chatbot</div>
+                    <p class="video-desc">A quick walkthrough of the features and capabilities of our latest AI assistant tool.</p>
+                    <a href="#" class="video-btn">Watch on YouTube →</a>
+                </div>
+            </div>
+
+            <!-- Video 2 -->
+            <div class="video-card">
+                <div class="video-wrapper">
+                    <iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ?si=placeholder" title="YouTube video player" allowfullscreen></iframe>
+                </div>
+                <div class="video-content">
+                    <div class="video-title">Generating Invoices in Seconds</div>
+                    <p class="video-desc">Learn how to create, customize, and download professional invoices using the Invoice Generator.</p>
+                    <a href="#" class="video-btn">Watch on YouTube →</a>
+                </div>
+            </div>
+
+            <!-- Video 3 -->
+            <div class="video-card">
+                <div class="video-wrapper">
+                    <iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ?si=placeholder" title="YouTube video player" allowfullscreen></iframe>
+                </div>
+                <div class="video-content">
+                    <div class="video-title">Building the Number Puzzle (DevLog)</div>
+                    <p class="video-desc">Behind the scenes: see how I coded the logic for the sliding tile game using JavaScript.</p>
+                    <a href="#" class="video-btn">Watch on YouTube →</a>
+                </div>
+            </div>
+
+             <!-- Video 4 -->
+             <div class="video-card">
+                <div class="video-wrapper">
+                    <iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ?si=placeholder" title="YouTube video player" allowfullscreen></iframe>
+                </div>
+                <div class="video-content">
+                    <div class="video-title">Hidden Features in Text Summarizer</div>
+                    <p class="video-desc">Unlock advanced summarization modes and export options you might have missed.</p>
+                    <a href="#" class="video-btn">Watch on YouTube →</a>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Subscribe CTA -->
+        <div class="subscribe-cta">
+            <h2>Want more coding tutorials?</h2>
+            <p style="margin-top: 10px; color: var(--text-secondary);">Subscribe to my YouTube channel for weekly updates, source code reveals, and live coding sessions.</p>
+            <a href="#" class="btn-youtube">Subscribe to RK CREATIVITY</a>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer>
+        <p>&copy; 2025 RK CREATIVITY | All Rights Reserved</p>
+        <div class="links">
+            <a href="privacy.html">Privacy Policy</a>
+            <a href="terms.html">Terms of Service</a>
+            <a href="#">GitHub</a>
+        </div>
+    </footer>
+
+    <!-- JAVASCRIPT LOGIC -->
+    <script>
+        // --- 1. DARK MODE TOGGLE (Shared Logic) ---
+        const themeToggle = document.getElementById('themeToggle');
+        const body = document.body;
+
+        if(localStorage.getItem('theme') === 'dark') {
+            body.classList.add('dark-mode');
+            themeToggle.textContent = '☀️';
+        }
+
+        themeToggle.addEventListener('click', () => {
+            body.classList.toggle('dark-mode');
+            
+            if(body.classList.contains('dark-mode')) {
+                localStorage.setItem('theme', 'dark');
+                themeToggle.textContent = '☀️';
+            } else {
+                localStorage.setItem('theme', 'light');
+                themeToggle.textContent = '🌙';
+            }
+        });
+
+        // --- 2. MOBILE MENU ---
+        const hamburger = document.getElementById('hamburger');
+        const navLinks = document.getElementById('navLinks');
+
+        hamburger.addEventListener('click', () => {
+            navLinks.classList.toggle('active');
+        });
+    </script>
+</body>
+</html>
