@@ -5,7 +5,282 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>RK CREATIVITY | About Me</title>
     <meta name="description" content="Learn more about the developer and mission behind RK CREATIVITY.">
-    <link rel="stylesheet" href="styles.about.css">
+  <style>
+            /* --- CSS VARIABLES (Matches index.html) --- */
+        :root {
+            --primary-color: #2874f0;
+            --secondary-color: #fb641b;
+            --bg-body: #f1f3f6;
+            --bg-card: #ffffff;
+            --text-main: #212121;
+            --text-secondary: #878787;
+            --shadow: 0 4px 12px rgba(0,0,0,0.1);
+            --shadow-hover: 0 8px 20px rgba(0,0,0,0.15);
+            --nav-bg: rgba(255, 255, 255, 0.95);
+            --border-radius: 12px;
+            --transition: all 0.3s ease;
+        }
+
+        /* Dark Mode Variables */
+        body.dark-mode {
+            --primary-color: #4a90e2;
+            --secondary-color: #ff8a50;
+            --bg-body: #121212;
+            --bg-card: #1e1e1e;
+            --text-main: #e0e0e0;
+            --text-secondary: #a0a0a0;
+            --shadow: 0 4px 12px rgba(0,0,0,0.5);
+            --shadow-hover: 0 8px 20px rgba(0,0,0,0.7);
+            --nav-bg: rgba(18, 18, 18, 0.95);
+        }
+
+        /* --- GLOBAL RESET --- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        html { scroll-behavior: smooth; }
+
+        body {
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            transition: background-color 0.3s ease, color 0.3s ease;
+            line-height: 1.6;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        a { text-decoration: none; color: inherit; }
+        ul { list-style: none; }
+        img { max-width: 100%; display: block; }
+
+        /* --- NAVIGATION --- */
+        nav {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            background: var(--nav-bg);
+            backdrop-filter: blur(10px);
+            padding: 15px 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--primary-color);
+            letter-spacing: -0.5px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 25px;
+            align-items: center;
+        }
+
+        .nav-links a {
+            font-weight: 500;
+            font-size: 0.95rem;
+            color: var(--text-main);
+            transition: color 0.3s;
+            position: relative;
+        }
+
+        .nav-links a:hover, .nav-links a.active {
+            color: var(--primary-color);
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -5px;
+            left: 0;
+            background-color: var(--primary-color);
+            transition: width 0.3s;
+        }
+        .nav-links a:hover::after, .nav-links a.active::after {
+            width: 100%;
+        }
+
+        /* Dark Mode Toggle */
+        .theme-switch {
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 50%;
+            background: var(--bg-body);
+            border: 1px solid var(--text-secondary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+      /* Replace your existing .hamburger styles with this: */
+
+.hamburger {
+    display: none;
+    cursor: pointer;
+    width: 30px;
+    height: 21px;
+    position: relative;
+    color: transparent; /* Hides the "☰" character if it's still in HTML */
+    user-select: none;
+}
+
+/* Creates the lines */
+.hamburger::before,
+.hamburger::after {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 3px;
+    background-color: var(--text-main); /* Uses your theme text color */
+    border-radius: 3px;
+    left: 0;
+    transition: all 0.3s ease;
+}
+
+/* Top Line + Middle Line (via shadow) */
+.hamburger::before {
+    top: 0;
+    box-shadow: 0 9px 0 var(--text-main); 
+}
+
+/* Bottom Line */
+.hamburger::after {
+    bottom: 0;
+}
+        /* --- ABOUT HEADER --- */
+        .page-header {
+            background: var(--bg-card);
+            padding: 60px 5% 40px;
+            text-align: center;
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+        }
+
+        .page-header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            color: var(--text-main);
+        }
+
+        .page-header p {
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* --- MAIN CONTENT --- */
+        .content-section {
+            padding: 60px 5%;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .story-container {
+            display: flex;
+            flex-direction: column;
+            gap: 40px;
+            margin-bottom: 60px;
+        }
+
+        .text-block h2 {
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            color: var(--text-main);
+        }
+        
+        .text-block p {
+            margin-bottom: 15px;
+            font-size: 1.05rem;
+            color: var(--text-secondary);
+        }
+
+        /* Skills Grid */
+        .skills-section {
+            background: var(--bg-card);
+            padding: 40px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+        }
+
+        .skills-section h3 {
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 1.5rem;
+        }
+
+        .skills-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 20px;
+        }
+
+        .skill-item {
+            text-align: center;
+            padding: 20px;
+            border: 1px solid rgba(0,0,0,0.1);
+            border-radius: 8px;
+            transition: var(--transition);
+        }
+
+        .skill-item:hover {
+            border-color: var(--primary-color);
+            transform: translateY(-3px);
+            background: rgba(40, 116, 240, 0.05);
+        }
+
+        .skill-icon {
+            font-size: 2rem;
+            margin-bottom: 10px;
+            display: block;
+        }
+        
+        .skill-name {
+            font-weight: 600;
+        }
+
+        /* --- FOOTER --- */
+        footer {
+            background: #111;
+            color: white;
+            padding: 40px 5%;
+            text-align: center;
+            margin-top: auto;
+        }
+
+        footer p { margin-bottom: 10px; opacity: 0.8; }
+        footer .links a { color: #888; font-size: 0.85rem; margin: 0 10px; }
+        footer .links a:hover { color: white; }
+
+        /* --- MOBILE RESPONSIVE --- */
+        @media (max-width: 768px) {
+            .hamburger { display: block; color: var(--text-main); }
+            
+            .nav-links {
+                position: absolute;
+                top: 100%;
+                left: 0;
+                width: 100%;
+                background: var(--nav-bg);
+                flex-direction: column;
+                padding: 20px;
+                display: none;
+                box-shadow: 0 10px 10px rgba(0,0,0,0.05);
+            }
+            
+            .nav-links.active { display: flex; }
+        }
+
+  </style>
 </head>
 <body>
 
