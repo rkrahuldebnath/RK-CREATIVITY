@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RK CREATIVITY | Privacy Policy</title>
+    <meta name="description" content="Privacy Policy for RK CREATIVITY web applications and tools.">
+    <link rel="stylesheet" href="css/styles.privacy.css">
+</head>
+<body>
+
+    <!-- NAVIGATION -->
+    <nav>
+        <div class="logo">🚀 RK CREATIVITY</div>
+        <div class="hamburger" id="hamburger">☰</div>
+        <ul class="nav-links" id="navLinks">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="apps.html">Apps</a></li>
+            <li><a href="tutorials.html">Tutorials</a></li>
+            <li><a href="about.html">About</a></li>
+            <li><a href="donate.html">Donate</a></li>
+            <li><a href="contact.html">Contact</a></li>
+            <!-- Dark Mode Toggle -->
+            <li>
+                <div class="theme-switch" id="themeToggle" title="Toggle Dark Mode">
+                    🌙
+                </div>
+            </li>
+        </ul>
+    </nav>
+
+    <!-- CONTENT -->
+    <div class="policy-container">
+        
+        <div class="policy-header">
+            <h1>Privacy Policy</h1>
+            <p class="last-updated">Last Updated: October 2025</p>
+        </div>
+
+        <section class="policy-section">
+            <h2>1. Introduction</h2>
+            <p>
+                Welcome to RK CREATIVITY. We respect your privacy and are committed to protecting any personal information you may share with us. 
+                This Privacy Policy explains how we handle your data when you visit our website and use our web applications.
+            </p>
+        </section>
+
+        <section class="policy-section">
+            <h2>2. Data Collection</h2>
+            <p>
+                <strong>We prioritize client-side processing.</strong> Most of the tools and games available on RK CREATIVITY (such as the Calculator, Puzzle Games, and Invoice Generator) run entirely within your browser. 
+            </p>
+            <ul>
+                <li>We do not store your input data (e.g., invoice details, passwords generated) on our servers.</li>
+                <li>Data created within these tools typically remains on your device and is lost when you close the tab, unless explicitly saved by you (e.g., downloading a PDF).</li>
+            </ul>
+        </section>
+
+        <section class="policy-section">
+            <h2>3. Local Storage & Cookies</h2>
+            <p>
+                We use standard web technologies like <strong>Local Storage</strong> to improve your experience. This is used solely for:
+            </p>
+            <ul>
+                <li>Saving your preference for Light or Dark Mode.</li>
+                <li>Saving game high scores or progress locally on your device.</li>
+            </ul>
+            <p>
+                We do not use tracking cookies for advertising purposes.
+            </p>
+        </section>
+
+        <section class="policy-section">
+            <h2>4. Third-Party Services</h2>
+            <p>
+                Our website may include embedded content from third-party providers, such as:
+            </p>
+            <ul>
+                <li><strong>YouTube:</strong> For displaying tutorial videos. YouTube may collect data about your interaction with the embedded video player.</li>
+                <li><strong>Google Fonts:</strong> For typography styling.</li>
+            </ul>
+            <p>
+                Please review the privacy policies of these third-party services for more information on how they handle your data.
+            </p>
+        </section>
+
+        <section class="policy-section">
+            <h2>5. Contact Us</h2>
+            <p>
+                If you have any questions about this Privacy Policy, please contact us via the form on our <a href="contact.html" style="color:var(--primary-color); text-decoration: underline;">Contact Page</a> or email us at wheelchairrk@gmail.com.
+            </p>
+        </section>
+
+    </div>
+
+    <!-- FOOTER -->
+    <footer>
+        <p>&copy; 2025 RK CREATIVITY | All Rights Reserved</p>
+        <div class="links">
+            <a href="privacy.html" style="color: white; text-decoration: underline;">Privacy Policy</a>
+            <a href="terms.html">Terms of Service</a>
+            <a href="#">GitHub</a>
+        </div>
+    </footer>
+
+    <!-- JAVASCRIPT LOGIC -->
+    <script>
+        // --- 1. DARK MODE TOGGLE (Shared Logic) ---
+        const themeToggle = document.getElementById('themeToggle');
+        const body = document.body;
+
+        if(localStorage.getItem('theme') === 'dark') {
+            body.classList.add('dark-mode');
+            themeToggle.textContent = '☀️';
+        }
+
+        themeToggle.addEventListener('click', () => {
+            body.classList.toggle('dark-mode');
+            
+            if(body.classList.contains('dark-mode')) {
+                localStorage.setItem('theme', 'dark');
+                themeToggle.textContent = '☀️';
+            } else {
+                localStorage.setItem('theme', 'light');
+                themeToggle.textContent = '🌙';
+            }
+        });
+
+        // --- 2. MOBILE MENU ---
+        const hamburger = document.getElementById('hamburger');
+        const navLinks = document.getElementById('navLinks');
+
+        hamburger.addEventListener('click', () => {
+            navLinks.classList.toggle('active');
+        });
+    </script>
+</body>
+</html>
