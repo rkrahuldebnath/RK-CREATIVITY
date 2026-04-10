@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Browse all digital PDF study materials by category — Computer Courses, School Notes, Competitive Exams at Viveka Digital Hub.">
+  <title>Category | Viveka Digital Hub</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="icon" href="images/logo.png" type="image/png">
+</head>
+<body>
+
+<!-- ====== FLOATING WHATSAPP ====== -->
+<a href="https://wa.me/919362719399" class="wa-fab" target="_blank" title="Chat on WhatsApp">
+  <span class="wa-fab-tooltip">Chat with us!</span>
+  💬
+</a>
+
+<!-- ====== NAVBAR ====== -->
+<nav class="navbar">
+  <div class="nav-container">
+    <a href="index.html" class="nav-logo">
+      <img src="images/logo.png" alt="Viveka Digital Hub Logo">
+      <div class="nav-logo-text">
+        <span class="brand-name">Viveka Digital Hub</span>
+        <span class="brand-tagline">Digital Study Materials</span>
+      </div>
+    </a>
+    <ul class="nav-menu" id="navMenu">
+      <li><a href="index.html"    class="nav-link">🏠 Home</a></li>
+      <li><a href="category.html" class="nav-link active">📂 Category</a></li>
+      <li><a href="about.html"    class="nav-link">ℹ️ About</a></li>
+      <li><a href="contact.html"  class="nav-link">📞 Contact</a></li>
+    </ul>
+    <button class="nav-toggle" id="navToggle" aria-label="Toggle menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<!-- ====== PAGE HERO ====== -->
+<section class="about-hero" style="padding: 60px 20px 50px;">
+  <h1>📂 Browse by Category</h1>
+  <p>Find the perfect study material for your course, class or exam.</p>
+</section>
+
+<!-- ====== COUPON ====== -->
+<section class="coupon-section">
+  <div class="coupon-inner">
+    <h3>🎟️ Have a Coupon Code?</h3>
+    <div class="coupon-form">
+      <input type="text" id="couponInput" class="coupon-input" placeholder="Enter coupon e.g. STUDENT20" autocomplete="off" maxlength="20">
+      <button class="btn btn-accent" onclick="applyCoupon()">Apply</button>
+    </div>
+    <div id="couponMsg" class="coupon-msg"></div>
+    <div id="activeCouponBadge" class="active-coupon-badge hidden"></div>
+  </div>
+</section>
+
+<!-- ====== SEARCH ====== -->
+<div class="search-section">
+  <div class="search-wrapper">
+    <span class="search-icon">🔍</span>
+    <input type="search" id="searchInput" class="search-input" placeholder="Search products across all categories..." autocomplete="off">
+  </div>
+</div>
+<div class="divider"></div>
+
+<!-- ====== CATEGORY CARDS ====== -->
+<section class="section">
+  <div class="container">
+    <div class="section-header">
+      <span class="section-label">📚 Categories</span>
+      <h2>Select a Category</h2>
+    </div>
+
+    <div class="cat-grid">
+      <div class="cat-card active" onclick="setCategory('all', this)" data-filter-cat="all">
+        <span class="cat-icon">📦</span>
+        <h3>All Products</h3>
+        <p>Browse everything we offer</p>
+      </div>
+      <div class="cat-card" onclick="setCategory('computer', this)" data-filter-cat="computer">
+        <span class="cat-icon">💻</span>
+        <h3>Computer Courses</h3>
+        <p>DCA, ADCA, Tally & More</p>
+      </div>
+      <div class="cat-card" onclick="setCategory('school', this)" data-filter-cat="school">
+        <span class="cat-icon">🏫</span>
+        <h3>School Notes</h3>
+        <p>Class 10 & Class 12 Boards</p>
+      </div>
+      <div class="cat-card" onclick="setCategory('competitive', this)" data-filter-cat="competitive">
+        <span class="cat-icon">🏆</span>
+        <h3>Competitive Exams</h3>
+        <p>SSC, Banking, Railway, UPSC</p>
+      </div>
+    </div>
+
+    <!-- Filter Buttons -->
+    <div class="filter-bar">
+      <button class="filter-btn active" data-cat="all">All</button>
+      <button class="filter-btn" data-cat="computer">💻 Computer Courses</button>
+      <button class="filter-btn" data-cat="school">🏫 School Notes</button>
+      <button class="filter-btn" data-cat="competitive">🏆 Competitive Exams</button>
+    </div>
+
+    <!-- Products Grid -->
+    <div class="products-grid" id="productsGrid">
+
+      <!-- Computer Courses -->
+      <div class="product-card"
+           data-name="DCA Complete Notes Bundle"
+           data-code="DCA-001"
+           data-base-price="149"
+           data-orig-price="350"
+           data-final-price="149"
+           data-cat="computer"
+           data-desc="Diploma in Computer Applications complete PDF">
+        <div class="product-img-wrap">
+          <img src="images/product1.jpg" alt="DCA Complete Notes Bundle" loading="lazy">
+          <span class="product-badge badge-bestseller">🏆 Best Seller</span>
+        </div>
+        <div class="product-body">
+          <span class="product-code">DCA-001</span>
+          <h3 class="product-name">DCA Complete Notes Bundle</h3>
+          <p class="product-desc">Full DCA syllabus — OS, MS Office, Internet, Tally basics, Programming intro &amp; more.</p>
+          <div class="product-sales"></div>
+          <div class="product-pricing">
+            <span class="price-original">₹350</span>
+            <span class="price-current">₹149</span>
+            <span class="price-discount">57% OFF</span>
+          </div>
+          <button class="btn-buy" onclick="buyNow(this)">💬 Buy on WhatsApp</button>
+        </div>
+      </div>
+
+      <div class="product-card"
+           data-name="ADCA Advanced Computer Course Notes"
+           data-code="ADCA-003"
+           data-base-price="249"
+           data-orig-price="600"
+           data-final-price="249"
+           data-cat="computer"
+           data-desc="Advanced Diploma computer PDF full notes">
+        <div class="product-img-wrap">
+          <img src="images/product3.jpg" alt="ADCA Advanced Computer Course Notes" loading="lazy">
+          <span class="product-badge badge-bestseller">🏆 Best Seller</span>
+        </div>
+        <div class="product-body">
+          <span class="product-code">ADCA-003</span>
+          <h3 class="product-name">ADCA Advanced Computer Course Notes</h3>
+          <p class="product-desc">Complete ADCA — Programming, Database, Networking, Excel, Tally ERP &amp; more in one PDF bundle.</p>
+          <div class="product-sales"></div>
+          <div class="product-pricing">
+            <span class="price-original">₹600</span>
+            <span class="price-current">₹249</span>
+            <span class="price-discount">58% OFF</span>
+          </div>
+          <button class="btn-buy" onclick="buyNow(this)">💬 Buy on WhatsApp</button>
+        </div>
+      </div>
+
+      <div class="product-card"
+           data-name="Tally ERP 9 Complete Notes"
+           data-code="TALLY-006"
+           data-base-price="129"
+           data-orig-price="300"
+           data-final-price="129"
+           data-cat="computer"
+           data-desc="Tally ERP 9 accounting complete PDF notes">
+        <div class="product-img-wrap">
+          <img src="images/product6.jpg" alt="Tally ERP 9 Complete Notes" loading="lazy">
+          <span class="product-badge badge-new">✨ New</span>
+        </div>
+        <div class="product-body">
+          <span class="product-code">TALLY-006</span>
+          <h3 class="product-name">Tally ERP 9 Complete Notes</h3>
+          <p class="product-desc">Step-by-step Tally guide — Accounts, GST Entry, Payroll, Inventory &amp; Financial Reports.</p>
+          <div class="product-sales"></div>
+          <div class="product-pricing">
+            <span class="price-original">₹300</span>
+            <span class="price-current">₹129</span>
+            <span class="price-discount">57% OFF</span>
+          </div>
+          <button class="btn-buy" onclick="buyNow(this)">💬 Buy on WhatsApp</button>
+        </div>
+      </div>
+
+      <div class="product-card"
+           data-name="MS Office Complete Guide"
+           data-code="MSO-007"
+           data-base-price="79"
+           data-orig-price="200"
+           data-final-price="79"
+           data-cat="computer"
+           data-desc="Microsoft Office Word Excel PowerPoint complete PDF">
+        <div class="product-img-wrap">
+          <img src="images/product1.jpg" alt="MS Office Complete Guide" loading="lazy">
+          <span class="product-badge badge-trending">🔥 Trending</span>
+        </div>
+        <div class="product-body">
+          <span class="product-code">MSO-007</span>
+          <h3 class="product-name">MS Office Complete Guide</h3>
+          <p class="product-desc">Master Word, Excel, PowerPoint &amp; Outlook with this comprehensive PDF guide — with tips &amp; tricks.</p>
+          <div class="product-sales"></div>
+          <div class="product-pricing">
+            <span class="price-original">₹200</span>
+            <span class="price-current">₹79</span>
+            <span class="price-discount">60% OFF</span>
+          </div>
+          <button class="btn-buy" onclick="buyNow(this)">💬 Buy on WhatsApp</button>
+        </div>
+      </div>
+
+      <!-- School Notes -->
+      <div class="product-card"
+           data-name="Class 10 Science & Math Notes"
+           data-code="C10-002"
+           data-base-price="99"
+           data-orig-price="250"
+           data-final-price="99"
+           data-cat="school"
+           data-desc="Class 10 board exam notes Science Mathematics">
+        <div class="product-img-wrap">
+          <img src="images/product2.jpg" alt="Class 10 Science & Math Notes" loading="lazy">
+          <span class="product-badge badge-trending">🔥 Trending</span>
+        </div>
+        <div class="product-body">
+          <span class="product-code">C10-002</span>
+          <h3 class="product-name">Class 10 Science &amp; Math Notes</h3>
+          <p class="product-desc">Complete board exam notes for Class 10 — key formulas, diagrams &amp; important questions from Science &amp; Maths.</p>
+          <div class="product-sales"></div>
+          <div class="product-pricing">
+            <span class="price-original">₹250</span>
+            <span class="price-current">₹99</span>
+            <span class="price-discount">60% OFF</span>
+          </div>
+          <button class="btn-buy" onclick="buyNow(this)">💬 Buy on WhatsApp</button>
+        </div>
+      </div>
+
+      <div class="product-card"
+           data-name="Class 12 All Subjects Notes"
+           data-code="C12-004"
+           data-base-price="149"
+           data-orig-price="400"
+           data-final-price="149"
+           data-cat="school"
+           data-desc="Class 12 complete notes all subjects board exam">
+        <div class="product-img-wrap">
+          <img src="images/product4.jpg" alt="Class 12 All Subjects Notes" loading="lazy">
+          <span class="product-badge badge-new">✨ New</span>
+        </div>
+        <div class="product-body">
+          <span class="product-code">C12-004</span>
+          <h3 class="product-name">Class 12 All Subjects Notes</h3>
+          <p class="product-desc">Board focused Class 12 notes — Physics, Chemistry, Biology, Math &amp; English with formula sheets.</p>
+          <div class="product-sales"></div>
+          <div class="product-pricing">
+            <span class="price-original">₹400</span>
+            <span class="price-current">₹149</span>
+            <span class="price-discount">62% OFF</span>
+          </div>
+          <button class="btn-buy" onclick="buyNow(this)">💬 Buy on WhatsApp</button>
+        </div>
+      </div>
+
+      <div class="product-card"
+           data-name="Class 10 Social Science Notes"
+           data-code="C10S-008"
+           data-base-price="69"
+           data-orig-price="180"
+           data-final-price="69"
+           data-cat="school"
+           data-desc="Class 10 Social Science History Geography PDF notes">
+        <div class="product-img-wrap">
+          <img src="images/product2.jpg" alt="Class 10 Social Science Notes" loading="lazy">
+          <span class="product-badge badge-new">✨ New</span>
+        </div>
+        <div class="product-body">
+          <span class="product-code">C10S-008</span>
+          <h3 class="product-name">Class 10 Social Science Notes</h3>
+          <p class="product-desc">Complete Social Science PDF for Class 10 — History, Geography, Civics &amp; Economics with MCQs.</p>
+          <div class="product-sales"></div>
+          <div class="product-pricing">
+            <span class="price-original">₹180</span>
+            <span class="price-current">₹69</span>
+            <span class="price-discount">61% OFF</span>
+          </div>
+          <button class="btn-buy" onclick="buyNow(this)">💬 Buy on WhatsApp</button>
+        </div>
+      </div>
+
+      <!-- Competitive Exams -->
+      <div class="product-card"
+           data-name="SSC & Banking Exam Preparation Kit"
+           data-code="COMP-005"
+           data-base-price="199"
+           data-orig-price="500"
+           data-final-price="199"
+           data-cat="competitive"
+           data-desc="SSC Banking Railway competitive exam PDF preparation">
+        <div class="product-img-wrap">
+          <img src="images/product5.jpg" alt="SSC & Banking Exam Kit" loading="lazy">
+          <span class="product-badge badge-trending">🔥 Trending</span>
+        </div>
+        <div class="product-body">
+          <span class="product-code">COMP-005</span>
+          <h3 class="product-name">SSC &amp; Banking Exam Preparation Kit</h3>
+          <p class="product-desc">All-in-one PDF — Reasoning, Maths, GK, English Grammar &amp; Current Affairs for SSC CGL, CHSL, Banking.</p>
+          <div class="product-sales"></div>
+          <div class="product-pricing">
+            <span class="price-original">₹500</span>
+            <span class="price-current">₹199</span>
+            <span class="price-discount">60% OFF</span>
+          </div>
+          <button class="btn-buy" onclick="buyNow(this)">💬 Buy on WhatsApp</button>
+        </div>
+      </div>
+
+      <div class="product-card"
+           data-name="Railway RRB Exam Notes"
+           data-code="RRB-009"
+           data-base-price="159"
+           data-orig-price="400"
+           data-final-price="159"
+           data-cat="competitive"
+           data-desc="Railway RRB NTPC Group D exam preparation PDF">
+        <div class="product-img-wrap">
+          <img src="images/product5.jpg" alt="Railway RRB Exam Notes" loading="lazy">
+          <span class="product-badge badge-bestseller">🏆 Best Seller</span>
+        </div>
+        <div class="product-body">
+          <span class="product-code">RRB-009</span>
+          <h3 class="product-name">Railway RRB Exam Notes</h3>
+          <p class="product-desc">Complete RRB NTPC &amp; Group D preparation PDF — GK, Maths tricks, Reasoning &amp; practice sets.</p>
+          <div class="product-sales"></div>
+          <div class="product-pricing">
+            <span class="price-original">₹400</span>
+            <span class="price-current">₹159</span>
+            <span class="price-discount">60% OFF</span>
+          </div>
+          <button class="btn-buy" onclick="buyNow(this)">💬 Buy on WhatsApp</button>
+        </div>
+      </div>
+
+    </div><!-- /products-grid -->
+
+    <div id="noResults" class="no-results" style="display:none;">
+      <div class="nr-icon">🔍</div>
+      <h3>No products found</h3>
+      <p>Try a different search term or select a different category.</p>
+    </div>
+
+  </div>
+</section>
+
+<!-- ====== FOOTER ====== -->
+<footer>
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <a href="index.html" class="nav-logo">
+        <img src="images/logo.png" alt="Viveka Digital Hub">
+        <div class="nav-logo-text">
+          <span class="brand-name">Viveka Digital Hub</span>
+          <span class="brand-tagline">Digital Study Materials</span>
+        </div>
+      </a>
+      <p>Affordable digital study notes for every student's journey.</p>
+    </div>
+    <div class="footer-col">
+      <h4>Quick Links</h4>
+      <ul>
+        <li><a href="index.html">🏠 Home</a></li>
+        <li><a href="category.html">📂 Category</a></li>
+        <li><a href="about.html">ℹ️ About Us</a></li>
+        <li><a href="contact.html">📞 Contact</a></li>
+        <li><a href="privacy.html">🔐 Privacy Policy</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Contact</h4>
+      <ul>
+        <li><a href="tel:9362719399">📱 9362719399</a></li>
+        <li><a href="https://wa.me/919362719399" target="_blank">💬 WhatsApp Us</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>© 2026 Viveka Digital Hub. All Rights Reserved.</p>
+    <a href="privacy.html">Privacy Policy</a>
+  </div>
+</footer>
+
+<script src="js/script.js"></script>
+<script>
+  // Category card click handler
+  function setCategory(cat, el) {
+    document.querySelectorAll('.cat-card').forEach(c => c.classList.remove('active'));
+    el.classList.add('active');
+    // Sync filter btn
+    document.querySelectorAll('.filter-btn').forEach(b => {
+      b.classList.toggle('active', b.dataset.cat === cat);
+    });
+    filterByCategory(cat);
+  }
+</script>
+</body>
+</html>

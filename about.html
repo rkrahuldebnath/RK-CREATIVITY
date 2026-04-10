@@ -1,146 +1,264 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RK CREATIVITY | About Me</title>
-    <meta name="description" content="Learn more about the developer and mission behind RK CREATIVITY.">
-    <link rel="stylesheet" href="css/styles.about.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Learn about Viveka Digital Hub — our mission to provide affordable, high-quality digital study materials for students across India.">
+  <title>About Us | Viveka Digital Hub</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="icon" href="images/logo.png" type="image/png">
 </head>
 <body>
 
-    <!-- NAVIGATION -->
-    <nav>
-        <div class="logo">🚀 RK CREATIVITY</div>
-        <div class="hamburger" id="hamburger">☰</div>
-        <ul class="nav-links" id="navLinks">
-            <li><a href="index.html">Home</a></li>
-            <li><a href="apps.html">Apps</a></li>
-            <li><a href="tutorials.html">Tutorials</a></li>
-            <li><a href="about.html" class="active">About</a></li>
-            <li><a href="donate.html">Donate</a></li>
-            <li><a href="contact.html">Contact</a></li>
-            <!-- Dark Mode Toggle -->
-            <li>
-                <div class="theme-switch" id="themeToggle" title="Toggle Dark Mode">
-                    🌙
-                </div>
-            </li>
-        </ul>
-    </nav>
+<!-- ====== FLOATING WHATSAPP ====== -->
+<a href="https://wa.me/919362719399" class="wa-fab" target="_blank" title="Chat on WhatsApp">
+  <span class="wa-fab-tooltip">Chat with us!</span>
+  💬
+</a>
 
-    <!-- HEADER -->
-    <header class="page-header">
-        <h1>About the Creator</h1>
-        <p>The story, mission, and technology behind RK CREATIVITY.</p>
-    </header>
+<!-- ====== NAVBAR ====== -->
+<nav class="navbar">
+  <div class="nav-container">
+    <a href="index.html" class="nav-logo">
+      <img src="images/logo.png" alt="Viveka Digital Hub Logo">
+      <div class="nav-logo-text">
+        <span class="brand-name">Viveka Digital Hub</span>
+        <span class="brand-tagline">Digital Study Materials</span>
+      </div>
+    </a>
+    <ul class="nav-menu" id="navMenu">
+      <li><a href="index.html"    class="nav-link">🏠 Home</a></li>
+      <li><a href="category.html" class="nav-link">📂 Category</a></li>
+      <li><a href="about.html"    class="nav-link active">ℹ️ About</a></li>
+      <li><a href="contact.html"  class="nav-link">📞 Contact</a></li>
+    </ul>
+    <button class="nav-toggle" id="navToggle" aria-label="Toggle menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
 
-    <!-- MAIN CONTENT -->
-    <section class="content-section">
-        
-        <div class="story-container">
-            <div class="text-block">
-                <h2>Who is RK?</h2>
-                <p>
-                    Hello! I'm the developer behind <strong>RK CREATIVITY</strong>. 
-                    I am a passionate web developer and technology enthusiast dedicated to building 
-                    accessible, functional, and creative web solutions.
-                </p>
-                <p>
-                    My journey started with a simple curiosity about how things work on the internet. 
-                    That curiosity quickly turned into a passion for coding. Despite facing physical challenges, 
-                    I found freedom and infinite possibilities in the world of software development. 
-                    This website is my digital playground—a place where I showcase my experiments with 
-                    Artificial Intelligence, solve problems with custom tools, and create fun experiences through games.
-                </p>
-            </div>
+<!-- ====== ABOUT HERO ====== -->
+<section class="about-hero">
+  <h1>About Viveka Digital Hub</h1>
+  <p>We believe every student deserves access to quality education without breaking the bank.</p>
+</section>
 
-            <div class="text-block">
-                <h2>The Mission</h2>
-                <p>
-                    The goal of RK CREATIVITY is simple: <strong>To create software that matters.</strong>
-                </p>
-                <p>
-                    Whether it's a tool that helps a student organize their schedule, an AI that simplifies complex text, 
-                    or a game that provides a quick break from a busy day, I aim to build applications that add value 
-                    to daily life. I believe in open knowledge, clean code, and user-centric design.
-                </p>
-            </div>
+<!-- ====== OWNER SECTION ====== -->
+<section class="owner-section">
+  <div class="owner-container">
+    <div class="owner-card">
+
+      <!-- Avatar -->
+      <div class="owner-avatar-wrap">
+        <div class="owner-avatar" id="ownerAvatarBox">
+          <img
+            src="assets/founder.jpg"
+            alt="Rahul Debnath - Founder Viveka Digital Hub"
+            id="founderImg"
+            onerror="this.style.display='none'; document.getElementById('ownerInitials').style.display='flex';"
+            onload="document.getElementById('ownerInitials').style.display='none';"
+            style="width:100%; height:100%; object-fit:cover; border-radius:50%;"
+          >
+          <span class="owner-avatar-initials" id="ownerInitials" style="display:none;">RD</span>
+        </div>
+        <div class="owner-badge-verified">✔ Verified Educator</div>
+      </div>
+
+      <!-- Info -->
+      <div class="owner-info">
+        <div class="owner-meta-top">
+          <span class="section-label" style="margin-bottom:10px;">👨‍💻 About the Founder</span>
+          <h2 class="owner-name">Rahul Debnath</h2>
+          <p class="owner-title">IT Educator · Web Developer · Digital Content Creator</p>
         </div>
 
-        <!-- Tech Stack / Skills -->
-        <div class="skills-section">
-            <h3>Technologies I Use</h3>
-            <div class="skills-grid">
-                <div class="skill-item">
-                    <span class="skill-icon">🌐</span>
-                    <span class="skill-name">HTML5 & CSS3</span>
-                </div>
-                <div class="skill-item">
-                    <span class="skill-icon">⚡</span>
-                    <span class="skill-name">JavaScript (ES6+)</span>
-                </div>
-                <div class="skill-item">
-                    <span class="skill-icon">🤖</span>
-                    <span class="skill-name">AI Integration</span>
-                </div>
-                <div class="skill-item">
-                    <span class="skill-icon">📱</span>
-                    <span class="skill-name">Responsive UI</span>
-                </div>
-                <div class="skill-item">
-                    <span class="skill-icon">🔥</span>
-                    <span class="skill-name">Firebase</span>
-                </div>
-                <div class="skill-item">
-                    <span class="skill-icon">🐍</span>
-                    <span class="skill-name">Python</span>
-                </div>
-            </div>
+        <p class="owner-bio">
+          Rahul Debnath is a passionate IT educator, web developer, and digital content creator dedicated to empowering students through technology. As the founder of <strong>Viveka Digital Hub</strong> and <strong>Viveka Digital Academy</strong>, he focuses on providing affordable and practical learning resources for students across India.
+        </p>
+        <p class="owner-bio">
+          With strong expertise in computer education, Rahul specializes in courses like <strong>DCA, ADCA</strong>, and basic to advanced IT skills. He is also the creator of the YouTube channel <strong>"Helping Technology"</strong>, where he shares valuable tutorials, career guidance, and tech knowledge in a simple, easy-to-understand way.
+        </p>
+        <p class="owner-bio">
+          His mission is to help students grow in the digital world, build skills, and create better career opportunities through technology. He believes <em>"Education should be accessible to everyone."</em>
+        </p>
+
+        <!-- Expertise Tags -->
+        <div class="owner-tags">
+          <span class="owner-tag">💻 DCA / ADCA</span>
+          <span class="owner-tag">🌐 Web Development</span>
+          <span class="owner-tag">📹 YouTube Creator</span>
+          <span class="owner-tag">📚 Digital Education</span>
+          <span class="owner-tag">🎯 IT Training</span>
+          <span class="owner-tag">📱 WhatsApp Commerce</span>
         </div>
 
-    </section>
-
-    <!-- FOOTER -->
-    <footer>
-        <p>&copy; 2025 RK CREATIVITY | All Rights Reserved</p>
-        <div class="links">
-            <a href="privacy.html">Privacy Policy</a>
-            <a href="terms.html">Terms of Service</a>
-            <a href="#">GitHub</a>
+        <!-- Social / Contact Links -->
+        <div class="owner-links">
+          <a href="https://wa.me/919362719399" target="_blank" class="owner-link owner-link-wa">
+            <span>💬</span> WhatsApp
+          </a>
+          <a href="https://youtube.com/@HelpingTechnology" target="_blank" class="owner-link owner-link-yt">
+            <span>▶️</span> Helping Technology
+          </a>
+          <a href="tel:9362719399" class="owner-link owner-link-ph">
+            <span>📱</span> 9362719399
+          </a>
         </div>
-    </footer>
+      </div>
 
-    <!-- JAVASCRIPT LOGIC -->
-    <script>
-        // --- 1. DARK MODE TOGGLE (Shared Logic) ---
-        const themeToggle = document.getElementById('themeToggle');
-        const body = document.body;
+    </div><!-- /owner-card -->
 
-        if(localStorage.getItem('theme') === 'dark') {
-            body.classList.add('dark-mode');
-            themeToggle.textContent = '☀️';
-        }
+    <!-- Mission Quote -->
+    <div class="owner-quote">
+      <span class="quote-mark">"</span>
+      Education should be accessible to everyone. Through technology, I aim to bridge the gap between students and quality study materials — making learning simple, practical, and affordable.
+      <span class="quote-mark">"</span>
+      <div class="quote-author">— Rahul Debnath, Founder · Viveka Digital Hub</div>
+    </div>
 
-        themeToggle.addEventListener('click', () => {
-            body.classList.toggle('dark-mode');
-            
-            if(body.classList.contains('dark-mode')) {
-                localStorage.setItem('theme', 'dark');
-                themeToggle.textContent = '☀️';
-            } else {
-                localStorage.setItem('theme', 'light');
-                themeToggle.textContent = '🌙';
-            }
-        });
+  </div>
+</section>
 
-        // --- 2. MOBILE MENU ---
-        const hamburger = document.getElementById('hamburger');
-        const navLinks = document.getElementById('navLinks');
+<!-- ====== ABOUT CONTENT ====== -->
+<div class="about-content">
 
-        hamburger.addEventListener('click', () => {
-            navLinks.classList.toggle('active');
-        });
-    </script>
+  <p>
+    <strong>Viveka Digital Hub</strong> was founded with a single, powerful vision — to make quality education affordable and accessible for every student in India. In a world where textbooks are expensive and coaching centres are out of reach for many, we bridge the gap with high-quality digital PDF notes at prices that everyone can afford.
+  </p>
+
+  <p>
+    Our team of experienced educators and subject matter experts craft each PDF with care — covering the full syllabus, important formulas, diagrams, previous year questions, and exam tips. Whether you're preparing for your Class 10 boards, pursuing a computer diploma, or cracking a competitive exam, we have the right material for you.
+  </p>
+
+  <p>
+    From DCA and ADCA computer courses to Class 10 &amp; 12 board notes, SSC, Banking, Railway preparation materials, and software training like Tally ERP 9 — our growing library covers everything a modern student needs. And with instant delivery via WhatsApp, you can start studying within minutes of purchase!
+  </p>
+
+  <p>
+    We are proud to have helped over <strong>5,000+ students</strong> across India study smarter, save money, and achieve their academic goals. Join the Viveka Digital Hub family today and experience the future of affordable learning.
+  </p>
+
+  <!-- WHY CHOOSE US -->
+  <div style="margin-top: 50px;">
+    <div class="section-header" style="text-align: left; margin-bottom: 24px;">
+      <span class="section-label">💎 Why Choose Us</span>
+      <h2 style="font-size: 1.7rem;">Why Students Trust Viveka Digital Hub</h2>
+    </div>
+
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon">⚡</div>
+        <h3>Instant Delivery</h3>
+        <p>Receive your PDF instantly via WhatsApp within minutes of ordering — no waiting, no delays.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">💰</div>
+        <h3>Highly Affordable</h3>
+        <p>Premium notes at student-friendly prices. Starting from as low as ₹49 — save up to 65%!</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">✅</div>
+        <h3>Trusted by Students</h3>
+        <p>5000+ students have already benefited. Our content is reviewed, accurate &amp; exam-focused.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">📱</div>
+        <h3>Easy Ordering</h3>
+        <p>Simple WhatsApp-based ordering. Just click Buy Now and we'll deliver directly to your chat.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🎟️</div>
+        <h3>Coupon Discounts</h3>
+        <p>Enjoy extra savings with exclusive coupon codes like VIVEKA10, STUDENT20 and RK50.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">📚</div>
+        <h3>Wide Collection</h3>
+        <p>From computer courses to school boards to competitive exams — we cover it all in one place.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- MISSION STATS -->
+  <div style="
+    background: linear-gradient(135deg, var(--primary), var(--primary-light));
+    border-radius: var(--radius-xl);
+    padding: 40px 30px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 24px;
+    text-align: center;
+    margin-top: 50px;
+    color: white;
+  ">
+    <div>
+      <div style="font-family: 'Outfit',sans-serif; font-size: 2.4rem; font-weight: 800; color: var(--accent);">5000+</div>
+      <div style="font-size: 0.85rem; opacity: 0.75; text-transform: uppercase; letter-spacing: 0.5px;">Happy Students</div>
+    </div>
+    <div>
+      <div style="font-family: 'Outfit',sans-serif; font-size: 2.4rem; font-weight: 800; color: var(--accent);">50+</div>
+      <div style="font-size: 0.85rem; opacity: 0.75; text-transform: uppercase; letter-spacing: 0.5px;">PDF Products</div>
+    </div>
+    <div>
+      <div style="font-family: 'Outfit',sans-serif; font-size: 2.4rem; font-weight: 800; color: var(--accent);">₹49</div>
+      <div style="font-size: 0.85rem; opacity: 0.75; text-transform: uppercase; letter-spacing: 0.5px;">Starting Price</div>
+    </div>
+    <div>
+      <div style="font-family: 'Outfit',sans-serif; font-size: 2.4rem; font-weight: 800; color: var(--accent);">99%</div>
+      <div style="font-size: 0.85rem; opacity: 0.75; text-transform: uppercase; letter-spacing: 0.5px;">Satisfaction Rate</div>
+    </div>
+  </div>
+
+  <!-- CTA -->
+  <div style="text-align: center; margin-top: 50px; padding: 40px; background: var(--white); border-radius: var(--radius-xl); border: 1px solid var(--gray-200); box-shadow: var(--shadow-md);">
+    <h2 style="font-family: 'Outfit',sans-serif; font-size: 1.5rem; color: var(--primary-dark); margin-bottom: 12px;">Ready to Start Learning? 🚀</h2>
+    <p style="color: var(--gray-600); margin-bottom: 24px;">Browse our complete collection and find the perfect study material for you.</p>
+    <div style="display: flex; gap: 14px; justify-content: center; flex-wrap: wrap;">
+      <a href="category.html" class="btn btn-primary">Browse All Products</a>
+      <a href="https://wa.me/919362719399" class="btn btn-whatsapp" target="_blank">💬 Chat on WhatsApp</a>
+    </div>
+  </div>
+
+</div>
+
+<!-- ====== FOOTER ====== -->
+<footer>
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <a href="index.html" class="nav-logo">
+        <img src="images/logo.png" alt="Viveka Digital Hub">
+        <div class="nav-logo-text">
+          <span class="brand-name">Viveka Digital Hub</span>
+          <span class="brand-tagline">Digital Study Materials</span>
+        </div>
+      </a>
+      <p>Affordable digital study notes for every student's journey.</p>
+    </div>
+    <div class="footer-col">
+      <h4>Quick Links</h4>
+      <ul>
+        <li><a href="index.html">🏠 Home</a></li>
+        <li><a href="category.html">📂 Category</a></li>
+        <li><a href="about.html">ℹ️ About Us</a></li>
+        <li><a href="contact.html">📞 Contact</a></li>
+        <li><a href="privacy.html">🔐 Privacy Policy</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Contact</h4>
+      <ul>
+        <li><a href="tel:9362719399">📱 9362719399</a></li>
+        <li><a href="https://wa.me/919362719399" target="_blank">💬 WhatsApp Us</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>© 2026 Viveka Digital Hub. All Rights Reserved.</p>
+    <a href="privacy.html">Privacy Policy</a>
+  </div>
+</footer>
+
+<script src="js/script.js"></script>
 </body>
 </html>

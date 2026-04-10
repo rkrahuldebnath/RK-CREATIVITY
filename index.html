@@ -1,258 +1,379 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RK CREATIVITY | Web App Showcase</title>
-    <meta name="description" content="Explore custom web applications, AI tools, and games by RK CREATIVITY.">
-    <link rel="stylesheet" href="css/styles.index.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Viveka Digital Hub – Affordable digital PDF notes and study materials for students. DCA, ADCA, Class 10, Class 12, Competitive Exams.">
+  <title>Viveka Digital Hub | Affordable Digital PDF Notes for Students</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="icon" href="images/logo.png" type="image/png">
 </head>
 <body>
 
-    <!-- NAVIGATION -->
-    <nav>
-        <div class="logo">🚀 RK CREATIVITY</div>
-        <div class="hamburger" id="hamburger">☰</div>
-        <ul class="nav-links" id="navLinks">
-            <li><a href="index.html" class="active">Home</a></li>
-            <li><a href="apps.html">Apps</a></li>
-            <li><a href="https://www.youtube.com/@HelpingTechnology?sub_confirmation=1">Tutorials</a></li>
-            <li><a href="https://wheelchairrk.blogspot.com/p/about-me.html">About</a></li>
-            <li><a href="donate.html">Donate</a></li>
-            <li><a href="https://wheelchairrk.blogspot.com/p/contact.html">Contact</a></li>
-            <!-- Dark Mode Toggle -->
-            <li>
-                <div class="theme-switch" id="themeToggle" title="Toggle Dark Mode">
-                    🌙
-                </div>
-            </li>
-        </ul>
-    </nav>
-    <!-- HERO SECTION -->
-    <header id="hero" class="hero">
-        <h1>RK CREATIVITY</h1>
-        <h2>Explore my latest Web Applications & Tools</h2>
-        <p class="tagline">"One place for all my experiments, tools, and AI projects."</p>
-        <div class="hero-btns">
-            <button class="btn btn-primary" onclick="document.getElementById('showcase').scrollIntoView();">Browse Apps</button>
-            <button class="btn btn-secondary" onclick="document.getElementById('tutorial').scrollIntoView();">Watch Tutorials</button>
-        </div>
-    </header>
+<!-- ====== FLOATING WHATSAPP ====== -->
+<a href="https://wa.me/919362719399" class="wa-fab" target="_blank" title="Chat on WhatsApp">
+  <span class="wa-fab-tooltip">Chat with us!</span>
+  💬
+</a>
 
-    <!-- APP SHOWCASE SECTION -->
-    <section id="showcase">
-        <div class="section-header">
-            <h3>Web Application Showcase</h3>
-            <p>Filter by category or search by name to find exactly what you need.</p>
-        </div>
+<!-- ====== NAVBAR ====== -->
+<nav class="navbar">
+  <div class="nav-container">
+    <a href="index.html" class="nav-logo">
+      <img src="images/logo.png" alt="Viveka Digital Hub Logo">
+      <div class="nav-logo-text">
+        <span class="brand-name">Viveka Digital Hub</span>
+        <span class="brand-tagline">Digital Study Materials</span>
+      </div>
+    </a>
+    <ul class="nav-menu" id="navMenu">
+      <li><a href="index.html"    class="nav-link active">🏠 Home</a></li>
+      <li><a href="category.html" class="nav-link">📂 Category</a></li>
+      <li><a href="about.html"    class="nav-link">ℹ️ About</a></li>
+      <li><a href="contact.html"  class="nav-link">📞 Contact</a></li>
+    </ul>
+    <button class="nav-toggle" id="navToggle" aria-label="Toggle menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
 
-        <!-- Filter Toolbar -->
-        <div class="toolbar">
-            <select id="categoryFilter">
-                <option value="all">All Categories</option>
-                <option value="AI Application">AI Application</option>
-                <option value="Tools">Tools</option>
-                <option value="Games">Games</option>
-            </select>
-            <input type="text" id="searchInput" placeholder="Search apps (e.g. Chatbot, Puzzle)...">
-        </div>
+<!-- ====== HERO ====== -->
+<section class="hero">
+  <div class="hero-content">
+    <div class="hero-badge">⚡ Trusted by 5000+ Students</div>
+    <h1>Welcome to <span>Viveka Digital Hub</span></h1>
+    <p>Affordable Digital Notes &amp; PDFs for Students — Download Instantly, Study Smarter!</p>
+    <div class="hero-stats">
+      <div class="hero-stat">
+        <span class="stat-num">500+</span>
+        <span class="stat-label">Products</span>
+      </div>
+      <div class="hero-stat">
+        <span class="stat-num">5000+</span>
+        <span class="stat-label">Students</span>
+      </div>
+      <div class="hero-stat">
+        <span class="stat-num">99%</span>
+        <span class="stat-label">Satisfaction</span>
+      </div>
+      <div class="hero-stat">
+        <span class="stat-num">₹49+</span>
+        <span class="stat-label">Starting At</span>
+      </div>
+    </div>
+  </div>
+</section>
 
-        <!-- App Grid -->
-        <div class="app-grid" id="appGrid">
-            
-            <!-- App 1 -->
-            <div class="app-card" data-category="AI Application">
-                <span class="badge ai">AI Application</span>
-                <span class="badge-new">NEW</span>
-                <div class="app-title">AI Chatbot</div>
-                <p class="app-desc">An intelligent conversational assistant powered by advanced language models.</p>
-                <a href="#" class="app-btn">Open App</a>
-            </div>
+<!-- ====== COUPON ====== -->
+<section class="coupon-section">
+  <div class="coupon-inner">
+    <h3>🎟️ Have a Coupon Code?</h3>
+    <div class="coupon-form">
+      <input
+        type="text"
+        id="couponInput"
+        class="coupon-input"
+        placeholder="Enter coupon code e.g. VIVEKA10"
+        autocomplete="off"
+        maxlength="20"
+      >
+      <button class="btn btn-accent" onclick="applyCoupon()" id="applyCouponBtn">Apply</button>
+    </div>
+    <div id="couponMsg" class="coupon-msg"></div>
+    <div id="activeCouponBadge" class="active-coupon-badge hidden"></div>
+  </div>
+</section>
 
-            <!-- App 2 -->
-            <div class="app-card" data-category="Tools">
-                <span class="badge tools">Tools</span>
-                <div class="app-title">Invoice Generator</div>
-                <p class="app-desc">Create professional PDF invoices instantly in your browser. No data stored.</p>
-                <a href="#" class="app-btn">Open App</a>
-            </div>
+<!-- ====== SEARCH ====== -->
+<div class="search-section">
+  <div class="search-wrapper">
+    <span class="search-icon">🔍</span>
+    <input
+      type="search"
+      id="searchInput"
+      class="search-input"
+      placeholder="Search for notes, courses, subjects..."
+      autocomplete="off"
+    >
+  </div>
+</div>
+<div class="divider"></div>
 
-            <!-- App 3 -->
-            <div class="app-card" data-category="Games">
-                <span class="badge games">Games</span>
-                <div class="app-title">Number Puzzle</div>
-                <p class="app-desc">Test your logic with this addictive sliding tile number puzzle.</p>
-                <a href="#" class="app-btn">Open App</a>
-            </div>
-
-            <!-- App 4 -->
-            <div class="app-card" data-category="Tools">
-                <span class="badge tools">Tools</span>
-                <div class="app-title">Password Manager</div>
-                <p class="app-desc">Securely generate and store passwords locally using encryption.</p>
-                <a href="#" class="app-btn">Open App</a>
-            </div>
-
-            <!-- App 5 -->
-            <div class="app-card" data-category="Tools">
-                <span class="badge tools">Tools</span>
-                <div class="app-title">Study Planner</div>
-                <p class="app-desc">Organize your study schedule and track progress efficiently.</p>
-                <a href="#" class="app-btn">Open App</a>
-            </div>
-
-            <!-- App 6 -->
-            <div class="app-card" data-category="AI Application">
-                <span class="badge ai">AI Application</span>
-                <div class="app-title">Image Caption AI</div>
-                <p class="app-desc">Upload an image and let AI generate a descriptive caption for it.</p>
-                <a href="#" class="app-btn">Open App</a>
-            </div>
-
-            <!-- App 7 -->
-            <div class="app-card" data-category="Games">
-                <span class="badge games">Games</span>
-                <span class="badge-new">NEW</span>
-                <div class="app-title">Quiz Master</div>
-                <p class="app-desc">Challenge yourself with quizzes on various tech topics.</p>
-                <a href="#" class="app-btn">Open App</a>
-            </div>
-
-            <!-- App 8 -->
-            <div class="app-card" data-category="AI Application">
-                <span class="badge ai">AI Application</span>
-                <div class="app-title">Text Summarizer</div>
-                <p class="app-desc">Paste long articles and get concise AI-generated summaries instantly.</p>
-                <a href="#" class="app-btn">Open App</a>
-            </div>
-
-        </div>
-        <!-- No results message -->
-        <p id="noResults" style="display:none; text-align:center; margin-top:20px; color:var(--text-secondary);">No apps found matching your criteria.</p>
-    </section>
-    <div class="center-align">
-        <a href="apps.html" class="explore-more-btn">Explore More Apps</a>
+<!-- ====== FEATURED PRODUCTS ====== -->
+<section class="section bg-light">
+  <div class="container">
+    <div class="section-header">
+      <span class="section-label">⭐ Featured</span>
+      <h2>Our Best-Selling Digital PDFs</h2>
+      <p>High-quality study materials curated for Students at unbeatable prices</p>
     </div>
 
-    <!-- TUTORIAL SECTION -->
-    <section id="tutorial" class="generic-section">
-        <div class="section-header">
-            <h3>How to Use My Web Apps</h3>
+    <div class="products-grid" id="productsGrid">
+
+      <!-- Product 1 -->
+      <div class="product-card"
+           data-name="DCA Complete Notes Bundle"
+           data-code="DCA-001"
+           data-base-price="149"
+           data-orig-price="350"
+           data-final-price="149"
+           data-cat="computer"
+           data-desc="Diploma in Computer Applications complete PDF notes">
+        <div class="product-img-wrap">
+          <img src="images/product1.jpg" alt="DCA Complete Notes Bundle" loading="lazy">
+          <span class="product-badge badge-bestseller">🏆 Best Seller</span>
         </div>
-        <div class="video-container">
-            <!-- Placeholder for YouTube Embed -->
-            <iframe width="950" height="535" src="https://www.youtube.com/embed/z_K1-Da3kFg" title="Indian Best Apps | Amrit mahotsav episodes | who am I | helpingtechnology" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-            
+        <div class="product-body">
+          <span class="product-code">DCA-001</span>
+          <h3 class="product-name">DCA Complete Notes Bundle</h3>
+          <p class="product-desc">Comprehensive Diploma in Computer Applications PDF — covers OS, MS Office, Internet, Tally basics &amp; more.</p>
+          <div class="product-sales"></div>
+          <div class="product-pricing">
+            <span class="price-original">₹350</span>
+            <span class="price-current">₹149</span>
+            <span class="price-discount">57% OFF</span>
+          </div>
+          <button class="btn-buy" onclick="buyNow(this)">
+            <span>💬</span> Buy on WhatsApp
+          </button>
         </div>
-        <div style="text-align: center; margin-top: 20px;">
-            <p style="margin-bottom: 15px;">Watch detailed walkthroughs and updates on my channel.</p>
-            <a href="#" class="btn btn-primary" style="background: #ff0000; color: white;">View All Tutorials on YouTube</a>
+      </div>
+
+      <!-- Product 2 -->
+      <div class="product-card"
+           data-name="Class 10 Science & Math Notes"
+           data-code="C10-002"
+           data-base-price="99"
+           data-orig-price="250"
+           data-final-price="99"
+           data-cat="school"
+           data-desc="Class 10 board exam complete notes for Science and Mathematics">
+        <div class="product-img-wrap">
+          <img src="images/product2.jpg" alt="Class 10 Science & Math Notes" loading="lazy">
+          <span class="product-badge badge-trending">🔥 Trending</span>
         </div>
-    </section>
-
-    <!-- FOOTER -->
-    <footer>
-        <p>&copy; 2025 RK CREATIVITY | All Rights Reserved</p>
-        <div class="links">
-            <a href="#">Privacy Policy</a>
-            <a href="#">Terms of Service</a>
-            <a href="#">GitHub</a>
+        <div class="product-body">
+          <span class="product-code">C10-002</span>
+          <h3 class="product-name">Class 10 Science &amp; Math Notes</h3>
+          <p class="product-desc">Board exam ready PDF notes for Class 10 — Science, Maths, key formulas, diagrams &amp; previous year questions.</p>
+          <div class="product-sales"></div>
+          <div class="product-pricing">
+            <span class="price-original">₹250</span>
+            <span class="price-current">₹99</span>
+            <span class="price-discount">60% OFF</span>
+          </div>
+          <button class="btn-buy" onclick="buyNow(this)">
+            <span>💬</span> Buy on WhatsApp
+          </button>
         </div>
-    </footer>
+      </div>
 
-    <!-- Back to Top Button -->
-    <button id="backToTop" title="Go to top">↑</button>
+      <!-- Product 3 -->
+      <div class="product-card"
+           data-name="ADCA Advanced Computer Course Notes"
+           data-code="ADCA-003"
+           data-base-price="249"
+           data-orig-price="600"
+           data-final-price="249"
+           data-cat="computer"
+           data-desc="Advanced Diploma in Computer Applications full PDF notes">
+        <div class="product-img-wrap">
+          <img src="images/product3.jpg" alt="ADCA Advanced Computer Course Notes" loading="lazy">
+          <span class="product-badge badge-bestseller">🏆 Best Seller</span>
+        </div>
+        <div class="product-body">
+          <span class="product-code">ADCA-003</span>
+          <h3 class="product-name">ADCA Advanced Computer Course Notes</h3>
+          <p class="product-desc">Full ADCA PDF bundle — Programming Basics, Database, Networking, Advanced Excel, Tally ERP &amp; more.</p>
+          <div class="product-sales"></div>
+          <div class="product-pricing">
+            <span class="price-original">₹600</span>
+            <span class="price-current">₹249</span>
+            <span class="price-discount">58% OFF</span>
+          </div>
+          <button class="btn-buy" onclick="buyNow(this)">
+            <span>💬</span> Buy on WhatsApp
+          </button>
+        </div>
+      </div>
 
-    <!-- JAVASCRIPT LOGIC -->
-    <script>
-        // --- 1. DARK MODE TOGGLE ---
-        const themeToggle = document.getElementById('themeToggle');
-        const body = document.body;
+      <!-- Product 4 -->
+      <div class="product-card"
+           data-name="Class 12 All Subjects Notes"
+           data-code="C12-004"
+           data-base-price="149"
+           data-orig-price="400"
+           data-final-price="149"
+           data-cat="school"
+           data-desc="Class 12 board complete notes for all subjects">
+        <div class="product-img-wrap">
+          <img src="images/product4.jpg" alt="Class 12 All Subjects Notes" loading="lazy">
+          <span class="product-badge badge-new">✨ New</span>
+        </div>
+        <div class="product-body">
+          <span class="product-code">C12-004</span>
+          <h3 class="product-name">Class 12 All Subjects Notes</h3>
+          <p class="product-desc">Comprehensive Class 12 study guide — Physics, Chemistry, Biology, Math &amp; English. Board exam focused revision.</p>
+          <div class="product-sales"></div>
+          <div class="product-pricing">
+            <span class="price-original">₹400</span>
+            <span class="price-current">₹149</span>
+            <span class="price-discount">62% OFF</span>
+          </div>
+          <button class="btn-buy" onclick="buyNow(this)">
+            <span>💬</span> Buy on WhatsApp
+          </button>
+        </div>
+      </div>
 
-        // Check local storage for saved preference
-        if(localStorage.getItem('theme') === 'dark') {
-            body.classList.add('dark-mode');
-            themeToggle.textContent = '☀️';
-        }
+      <!-- Product 5 -->
+      <div class="product-card"
+           data-name="SSC & Banking Exam Preparation Kit"
+           data-code="COMP-005"
+           data-base-price="199"
+           data-orig-price="500"
+           data-final-price="199"
+           data-cat="competitive"
+           data-desc="SSC CGL Banking Exam complete preparation PDF">
+        <div class="product-img-wrap">
+          <img src="images/product5.jpg" alt="SSC & Banking Exam Preparation Kit" loading="lazy">
+          <span class="product-badge badge-trending">🔥 Trending</span>
+        </div>
+        <div class="product-body">
+          <span class="product-code">COMP-005</span>
+          <h3 class="product-name">SSC &amp; Banking Exam Preparation Kit</h3>
+          <p class="product-desc">All-in-one competitive exam PDF — Reasoning, Maths, GK, English Grammar, current affairs &amp; mock tests.</p>
+          <div class="product-sales"></div>
+          <div class="product-pricing">
+            <span class="price-original">₹500</span>
+            <span class="price-current">₹199</span>
+            <span class="price-discount">60% OFF</span>
+          </div>
+          <button class="btn-buy" onclick="buyNow(this)">
+            <span>💬</span> Buy on WhatsApp
+          </button>
+        </div>
+      </div>
 
-        themeToggle.addEventListener('click', () => {
-            body.classList.toggle('dark-mode');
-            
-            if(body.classList.contains('dark-mode')) {
-                localStorage.setItem('theme', 'dark');
-                themeToggle.textContent = '☀️';
-            } else {
-                localStorage.setItem('theme', 'light');
-                themeToggle.textContent = '🌙';
-            }
-        });
+      <!-- Product 6 -->
+      <div class="product-card"
+           data-name="Tally ERP 9 Complete Notes"
+           data-code="TALLY-006"
+           data-base-price="129"
+           data-orig-price="300"
+           data-final-price="129"
+           data-cat="computer"
+           data-desc="Tally ERP 9 accounting software complete PDF notes">
+        <div class="product-img-wrap">
+          <img src="images/product6.jpg" alt="Tally ERP 9 Complete Notes" loading="lazy">
+          <span class="product-badge badge-new">✨ New</span>
+        </div>
+        <div class="product-body">
+          <span class="product-code">TALLY-006</span>
+          <h3 class="product-name">Tally ERP 9 Complete Notes</h3>
+          <p class="product-desc">Master Tally ERP 9 with step-by-step PDF guide — Accounts, GST, Payroll, Inventory &amp; Financial Reports.</p>
+          <div class="product-sales"></div>
+          <div class="product-pricing">
+            <span class="price-original">₹300</span>
+            <span class="price-current">₹129</span>
+            <span class="price-discount">57% OFF</span>
+          </div>
+          <button class="btn-buy" onclick="buyNow(this)">
+            <span>💬</span> Buy on WhatsApp
+          </button>
+        </div>
+      </div>
 
-        // --- 2. MOBILE MENU ---
-        const hamburger = document.getElementById('hamburger');
-        const navLinks = document.getElementById('navLinks');
+    </div><!-- /products-grid -->
 
-        hamburger.addEventListener('click', () => {
-            navLinks.classList.toggle('active');
-        });
+    <div id="noResults" class="no-results" style="display:none;">
+      <div class="nr-icon">🔍</div>
+      <h3>No products found</h3>
+      <p>Try a different search term or clear your search.</p>
+    </div>
 
-        // Close menu when a link is clicked
-        document.querySelectorAll('.nav-links a').forEach(link => {
-            link.addEventListener('click', () => {
-                navLinks.classList.remove('active');
-            });
-        });
+  </div>
+</section>
 
-        // --- 3. FILTERING & SEARCH LOGIC ---
-        const categoryFilter = document.getElementById('categoryFilter');
-        const searchInput = document.getElementById('searchInput');
-        const appCards = document.querySelectorAll('.app-card');
-        const noResults = document.getElementById('noResults');
+<!-- ====== WHY CHOOSE US ====== -->
+<section class="section">
+  <div class="container">
+    <div class="section-header">
+      <span class="section-label">💎 Why Us</span>
+      <h2>Why Students Love Viveka Digital Hub</h2>
+      <p>We make learning affordable, accessible and instant.</p>
+    </div>
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon">⚡</div>
+        <h3>Instant Delivery</h3>
+        <p>Get your PDF notes instantly via WhatsApp within minutes of payment.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">💰</div>
+        <h3>Best Prices</h3>
+        <p>Premium quality notes at highly affordable prices, starting at just ₹49.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">✅</div>
+        <h3>Trusted Content</h3>
+        <p>Handcrafted notes by experienced educators — accurate &amp; exam-focused.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🎟️</div>
+        <h3>Exclusive Coupons</h3>
+        <p>Save more with coupon codes. Use VIVEKA10, STUDENT20 or RK50!</p>
+      </div>
+    </div>
+  </div>
+</section>
 
-        function filterApps() {
-            const categoryValue = categoryFilter.value;
-            const searchValue = searchInput.value.toLowerCase();
-            let visibleCount = 0;
+<!-- ====== FOOTER ====== -->
+<footer>
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <a href="index.html" class="nav-logo">
+        <img src="images/logo.png" alt="Viveka Digital Hub">
+        <div class="nav-logo-text">
+          <span class="brand-name">Viveka Digital Hub</span>
+          <span class="brand-tagline">Digital Study Materials</span>
+        </div>
+      </a>
+      <p>Your trusted partner for affordable digital study notes &amp; PDFs. Helping students achieve more with less stress.</p>
+    </div>
+    <div class="footer-col">
+      <h4>Quick Links</h4>
+      <ul>
+        <li><a href="index.html">🏠 Home</a></li>
+        <li><a href="category.html">📂 Category</a></li>
+        <li><a href="about.html">ℹ️ About Us</a></li>
+        <li><a href="contact.html">📞 Contact</a></li>
+        <li><a href="privacy.html">🔐 Privacy Policy</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Contact Us</h4>
+      <ul>
+        <li><a href="tel:9362719399">📱 9362719399</a></li>
+        <li><a href="https://wa.me/919362719399" target="_blank">💬 WhatsApp Us</a></li>
+        <li><a href="contact.html">✉️ Send a Message</a></li>
+      </ul>
+      <br>
+      <h4>Coupon Codes</h4>
+      <ul>
+        <li><a href="#">🎟️ VIVEKA10 — 10% OFF</a></li>
+        <li><a href="#">🎟️ STUDENT20 — 20% OFF</a></li>
+        <li><a href="#">🎟️ RK50 — 50% OFF</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>© 2026 Viveka Digital Hub. All Rights Reserved.</p>
+    <a href="privacy.html">Privacy Policy</a>
+  </div>
+</footer>
 
-            appCards.forEach(card => {
-                const cardCategory = card.getAttribute('data-category');
-                const cardTitle = card.querySelector('.app-title').textContent.toLowerCase();
-                
-                // Logic: Must match Category AND Search text
-                const matchesCategory = (categoryValue === 'all') || (cardCategory === categoryValue);
-                const matchesSearch = cardTitle.includes(searchValue);
-
-                if (matchesCategory && matchesSearch) {
-                    card.style.display = 'flex'; // Restore flex display
-                    visibleCount++;
-                } else {
-                    card.style.display = 'none';
-                }
-            });
-
-            // Show "No Results" message if needed
-            noResults.style.display = visibleCount === 0 ? 'block' : 'none';
-        }
-
-        // Add Event Listeners
-        categoryFilter.addEventListener('change', filterApps);
-        searchInput.addEventListener('input', filterApps); // 'input' fires instantly while typing
-
-        // --- 4. BACK TO TOP BUTTON ---
-        const backToTopBtn = document.getElementById('backToTop');
-
-        window.onscroll = function() {
-            if (document.body.scrollTop > 300 || document.documentElement.scrollTop > 300) {
-                backToTopBtn.style.display = "flex";
-            } else {
-                backToTopBtn.style.display = "none";
-            }
-        };
-
-        backToTopBtn.addEventListener('click', () => {
-            document.body.scrollTop = 0; // Safari
-            document.documentElement.scrollTop = 0; // Chrome, Firefox, IE, Opera
-        });
-
-    </script>
+<script src="js/script.js"></script>
 </body>
 </html>

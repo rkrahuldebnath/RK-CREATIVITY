@@ -1,139 +1,292 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RK CREATIVITY | Contact</title>
-    <meta name="description" content="Get in touch with RK CREATIVITY for collaborations, bug reports, or general inquiries.">
-    <link rel="stylesheet" href="css/styles.contact.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Contact Viveka Digital Hub — reach us via WhatsApp at 9362719399 for instant support and order inquiries.">
+  <title>Contact Us | Viveka Digital Hub</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="icon" href="images/logo.png" type="image/png">
+
 </head>
 <body>
 
-    <!-- NAVIGATION -->
-    <nav>
-        <div class="logo">🚀 RK CREATIVITY</div>
-        <div class="hamburger" id="hamburger">☰</div>
-        <ul class="nav-links" id="navLinks">
-            <li><a href="index.html">Home</a></li>
-            <li><a href="apps.html">Apps</a></li>
-            <li><a href="tutorials.html">Tutorials</a></li>
-            <li><a href="about.html">About</a></li>
-            <li><a href="donate.html">Donate</a></li>
-            <li><a href="contact.html" class="active">Contact</a></li>
-            <!-- Dark Mode Toggle -->
-            <li>
-                <div class="theme-switch" id="themeToggle" title="Toggle Dark Mode">
-                    🌙
-                </div>
-            </li>
-        </ul>
-    </nav>
+<!-- ====== FLOATING WHATSAPP ====== -->
+<a href="https://wa.me/919362719399" class="wa-fab" target="_blank" title="Chat on WhatsApp">
+  <span class="wa-fab-tooltip">Chat with us!</span>
+  💬
+</a>
+<!-- ====== NAVBAR ====== -->
+<nav class="navbar">
+  <div class="nav-container">
+    <a href="index.html" class="nav-logo">
+      <img src="images/logo.png" alt="Viveka Digital Hub Logo">
+      <div class="nav-logo-text">
+        <span class="brand-name">Viveka Digital Hub</span>
+        <span class="brand-tagline">Digital Study Materials</span>
+      </div>
+    </a>
+    <ul class="nav-menu" id="navMenu">
+      <li><a href="index.html"    class="nav-link">🏠 Home</a></li>
+      <li><a href="category.html" class="nav-link">📂 Category</a></li>
+      <li><a href="about.html"    class="nav-link">ℹ️ About</a></li>
+      <li><a href="contact.html"  class="nav-link active">📞 Contact</a></li>
+    </ul>
+    <button class="nav-toggle" id="navToggle" aria-label="Toggle menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
 
-    <!-- HEADER -->
-    <header class="page-header">
-        <h1>Get in Touch</h1>
-        <p>Have a question, suggestion, or just want to say hi? Drop me a message below.</p>
-    </header>
+<!-- ====== CONTACT HERO ====== -->
+<section class="contact-hero">
+  <h1>📞 Get In Touch</h1>
+  <p>Have a question or need help with an order? We're just a WhatsApp message away!</p>
+</section>
 
-    <!-- MAIN CONTACT CONTENT -->
-    <section class="contact-section">
-        
-        <!-- Contact Info Side -->
-        <div class="contact-info">
-            <div class="info-card">
-                <h3>Direct Contact</h3>
-                <div class="info-item">
-                    <span class="info-icon">📧</span>
-                    <span>wheelchairrk@gmail.com</span>
-                </div>
-                <div class="info-item">
-                    <span class="info-icon">📞</span>
-                    <span>+91 9362719399</span>
-                </div>
-                <div class="info-item">
-                    <span class="info-icon">📍</span>
-                    <span>Sarashima, Belonia, South Tripura, Tripura, 799155 India</span>
-                </div>
-            </div>
+<!-- ====== CONTACT CONTENT ====== -->
+<section class="section">
+  <div class="container">
+    <div class="contact-grid">
 
-            <div class="info-card">
-                <h3>Connect Socially</h3>
-                <p style="margin-bottom: 15px; color: var(--text-secondary); font-size: 0.95rem;">
-                    Follow my latest updates and projects on social platforms.
-                </p>
-                <div class="info-item">
-                    <span class="info-icon">🔗</span>
-                    <a href="#" style="text-decoration: underline;">GitHub Profile</a>
-                </div>
-                <div class="info-item">
-                    <span class="info-icon">🔗</span>
-                    <a href="#" style="text-decoration: underline;">LinkedIn Profile</a>
-                </div>
-            </div>
+      <!-- Info Card -->
+      <div class="contact-info-card">
+        <h2>Contact Information</h2>
+
+        <div class="contact-item">
+          <div class="contact-icon-box">📱</div>
+          <div class="contact-detail">
+            <h4>Phone / WhatsApp</h4>
+            <p><a href="tel:9362719399" style="color: var(--primary); font-weight: 700;">9362719399</a></p>
+            <p style="font-size: 0.8rem; color: var(--gray-400); margin-top: 2px;">Available: Mon–Sat, 9AM–8PM</p>
+          </div>
         </div>
 
-        <!-- Contact Form Side -->
-        <div class="contact-form-container">
-            <h3 style="margin-bottom: 25px; font-size: 1.5rem; color: var(--text-main);">Send a Message</h3>
-            <form onsubmit="event.preventDefault(); alert('Thank you! Your message has been sent (Simulation).');">
-                <div class="form-group">
-                    <label for="name">Your Name</label>
-                    <input type="text" id="name" placeholder="John Doe" required>
-                </div>
-                <div class="form-group">
-                    <label for="email">Email Address</label>
-                    <input type="email" id="email" placeholder="john@example.com" required>
-                </div>
-                <div class="form-group">
-                    <label for="message">Message</label>
-                    <textarea id="message" rows="5" placeholder="What's on your mind?" required></textarea>
-                </div>
-                <button type="submit" class="submit-btn">Send Message</button>
-            </form>
+        <div class="contact-item">
+          <div class="contact-icon-box">💬</div>
+          <div class="contact-detail">
+            <h4>WhatsApp (Preferred)</h4>
+            <p>Send us a message for instant replies</p>
+          </div>
         </div>
 
-    </section>
-
-    <!-- FOOTER -->
-    <footer>
-        <p>&copy; 2025 RK CREATIVITY | All Rights Reserved</p>
-        <div class="links">
-            <a href="privacy.html">Privacy Policy</a>
-            <a href="terms.html">Terms of Service</a>
-            <a href="#">GitHub</a>
+        <div class="contact-item">
+          <div class="contact-icon-box">⏰</div>
+          <div class="contact-detail">
+            <h4>Response Time</h4>
+            <p>Typically within <strong>15 minutes</strong></p>
+          </div>
         </div>
-    </footer>
 
-    <!-- JAVASCRIPT LOGIC -->
-    <script>
-        // --- 1. DARK MODE TOGGLE (Shared Logic) ---
-        const themeToggle = document.getElementById('themeToggle');
-        const body = document.body;
+        <div class="contact-item">
+          <div class="contact-icon-box">📦</div>
+          <div class="contact-detail">
+            <h4>Delivery</h4>
+            <p>Instant PDF delivery via WhatsApp</p>
+          </div>
+        </div>
 
-        if(localStorage.getItem('theme') === 'dark') {
-            body.classList.add('dark-mode');
-            themeToggle.textContent = '☀️';
-        }
+        <!-- WhatsApp CTA -->
+        <a href="https://wa.me/919362719399?text=Hello%2C%20I%20need%20help%20with%20Viveka%20Digital%20Hub." target="_blank" class="btn btn-whatsapp" style="width: 100%; justify-content: center; margin-top: 8px;">
+          💬 Open WhatsApp Chat
+        </a>
 
-        themeToggle.addEventListener('click', () => {
-            body.classList.toggle('dark-mode');
-            
-            if(body.classList.contains('dark-mode')) {
-                localStorage.setItem('theme', 'dark');
-                themeToggle.textContent = '☀️';
-            } else {
-                localStorage.setItem('theme', 'light');
-                themeToggle.textContent = '🌙';
-            }
-        });
+        <!-- Info Box -->
+        <div class="contact-map-placeholder">
+          <span>🇮🇳</span>
+          <p>Serving Students All Across India</p>
+        </div>
+      </div>
 
-        // --- 2. MOBILE MENU ---
-        const hamburger = document.getElementById('hamburger');
-        const navLinks = document.getElementById('navLinks');
+      <!-- Message Form -->
+      <div class="contact-form-card">
+        <h2>Send Us a Message</h2>
+        <p style="font-size: 0.88rem; color: var(--gray-600); margin-bottom: 24px;">
+          Fill the form below and we'll connect with you via WhatsApp instantly.
+        </p>
 
-        hamburger.addEventListener('click', () => {
-            navLinks.classList.toggle('active');
-        });
-    </script>
+        <form id="contactForm" novalidate>
+          <div class="form-group">
+            <label for="contactName">Your Name *</label>
+            <input
+              type="text"
+              id="contactName"
+              class="form-control"
+              placeholder="e.g. Rahul Kumar"
+              required
+              autocomplete="name"
+            >
+          </div>
+
+          <div class="form-group">
+            <label for="contactPhone">Phone Number</label>
+            <input
+              type="tel"
+              id="contactPhone"
+              class="form-control"
+              placeholder="e.g. 9876543210"
+              autocomplete="tel"
+            >
+          </div>
+
+          <div class="form-group">
+            <label for="contactSubject">Subject</label>
+            <select id="contactSubject" class="form-control" style="cursor: pointer;">
+              <option value="">-- Select a Subject --</option>
+              <option value="Order Inquiry">Order Inquiry</option>
+              <option value="Product Information">Product Information</option>
+              <option value="Coupon Help">Coupon Help</option>
+              <option value="Feedback">Feedback</option>
+              <option value="Other">Other</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="contactMsg">Your Message *</label>
+            <textarea
+              id="contactMsg"
+              class="form-control"
+              placeholder="Tell us how we can help you..."
+              required
+              rows="5"
+            ></textarea>
+          </div>
+
+          <div id="formSuccess" class="form-success">
+            ✅ Redirecting to WhatsApp with your message...
+          </div>
+
+          <button type="submit" class="btn btn-whatsapp" style="width: 100%; justify-content: center; margin-top: 6px; padding: 14px;">
+            💬 Send via WhatsApp
+          </button>
+        </form>
+
+        <!-- Coupon reminder -->
+        <div style="margin-top: 24px; background: var(--gray-100); border-radius: var(--radius-md); padding: 16px; font-size: 0.85rem; color: var(--gray-600); border-left: 3px solid var(--accent);">
+          <strong style="color: var(--primary-dark);">🎟️ Active Coupons:</strong><br>
+          VIVEKA10 (10% OFF) &nbsp;|&nbsp; STUDENT20 (20% OFF) &nbsp;|&nbsp; RK50 (50% OFF)
+        </div>
+      </div>
+
+    </div><!-- /contact-grid -->
+
+    <!-- FAQ Section -->
+    <div style="max-width: 780px; margin: 60px auto 0;">
+      <div class="section-header">
+        <span class="section-label">❓ FAQ</span>
+        <h2>Frequently Asked Questions</h2>
+      </div>
+
+      <div style="display: flex; flex-direction: column; gap: 14px;">
+
+        <details style="background: var(--white); border: 1px solid var(--gray-200); border-radius: var(--radius-md); padding: 18px 20px; cursor: pointer;">
+          <summary style="font-weight: 700; color: var(--primary-dark); font-size: 0.95rem; list-style: none; display: flex; justify-content: space-between;">
+            How do I receive my PDF after purchase? <span>▼</span>
+          </summary>
+          <p style="margin-top: 12px; font-size: 0.88rem; color: var(--gray-600); line-height: 1.7;">
+            After you click "Buy on WhatsApp" and complete the payment, we will send your PDF file directly to your WhatsApp number — usually within 15 minutes!
+          </p>
+        </details>
+
+        <details style="background: var(--white); border: 1px solid var(--gray-200); border-radius: var(--radius-md); padding: 18px 20px; cursor: pointer;">
+          <summary style="font-weight: 700; color: var(--primary-dark); font-size: 0.95rem; list-style: none; display: flex; justify-content: space-between;">
+            How do coupon codes work? <span>▼</span>
+          </summary>
+          <p style="margin-top: 12px; font-size: 0.88rem; color: var(--gray-600); line-height: 1.7;">
+            Enter your coupon code in the coupon box on the Home or Category page, then click "Apply". The discount will be automatically applied to all product prices. The final discounted price will be sent in your WhatsApp order message.
+          </p>
+        </details>
+
+        <details style="background: var(--white); border: 1px solid var(--gray-200); border-radius: var(--radius-md); padding: 18px 20px; cursor: pointer;">
+          <summary style="font-weight: 700; color: var(--primary-dark); font-size: 0.95rem; list-style: none; display: flex; justify-content: space-between;">
+            Is the content accurate and up to date? <span>▼</span>
+          </summary>
+          <p style="margin-top: 12px; font-size: 0.88rem; color: var(--gray-600); line-height: 1.7;">
+            Yes! All our PDFs are prepared by experienced educators and are aligned with the latest syllabus. We regularly update content to ensure accuracy.
+          </p>
+        </details>
+
+        <details style="background: var(--white); border: 1px solid var(--gray-200); border-radius: var(--radius-md); padding: 18px 20px; cursor: pointer;">
+          <summary style="font-weight: 700; color: var(--primary-dark); font-size: 0.95rem; list-style: none; display: flex; justify-content: space-between;">
+            What payment methods do you accept? <span>▼</span>
+          </summary>
+          <p style="margin-top: 12px; font-size: 0.88rem; color: var(--gray-600); line-height: 1.7;">
+            We accept UPI, Google Pay, PhonePe, Paytm, and bank transfer. Payment details will be shared on WhatsApp after you place your order.
+          </p>
+        </details>
+
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ====== FOOTER ====== -->
+<footer>
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <a href="index.html" class="nav-logo">
+        <img src="images/logo.png" alt="Viveka Digital Hub">
+        <div class="nav-logo-text">
+          <span class="brand-name">Viveka Digital Hub</span>
+          <span class="brand-tagline">Digital Study Materials</span>
+        </div>
+      </a>
+      <p>Affordable digital study notes for every student's journey.</p>
+    </div>
+    <div class="footer-col">
+      <h4>Quick Links</h4>
+      <ul>
+        <li><a href="index.html">🏠 Home</a></li>
+        <li><a href="category.html">📂 Category</a></li>
+        <li><a href="about.html">ℹ️ About Us</a></li>
+        <li><a href="contact.html">📞 Contact</a></li>
+        <li><a href="privacy.html">🔐 Privacy Policy</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Contact</h4>
+      <ul>
+        <li><a href="tel:9362719399">📱 9362719399</a></li>
+        <li><a href="https://wa.me/919362719399" target="_blank">💬 WhatsApp Us</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>© 2026 Viveka Digital Hub. All Rights Reserved.</p>
+    <a href="privacy.html">Privacy Policy</a>
+  </div>
+</footer>
+
+<script src="js/script.js"></script>
+<script>
+  // Enhanced contact form with subject
+  document.getElementById('contactForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    const name    = document.getElementById('contactName').value.trim();
+    const phone   = document.getElementById('contactPhone').value.trim();
+    const subject = document.getElementById('contactSubject').value;
+    const msg     = document.getElementById('contactMsg').value.trim();
+
+    if (!name || !msg) {
+      showToast('⚠️ Please fill your Name and Message.');
+      return;
+    }
+
+    let text = `Hello Viveka Digital Hub! 👋\n\nName: ${name}`;
+    if (phone) text += `\nPhone: ${phone}`;
+    if (subject) text += `\nSubject: ${subject}`;
+    text += `\n\nMessage:\n${msg}`;
+
+    const url = `https://wa.me/919362719399?text=${encodeURIComponent(text)}`;
+
+    document.getElementById('formSuccess').style.display = 'block';
+    setTimeout(() => {
+      window.open(url, '_blank');
+      document.getElementById('formSuccess').style.display = 'none';
+      document.getElementById('contactForm').reset();
+    }, 800);
+  });
+</script>
 </body>
 </html>
