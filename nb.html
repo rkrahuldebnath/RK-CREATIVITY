@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blood Need - Emergency Request</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Custom Styles -->
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        body { font-family: 'Hind Siliguri', sans-serif; }
+    </style>
+</head>
+<body class="bg-gray-50 h-screen flex flex-col">
+    
+    <header class="p-6 flex justify-center items-center bg-white shadow-sm">
+        <div class="flex items-center gap-3 text-red-600 font-bold text-2xl">
+            <i class="fa-solid fa-droplet animate-bounce text-3xl"></i>
+            <span>Blood Need App</span>
+        </div>
+    </header>
+
+    <main class="flex-1 flex flex-col items-center justify-center p-4">
+        <!-- THE BIG BUTTON -->
+        <div id="main-btn" onclick="openForm()" class="main-button bg-red-600 text-white pulse-red shadow-2xl hover:bg-red-700">
+            <i class="fa-solid fa-hand-holding-heart text-6xl mb-4"></i>
+            <span class="text-3xl font-black uppercase tracking-wider">Blood Need</span>
+        </div>
+        <p class="mt-12 text-gray-500 font-medium text-center animate-pulse">Click the button for emergency requests</p>
+    </main>
+
+    <!-- EMERGENCY FORM MODAL -->
+    <div id="formModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black bg-opacity-60 backdrop-blur-sm p-4">
+        <div class="bg-white rounded-2xl w-full max-w-md overflow-hidden shadow-2xl">
+            <div class="bg-red-600 p-4 text-white flex justify-between items-center">
+                <h3 class="text-xl font-bold flex items-center"><i class="fa-solid fa-truck-medical mr-2"></i> Post Emergency</h3>
+                <button onclick="closeForm()" class="text-white hover:text-red-200"><i class="fa-solid fa-xmark text-xl"></i></button>
+            </div>
+            
+            <form id="emergencyForm" onsubmit="submitRequest(event)" class="p-6 space-y-4">
+                <div>
+                    <label class="block text-sm font-bold text-gray-700 mb-1">Patient Name</label>
+                    <input type="text" id="patientName" required class="w-full px-4 py-2 bg-gray-50 border rounded-lg focus:ring-2 focus:ring-red-500 outline-none">
+                </div>
+                
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-bold text-gray-700 mb-1">Blood Group</label>
+                        <select id="bloodGroup" required class="w-full px-4 py-2 bg-gray-50 border rounded-lg focus:ring-2 focus:ring-red-500 outline-none font-bold text-red-600">
+                            <option>A+</option><option>A-</option><option>B+</option><option>B-</option>
+                            <option>O+</option><option>O-</option><option>AB+</option><option>AB-</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-bold text-gray-700 mb-1">Units Needed</label>
+                        <input type="number" id="units" required min="1" max="10" class="w-full px-4 py-2 bg-gray-50 border rounded-lg focus:ring-2 focus:ring-red-500 outline-none">
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-bold text-gray-700 mb-1">Hospital / Location</label>
+                    <input type="text" id="hospital" required placeholder="e.g. AGMC / IGM Hospital" class="w-full px-4 py-2 bg-gray-50 border rounded-lg focus:ring-2 focus:ring-red-500 outline-none">
+                </div>
+
+                <div>
+                    <label class="block text-sm font-bold text-gray-700 mb-1">Contact Number</label>
+                    <input type="tel" id="contact" required placeholder="10 Digit Number" class="w-full px-4 py-2 bg-gray-50 border rounded-lg focus:ring-2 focus:ring-red-500 outline-none">
+                </div>
+
+                <button type="submit" id="submitBtn" class="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-3 rounded-lg shadow-lg transform transition active:scale-95 flex justify-center items-center">
+                    Submit Request <i class="fa-solid fa-paper-plane ml-2"></i>
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Firebase SDK Modular v9+ -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
+        import { getDatabase, ref, push, set, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-database.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyD_MKiHwtrmkdfZTh3e9IZ1oe1WEZM4Xto",
+            authDomain: "need-blood-41aff.firebaseapp.com",
+            databaseURL: "https://need-blood-41aff-default-rtdb.firebaseio.com",
+            projectId: "need-blood-41aff"
+        };
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+        
+        window.db = db;
+        window.ref = ref;
+        window.push = push;
+        window.set = set;
+        window.serverTimestamp = serverTimestamp;
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        function openForm() {
+            document.getElementById('formModal').style.display = 'flex';
+        }
+        function closeForm() {
+            document.getElementById('formModal').style.display = 'none';
+        }
+
+        async function submitRequest(e) {
+            e.preventDefault();
+            
+            const btn = document.getElementById('submitBtn');
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Processing...';
+            btn.disabled = true;
+
+            const requestData = {
+                patientName: document.getElementById('patientName').value,
+                bloodGroup: document.getElementById('bloodGroup').value,
+                units: document.getElementById('units').value,
+                hospital: document.getElementById('hospital').value,
+                contact: document.getElementById('contact').value,
+                status: 'pending',
+                timestamp: window.serverTimestamp(),
+                id: Math.random().toString(36).substr(2, 9).toUpperCase()
+            };
+
+            try {
+                const newRef = window.push(window.ref(window.db, 'emergency_requests'));
+                await window.set(newRef, requestData);
+                
+                closeForm();
+                document.getElementById('emergencyForm').reset();
+                
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Request Posted!',
+                    text: 'Admin notified. Your Request ID is ' + requestData.id,
+                    confirmButtonColor: '#dc2626'
+                });
+            } catch (err) {
+                Swal.fire('Error', 'Failed to submit. Check your connection.', 'error');
+            } finally {
+                btn.innerHTML = 'Submit Request <i class="fa-solid fa-paper-plane ml-2"></i>';
+                btn.disabled = false;
+            }
+        }
+    </script>
+</body>
+</html>

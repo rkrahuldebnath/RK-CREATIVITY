@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blood Need - Register as Donor</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Segoe+UI:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
+        import { getDatabase, ref, push, set, onValue } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-database.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyD_MKiHwtrmkdfZTh3e9IZ1oe1WEZM4Xto",
+            authDomain: "need-blood-41aff.firebaseapp.com",
+            databaseURL: "https://need-blood-41aff-default-rtdb.firebaseio.com",
+            projectId: "need-blood-41aff"
+        };
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+        
+        window.firebaseDB = db;
+        window.firebaseRef = ref;
+        window.firebaseOnValue = onValue;
+        window.firebasePush = push;
+        window.firebaseSet = set;
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <!-- Custom Styles -->
+    <link rel="stylesheet" href="styles.css">
+
+    <script>
+        let locationData = {};
+
+        function buildLocationData(snapshot) {
+            locationData = {};
+            const items = snapshot || {};
+            Object.values(items).forEach(item => {
+                const { state, district, subdivision, pinCode } = item;
+                if (!state || !district || !subdivision || !pinCode) return;
+                
+                if (!locationData[state]) locationData[state] = {};
+                if (!locationData[state][district]) locationData[state][district] = {};
+                if (!locationData[state][district][subdivision]) locationData[state][district][subdivision] = [];
+                if (!locationData[state][district][subdivision].includes(pinCode)) {
+                    locationData[state][district][subdivision].push(pinCode);
+                }
+            });
+            populateFormStates();
+        }
+
+        function initLocationData() {
+            const wait = setInterval(() => {
+                if (window.firebaseDB && window.firebaseRef && window.firebaseOnValue) {
+                    clearInterval(wait);
+                    const locationsRef = window.firebaseRef(window.firebaseDB, 'locations');
+                    window.firebaseOnValue(locationsRef, snapshot => {
+                        buildLocationData(snapshot.val());
+                    }, error => {
+                        console.error('Firebase location read failed:', error);
+                    });
+                }
+            }, 100);
+        }
+
+        // Phone validation - ensure 10 digits and format with +91
+        function validateAndFormatPhone(phone) {
+            // Remove all non-digits
+            const digits = phone.replace(/\D/g, '');
+            
+            // If it's 11 digits and starts with 91, remove the 91
+            if (digits.length === 11 && digits.startsWith('91')) {
+                return {
+                    valid: true,
+                    formatted: '+91 ' + digits.slice(2).replace(/(\d{4})(\d{3})(\d{3})/, '$1 $2 $3'),
+                    raw: digits.slice(2)
+                };
+            }
+            
+            // If it's exactly 10 digits
+            if (digits.length === 10) {
+                return {
+                    valid: true,
+                    formatted: '+91 ' + digits.replace(/(\d{4})(\d{3})(\d{3})/, '$1 $2 $3'),
+                    raw: digits
+                };
+            }
+            
+            // Invalid
+            return {
+                valid: false,
+                formatted: null,
+                raw: null,
+                error: 'Phone number must be exactly 10 digits'
+            };
+        }
+    </script>
+</head>
+<body class="min-h-screen flex flex-col">
+
+    <nav class="bg-white shadow-md sticky top-0 z-50 border-b border-gray-200">
+        <div class="container mx-auto px-4">
+            <div class="flex justify-between items-center h-16">
+                <a href="index.html" class="flex items-center gap-3 text-red-600 font-bold text-xl hover:opacity-90">
+                    <img src="resocos/logo.gif" alt="Logo" class="h-10 w-10 object-contain bg-white rounded-full border border-gray-200 shadow-sm" style="min-width:2.5rem; min-height:2.5rem;">
+                    <span class="ml-1 tracking-tight">Blood Need</span>
+                </a>
+                <a href="index.html" class="text-gray-600 hover:text-red-700 transition font-medium flex items-center px-4 py-2 rounded-lg hover:bg-red-50">
+                    <i class="fa-solid fa-arrow-left mr-2"></i><span class="hidden sm:inline">Back to Home</span>
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <main class="flex-grow container mx-auto px-4 py-10 flex justify-center">
+        <div class="bg-white rounded-2xl shadow-xl w-full max-w-3xl overflow-hidden border border-gray-100">
+            <div class="bg-red-600 text-white p-8 text-center relative overflow-hidden">
+                <!-- Decorative background elements -->
+                <div class="absolute top-0 right-0 opacity-10 text-8xl transform translate-x-4 -translate-y-4">
+                    <i class="fa-solid fa-droplet"></i>
+                </div>
+                <div class="absolute bottom-0 left-0 opacity-10 text-6xl transform -translate-x-4 translate-y-4">
+                    <i class="fa-solid fa-hand-holding-heart"></i>
+                </div>
+                
+                <h2 class="text-3xl font-extrabold relative z-10"><i class="fa-solid fa-user-plus mr-3"></i>Donor Registration</h2>
+                <p class="mt-3 opacity-90 relative z-10 text-lg font-medium">Join our community to help save lives. Your application will be reviewed by an admin.</p>
+            </div>
+            
+            <div class="p-6 md:p-8">
+                <form id="registrationForm" onsubmit="submitForm(event)" class="space-y-8">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        
+                        <div class="space-y-4 bg-gray-50 p-5 rounded-xl border border-gray-100">
+                            <h4 class="font-bold text-gray-800 border-b border-gray-200 pb-3 mb-4 text-lg"><i class="fa-solid fa-user text-red-500 mr-2"></i>Personal Details</h4>
+                            
+                            <div>
+                                <label class="block text-sm font-semibold text-gray-700 mb-1.5">Full Name <span class="text-red-500">*</span></label>
+                                <input type="text" id="name" required class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 bg-white transition-colors">
+                            </div>
+                            
+                            <div class="grid grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-sm font-semibold text-gray-700 mb-1.5">Age <span class="text-red-500">*</span></label>
+                                    <input type="number" id="age" required class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 bg-white transition-colors">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-semibold text-gray-700 mb-1.5">Gender <span class="text-red-500">*</span></label>
+                                    <select id="gender" required class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 bg-white transition-colors">
+                                        <option value="Male">Male</option>
+                                        <option value="Female">Female</option>
+                                        <option value="Other">Other</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div>
+                                <label class="block text-sm font-semibold text-gray-700 mb-1.5">Blood Group <span class="text-red-500">*</span></label>
+                                <select id="bloodGroup" required class="w-full px-4 py-2.5 border border-red-200 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 bg-red-50 font-bold text-red-700 transition-colors">
+                                    <option value="A+">A+</option><option value="A-">A-</option>
+                                    <option value="B+">B+</option><option value="B-">B-</option>
+                                    <option value="O+">O+</option><option value="O-">O-</option>
+                                    <option value="AB+">AB+</option><option value="AB-">AB-</option>
+                                </select>
+                            </div>
+                            
+                            <div>
+                                <label class="block text-sm font-semibold text-gray-700 mb-1.5">Photo URL</label>
+                                <input type="url" id="photoUrl" placeholder="Link to profile photo (optional)" class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 bg-white transition-colors">
+                            </div>
+                        </div>
+
+                        <div class="space-y-4 bg-gray-50 p-5 rounded-xl border border-gray-100">
+                            <h4 class="font-bold text-gray-800 border-b border-gray-200 pb-3 mb-4 text-lg"><i class="fa-solid fa-location-dot text-blue-500 mr-2"></i>Contact & Location</h4>
+                            
+                            <div class="grid grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-sm font-semibold text-gray-700 mb-1.5">Phone <span class="text-red-500">*</span></label>
+                                    <div class="relative">
+                                        <span class="absolute left-3 top-3 text-gray-600 text-sm font-semibold">+91</span>
+                                        <input type="tel" id="phone" placeholder="9876543210" maxlength="10" required class="w-full pl-12 pr-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 bg-white transition-colors">
+                                    </div>
+                                    <p class="text-xs text-gray-500 mt-1">10 digits only</p>
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-semibold text-gray-700 mb-1.5">WhatsApp</label>
+                                    <div class="relative">
+                                        <span class="absolute left-3 top-3 text-gray-600 text-sm font-semibold">+91</span>
+                                        <input type="tel" id="whatsappNumber" placeholder="9876543210" maxlength="10" class="w-full pl-12 pr-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 bg-white transition-colors">
+                                    </div>
+                                    <p class="text-xs text-gray-500 mt-1">10 digits only</p>
+                                </div>
+                            </div>
+                            
+                            <div>
+                                <label class="block text-sm font-semibold text-gray-700 mb-1.5">State <span class="text-red-500">*</span></label>
+                                <select id="state" required onchange="populateFormDistricts()" class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 bg-white transition-colors">
+                                    <option value="">Select a State</option>
+                                </select>
+                            </div>
+
+                            <div>
+                                <label class="block text-sm font-semibold text-gray-700 mb-1.5">District <span class="text-red-500">*</span></label>
+                                <select id="district" required onchange="populateFormSubdivisions()" disabled class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 bg-white transition-colors">
+                                    <option value="">Select a District</option>
+                                </select>
+                            </div>
+
+                            <div>
+                                <label class="block text-sm font-semibold text-gray-700 mb-1.5">Subdivision <span class="text-red-500">*</span></label>
+                                <select id="subDivision" required onchange="populateFormPinCode()" disabled class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 bg-white transition-colors">
+                                    <option value="">Select a Subdivision</option>
+                                </select>
+                            </div>
+                            
+                            <div class="grid grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-sm font-semibold text-gray-700 mb-1.5">City/Village <span class="text-red-500">*</span></label>
+                                    <input type="text" id="cityOrVillage" placeholder="e.g., Agartala" required class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 bg-white transition-colors">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-semibold text-gray-700 mb-1.5">PIN Code <span class="text-red-500">*</span></label>
+                                    <select id="pinCode" required disabled class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 bg-white transition-colors">
+                                    <option value="">Select a PIN Code</option>
+                                </select>
+                                    <p class="text-xs text-gray-500 mt-1">Choose a PIN based on the selected subdivision</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-blue-50 border border-blue-200 rounded-xl p-5 text-sm text-blue-800 flex items-start shadow-sm mt-8">
+                        <i class="fa-solid fa-shield-halved text-blue-600 text-2xl mr-4 mt-0.5"></i>
+                        <div>
+                            <strong class="block text-lg mb-1">Privacy Promise</strong>
+                            By registering, you agree that your contact information will be securely made available on this platform exclusively for individuals seeking emergency blood donations. Your details will be reviewed before appearing live.
+                        </div>
+                    </div>
+
+                    <button type="submit" class="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-4 px-6 rounded-xl shadow-lg transition-transform hover:-translate-y-0.5 text-lg flex justify-center items-center mt-6">
+                        <i class="fa-solid fa-paper-plane mr-3 text-xl"></i> Submit Application For Review
+                    </button>
+                </form>
+            </div>
+        </div>
+    </main>
+
+    <footer class="bg-gray-800 text-gray-300 py-6 mt-auto">
+        <div class="container mx-auto px-4 text-center text-sm font-medium">
+            <p>&copy; 2025 Blood Need App. India. Built for humanity.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Location cascade functions for form
+        function populateFormStates() {
+            const stateSelect = document.getElementById('state');
+            stateSelect.innerHTML = '<option value="">Select a State</option>';
+            
+            Object.keys(locationData).forEach(state => {
+                const option = document.createElement('option');
+                option.value = state;
+                option.textContent = state;
+                stateSelect.appendChild(option);
+            });
+        }
+
+        function populateFormDistricts() {
+            const state = document.getElementById('state').value;
+            const districtSelect = document.getElementById('district');
+            const subdivisionSelect = document.getElementById('subDivision');
+
+            districtSelect.innerHTML = '<option value="">Select a District</option>';
+            subdivisionSelect.innerHTML = '<option value="">Select a Subdivision</option>';
+            subdivisionSelect.disabled = true;
+
+            if (state && locationData[state]) {
+                districtSelect.disabled = false;
+                Object.keys(locationData[state]).forEach(district => {
+                    const option = document.createElement('option');
+                    option.value = district;
+                    option.textContent = district;
+                    districtSelect.appendChild(option);
+                });
+            } else {
+                districtSelect.disabled = true;
+            }
+        }
+
+        function populateFormSubdivisions() {
+            const state = document.getElementById('state').value;
+            const district = document.getElementById('district').value;
+            const subdivisionSelect = document.getElementById('subDivision');
+
+            subdivisionSelect.innerHTML = '<option value="">Select a Subdivision</option>';
+
+            if (state && district && locationData[state] && locationData[state][district]) {
+                subdivisionSelect.disabled = false;
+                Object.keys(locationData[state][district]).forEach(subDiv => {
+                    const option = document.createElement('option');
+                    option.value = subDiv;
+                    option.textContent = subDiv;
+                    subdivisionSelect.appendChild(option);
+                });
+            } else {
+                subdivisionSelect.disabled = true;
+            }
+        }
+
+        function populateFormPinCode() {
+            const state = document.getElementById('state').value;
+            const district = document.getElementById('district').value;
+            const subdivision = document.getElementById('subDivision').value;
+            const pinCodeField = document.getElementById('pinCode');
+
+            pinCodeField.innerHTML = '<option value="">Select a PIN Code</option>';
+            if (state && district && subdivision && locationData[state] && locationData[state][district] && locationData[state][district][subdivision]) {
+                locationData[state][district][subdivision].forEach(pin => {
+                    const option = document.createElement('option');
+                    option.value = pin;
+                    option.textContent = pin;
+                    pinCodeField.appendChild(option);
+                });
+                pinCodeField.disabled = false;
+            } else {
+                pinCodeField.disabled = true;
+            }
+        }
+
+        // Initialize form states when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            initLocationData();
+        });
+
+        function submitForm(e) {
+            e.preventDefault();
+            
+            // Comprehensive Firebase Check
+            if(!window.firebaseDB || !window.firebaseSet || !window.firebasePush) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'System Initializing...',
+                    text: 'The connection to our database is still being established. Please wait 5 seconds and try again.'
+                });
+                return;
+            }
+
+            // Validate inputs early
+            const ageVal = parseInt(document.getElementById('age').value);
+            if (isNaN(ageVal) || ageVal < 18 || ageVal > 65) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Invalid Age',
+                    text: 'You must be between 18 and 65 years old to donate blood.'
+                });
+                return;
+            }
+
+            // Validate phones
+            const phoneValidation = validateAndFormatPhone(document.getElementById('phone').value.trim());
+            if (!phoneValidation.valid) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Invalid Phone',
+                    text: phoneValidation.error
+                });
+                return;
+            }
+
+            let whatsappValidation = { valid: true, raw: '', formatted: '' };
+            const whatsappValue = document.getElementById('whatsappNumber').value.trim();
+            if (whatsappValue) {
+                whatsappValidation = validateAndFormatPhone(whatsappValue);
+                if (!whatsappValidation.valid) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Invalid WhatsApp',
+                        text: whatsappValidation.error
+                    });
+                    return;
+                }
+            }
+
+            const pendingData = {
+                name: document.getElementById('name').value.trim().toUpperCase(),
+                age: ageVal,
+                gender: document.getElementById('gender').value,
+                bloodGroup: document.getElementById('bloodGroup').value,
+                state: document.getElementById('state').value.trim().toUpperCase(),
+                district: document.getElementById('district').value.trim().toUpperCase(),
+                subDivision: document.getElementById('subDivision').value.trim().toUpperCase(),
+                cityOrVillage: document.getElementById('cityOrVillage').value.trim().toUpperCase(),
+                pinCode: document.getElementById('pinCode').value.trim(),
+                phone: phoneValidation.raw,
+                phoneFormatted: phoneValidation.formatted || '',
+                whatsappNumber: whatsappValidation.raw || '',
+                whatsappNumberFormatted: whatsappValidation.formatted || '',
+                photoUrl: document.getElementById('photoUrl').value.trim(),
+                donationCount: 0,
+                status: 'pending',
+                submittedAt: new Date().toISOString()
+            };
+
+            Swal.fire({
+                title: 'Submitting...',
+                text: 'Sending your application to our team.',
+                allowOutsideClick: false,
+                didOpen: () => {
+                    Swal.showLoading();
+                }
+            });
+
+            try {
+                const pRef = window.firebaseRef(window.firebaseDB, 'pending_donors');
+                const newReq = window.firebasePush(pRef);
+                
+                window.firebaseSet(newReq, pendingData).then(() => {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Registration Submitted!',
+                        text: 'Thank you! Your details will be reviewed by an admin and will appear on the site shortly.',
+                        confirmButtonText: 'Back to Home',
+                        confirmButtonColor: '#dc2626'
+                    }).then(() => {
+                        window.location.href = 'index.html';
+                    });
+                }).catch(error => {
+                    console.error("Firebase Set Error:", error);
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Submission Failed',
+                        text: 'Database Error: ' + error.message
+                    });
+                });
+            } catch (err) {
+                console.error("Submission Crash:", err);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'System Error',
+                    text: 'An unexpected error occurred: ' + err.message
+                });
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Top Donors - Blood Need App</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
+        import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-database.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyD_MKiHwtrmkdfZTh3e9IZ1oe1WEZM4Xto",
+            authDomain: "need-blood-41aff.firebaseapp.com",
+            databaseURL: "https://need-blood-41aff-default-rtdb.firebaseio.com",
+            projectId: "need-blood-41aff"
+        };
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+        
+        let donorsDB = [];
+
+        onValue(ref(db, 'donors'), (snapshot) => {
+            const data = snapshot.val();
+            donorsDB = data ? Object.keys(data).map(key => ({ ...data[key], id: key })) : [];
+            renderTopDonors();
+        });
+
+        function renderTopDonors() {
+            const sorted = [...donorsDB].sort((a, b) => b.donationCount - a.donationCount);
+            const tbody = document.getElementById('top-donors-list');
+            if(!tbody) return;
+            tbody.innerHTML = '';
+
+            if(sorted.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="6" class="px-6 py-10 text-center text-gray-500">Loading donor rankings...</td></tr>';
+                return;
+            }
+
+            sorted.forEach((donor, index) => {
+                const tr = document.createElement('tr');
+                tr.className = "hover:bg-red-50/50 transition border-b border-gray-100 last:border-0";
+                
+                let rankIcon = `<span class="font-bold text-gray-400 group-hover:text-red-500 transition">#${index+1}</span>`;
+                if(index === 0) rankIcon = `<div class="bg-yellow-100 w-8 h-8 rounded-full flex items-center justify-center border border-yellow-200 shadow-sm"><i class="fa-solid fa-crown text-yellow-600"></i></div>`;
+                if(index === 1) rankIcon = `<div class="bg-gray-100 w-8 h-8 rounded-full flex items-center justify-center border border-gray-200 shadow-sm"><i class="fa-solid fa-medal text-gray-400"></i></div>`;
+                if(index === 2) rankIcon = `<div class="bg-orange-100 w-8 h-8 rounded-full flex items-center justify-center border border-orange-200 shadow-sm"><i class="fa-solid fa-medal text-orange-700"></i></div>`;
+
+                tr.innerHTML = `
+                    <td class="px-6 py-4 whitespace-nowrap">${rankIcon}</td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <div class="flex items-center">
+                            <img class="h-10 w-10 rounded-full object-cover mr-3 border-2 border-white shadow-sm" src="${donor.photoUrl || 'https://ui-avatars.com/api/?name='+encodeURI(donor.name)+'&background=fee2e2&color=dc2626'}" alt="">
+                            <div class="text-sm font-bold text-gray-900">${donor.name}</div>
+                        </div>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <span class="px-2.5 py-0.5 inline-flex text-xs leading-5 font-bold rounded-full bg-red-100 text-red-700 border border-red-200">${donor.bloodGroup}</span>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-xs font-semibold text-gray-500"><i class="fa-solid fa-location-dot mr-1 opacity-50"></i>${donor.district}, ${donor.state}</td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <div class="flex flex-col items-center">
+                            <span class="text-lg font-extrabold text-gray-800">${donor.donationCount}</span>
+                            <span class="text-[10px] text-gray-400 uppercase tracking-tighter">Donations</span>
+                        </div>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                        <a href="index.html" class="text-red-600 hover:text-red-900 border border-red-100 px-3 py-1 rounded-lg bg-red-50 hover:bg-red-100 transition">Contact</a>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        html { scroll-behavior: smooth; }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800 flex flex-col min-h-screen">
+
+    <!-- Navbar -->
+    <nav class="bg-white shadow-md sticky top-0 z-50">
+        <div class="container mx-auto px-4">
+            <div class="flex justify-between items-center h-16">
+                <!-- Logo -->
+                <a href="index.html" class="flex items-center gap-3 text-red-600 font-bold text-xl">
+                    <img src="resocos/logo.gif" alt="Logo" class="h-14 w-14 object-contain bg-white rounded-full border border-gray-300 shadow" style="min-width:3.5rem; min-height:3.5rem; display:block; margin-right:0.5rem;">
+                    <span class="ml-2">Blood Need</span>
+                </a>
+
+                <!-- Desktop Menu -->
+                <div class="hidden md:flex space-x-6 font-medium text-gray-600">
+                    <a href="index.html" class="hover:text-red-600 transition">Home</a>
+                    <a href="nb.html" class="text-red-600 font-bold hover:text-red-700 transition"><i class="fa-solid fa-truck-medical mr-1"></i> Blood Need</a>
+                    <a href="gallery.html" class="hover:text-red-600 transition">Gallery</a>
+                    <a href="top-donors.html" class="text-red-600 transition">Top Donors</a>
+                    <a href="about.html" class="hover:text-red-600 transition">About</a>
+                    <a href="contact.html" class="hover:text-red-600 transition">Contact</a>
+                </div>
+
+                <!-- Mobile Menu Button -->
+                <button id="mobile-menu-btn" class="md:hidden text-gray-600 hover:text-red-600 focus:outline-none">
+                    <i class="fa-solid fa-bars text-2xl"></i>
+                </button>
+            </div>
+        </div>
+        <!-- Mobile Dropdown -->
+        <div id="mobile-menu" class="hidden md:hidden bg-white border-t">
+            <a href="index.html" class="block py-2 px-4 hover:bg-red-50 hover:text-red-600">Home</a>
+            <a href="nb.html" class="block py-2 px-4 bg-red-600 text-white font-bold"><i class="fa-solid fa-truck-medical mr-2"></i> Blood Need NOW</a>
+            <a href="gallery.html" class="block py-2 px-4 hover:bg-red-50 hover:text-red-600">Gallery</a>
+            <a href="top-donors.html" class="block py-2 px-4 text-red-600">Top Donors</a>
+            <a href="about.html" class="block py-2 px-4 hover:bg-red-50 hover:text-red-600">About</a>
+            <a href="contact.html" class="block py-2 px-4 hover:bg-red-50 hover:text-red-600">Contact</a>
+        </div>
+    </nav>
+
+    <!-- Main Content Area -->
+    <main class="flex-grow py-12">
+        <div class="container mx-auto px-4 max-w-5xl">
+            <div class="text-center mb-12">
+                <i class="fa-solid fa-trophy text-5xl text-yellow-500 mb-4"></i>
+                <h2 class="text-3xl md:text-4xl font-bold text-gray-800 mb-2">Our Top Saviors</h2>
+                <p class="text-gray-600">Honoring the heroes who have donated blood most frequently and helped save lives.</p>
+            </div>
+            
+            <div class="bg-white rounded-3xl shadow-xl overflow-hidden border border-gray-100">
+                <div class="bg-red-600 px-6 py-4 flex justify-between items-center">
+                    <h3 class="text-white font-bold flex items-center uppercase tracking-wider text-sm">
+                        <i class="fa-solid fa-list-ol mr-2"></i> Leaderboard
+                    </h3>
+                    <div class="text-red-100 text-xs italic">Live updates from database</div>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse">
+                        <thead class="bg-gray-50 text-gray-500 uppercase text-[10px] font-extrabold tracking-widest border-b border-gray-100">
+                            <tr>
+                                <th class="px-6 py-4">Rank</th>
+                                <th class="px-6 py-4">Donor Profile</th>
+                                <th class="px-6 py-4">Group</th>
+                                <th class="px-6 py-4">State/District</th>
+                                <th class="px-6 py-4 text-center">Stats</th>
+                                <th class="px-6 py-4">Contact</th>
+                            </tr>
+                        </thead>
+                        <tbody id="top-donors-list" class="divide-y divide-gray-50">
+                            <!-- Rows injected by JS -->
+                             <tr><td colspan="6" class="px-6 py-10 text-center text-gray-500 font-medium">Loading donor rankings...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="mt-12 bg-red-50 p-6 rounded-2xl border border-red-100 text-center">
+                <h4 class="font-bold text-red-800 mb-2">Want to be on this list?</h4>
+                <p class="text-red-700 text-sm mb-4">Join our community and donate blood safely. Every drop counts!</p>
+                <a href="form.html" class="inline-block bg-red-600 text-white font-bold py-2.5 px-8 rounded-full shadow hover:bg-red-700 transition">Register Now</a>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-white py-10">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8 border-b border-gray-800 pb-8">
+                <div>
+                    <h4 class="text-xl font-bold mb-4 text-red-500">Blood Need</h4>
+                    <p class="text-gray-400 text-sm">Saving lives by connecting people. Our mission is to ensure no one suffers due to lack of blood donors.</p>
+                </div>
+                <div>
+                    <h4 class="text-xl font-bold mb-4">Quick Links</h4>
+                    <ul class="text-gray-400 text-sm space-y-2">
+                        <li><a href="index.html" class="hover:text-white transition">Home</a></li>
+                        <li><a href="about.html" class="hover:text-white transition">About Us</a></li>
+                        <li><a href="gallery.html" class="hover:text-white transition">Gallery</a></li>
+                        <li><a href="contact.html" class="hover:text-white transition">Contact Us</a></li>
+                        <li><a href="form.html" class="hover:text-white transition">Register as Donor</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-xl font-bold mb-4">Admin</h4>
+                    <a href="admin.html" class="text-gray-500 hover:text-white text-sm transition">Admin Dashboard Login</a>
+                </div>
+            </div>
+            <div class="text-center text-gray-500 text-xs">
+                &copy; 2025 Blood Need App. India. Built for humanity.
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Mobile Menu Toggle
+        document.getElementById('mobile-menu-btn').addEventListener('click', () => {
+            document.getElementById('mobile-menu').classList.toggle('hidden');
+        });
+    </script>
+</body>
+</html>

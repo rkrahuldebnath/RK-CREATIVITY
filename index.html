@@ -1,379 +1,842 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Viveka Digital Hub – Affordable digital PDF notes and study materials for students. DCA, ADCA, Class 10, Class 12, Competitive Exams.">
-  <title>Viveka Digital Hub | Affordable Digital PDF Notes for Students</title>
-  <link rel="stylesheet" href="css/style.css">
-  <link rel="icon" href="images/logo.png" type="image/png">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blood Need App - Find Donors in India</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Leaflet CSS (Map) -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+    
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Custom Styles -->
+    <link rel="stylesheet" href="styles.css">
 </head>
-<body>
+<body class="bg-gray-50 text-gray-800 flex flex-col min-h-screen">
 
-<!-- ====== FLOATING WHATSAPP ====== -->
-<a href="https://wa.me/919362719399" class="wa-fab" target="_blank" title="Chat on WhatsApp">
-  <span class="wa-fab-tooltip">Chat with us!</span>
-  💬
-</a>
+    <!-- Navbar -->
+    <nav class="bg-white shadow-md sticky top-0 z-50">
+        <div class="container mx-auto px-4">
+            <div class="flex justify-between items-center h-16">
+                <!-- Logo -->
+                <a href="#" onclick="navTo('home')" class="flex items-center gap-3 text-red-600 font-bold text-xl">
+                    <img src="resocos/logo.gif" alt="Logo" class="h-14 w-14 object-contain bg-white rounded-full border border-gray-300 shadow" style="min-width:3.5rem; min-height:3.5rem; display:block; margin-right:0.5rem;">
+                    <span class="ml-2">Blood Need</span>
+                </a>
 
-<!-- ====== NAVBAR ====== -->
-<nav class="navbar">
-  <div class="nav-container">
-    <a href="index.html" class="nav-logo">
-      <img src="images/logo.png" alt="Viveka Digital Hub Logo">
-      <div class="nav-logo-text">
-        <span class="brand-name">Viveka Digital Hub</span>
-        <span class="brand-tagline">Digital Study Materials</span>
-      </div>
-    </a>
-    <ul class="nav-menu" id="navMenu">
-      <li><a href="index.html"    class="nav-link active">🏠 Home</a></li>
-      <li><a href="category.html" class="nav-link">📂 Category</a></li>
-      <li><a href="about.html"    class="nav-link">ℹ️ About</a></li>
-      <li><a href="contact.html"  class="nav-link">📞 Contact</a></li>
-    </ul>
-    <button class="nav-toggle" id="navToggle" aria-label="Toggle menu">
-      <span></span><span></span><span></span>
-    </button>
-  </div>
-</nav>
+                <!-- Desktop Menu -->
+                <div class="hidden md:flex space-x-6 font-medium text-gray-600">
+                    <a href="index.html" class="text-red-600 font-bold transition">Home</a>
+                    <a href="nb.html" class="text-red-700 font-extrabold hover:text-red-800 transition"><i class="fa-solid fa-truck-medical mr-1"></i> Blood Need</a>
+                    <a href="gallery.html" class="hover:text-red-600 transition">Gallery</a>
+                    <a href="top-donors.html" class="hover:text-red-600 transition">Top Donors</a>
+                    <a href="about.html" class="hover:text-red-600 transition">About</a>
+                    <a href="contact.html" class="hover:text-red-600 transition">Contact</a>
+                </div>
 
-<!-- ====== HERO ====== -->
-<section class="hero">
-  <div class="hero-content">
-    <div class="hero-badge">⚡ Trusted by 5000+ Students</div>
-    <h1>Welcome to <span>Viveka Digital Hub</span></h1>
-    <p>Affordable Digital Notes &amp; PDFs for Students — Download Instantly, Study Smarter!</p>
-    <div class="hero-stats">
-      <div class="hero-stat">
-        <span class="stat-num">500+</span>
-        <span class="stat-label">Products</span>
-      </div>
-      <div class="hero-stat">
-        <span class="stat-num">5000+</span>
-        <span class="stat-label">Students</span>
-      </div>
-      <div class="hero-stat">
-        <span class="stat-num">99%</span>
-        <span class="stat-label">Satisfaction</span>
-      </div>
-      <div class="hero-stat">
-        <span class="stat-num">₹49+</span>
-        <span class="stat-label">Starting At</span>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ====== COUPON ====== -->
-<section class="coupon-section">
-  <div class="coupon-inner">
-    <h3>🎟️ Have a Coupon Code?</h3>
-    <div class="coupon-form">
-      <input
-        type="text"
-        id="couponInput"
-        class="coupon-input"
-        placeholder="Enter coupon code e.g. VIVEKA10"
-        autocomplete="off"
-        maxlength="20"
-      >
-      <button class="btn btn-accent" onclick="applyCoupon()" id="applyCouponBtn">Apply</button>
-    </div>
-    <div id="couponMsg" class="coupon-msg"></div>
-    <div id="activeCouponBadge" class="active-coupon-badge hidden"></div>
-  </div>
-</section>
-
-<!-- ====== SEARCH ====== -->
-<div class="search-section">
-  <div class="search-wrapper">
-    <span class="search-icon">🔍</span>
-    <input
-      type="search"
-      id="searchInput"
-      class="search-input"
-      placeholder="Search for notes, courses, subjects..."
-      autocomplete="off"
-    >
-  </div>
-</div>
-<div class="divider"></div>
-
-<!-- ====== FEATURED PRODUCTS ====== -->
-<section class="section bg-light">
-  <div class="container">
-    <div class="section-header">
-      <span class="section-label">⭐ Featured</span>
-      <h2>Our Best-Selling Digital PDFs</h2>
-      <p>High-quality study materials curated for Students at unbeatable prices</p>
-    </div>
-
-    <div class="products-grid" id="productsGrid">
-
-      <!-- Product 1 -->
-      <div class="product-card"
-           data-name="DCA Complete Notes Bundle"
-           data-code="DCA-001"
-           data-base-price="149"
-           data-orig-price="350"
-           data-final-price="149"
-           data-cat="computer"
-           data-desc="Diploma in Computer Applications complete PDF notes">
-        <div class="product-img-wrap">
-          <img src="images/product1.jpg" alt="DCA Complete Notes Bundle" loading="lazy">
-          <span class="product-badge badge-bestseller">🏆 Best Seller</span>
+                <!-- Mobile Menu Button -->
+                <button id="mobile-menu-btn" class="md:hidden text-gray-600 hover:text-red-600 focus:outline-none">
+                    <i class="fa-solid fa-bars text-2xl"></i>
+                </button>
+            </div>
         </div>
-        <div class="product-body">
-          <span class="product-code">DCA-001</span>
-          <h3 class="product-name">DCA Complete Notes Bundle</h3>
-          <p class="product-desc">Comprehensive Diploma in Computer Applications PDF — covers OS, MS Office, Internet, Tally basics &amp; more.</p>
-          <div class="product-sales"></div>
-          <div class="product-pricing">
-            <span class="price-original">₹350</span>
-            <span class="price-current">₹149</span>
-            <span class="price-discount">57% OFF</span>
-          </div>
-          <button class="btn-buy" onclick="buyNow(this)">
-            <span>💬</span> Buy on WhatsApp
-          </button>
+        <!-- Mobile Dropdown -->
+        <div id="mobile-menu" class="hidden md:hidden bg-white border-t">
+            <a href="index.html" class="block py-2 px-4 hover:bg-red-50 hover:text-red-600 font-bold">Home</a>
+            <a href="nb.html" class="block py-2 px-4 bg-red-600 text-white font-bold"><i class="fa-solid fa-truck-medical mr-2"></i> Blood Need NOW</a>
+            <a href="gallery.html" class="block py-2 px-4 hover:bg-red-50 hover:text-red-600">Gallery</a>
+            <a href="top-donors.html" class="block py-2 px-4 hover:bg-red-50 hover:text-red-600">Top Donors</a>
+            <a href="about.html" class="block py-2 px-4 hover:bg-red-50 hover:text-red-600">About</a>
+            <a href="contact.html" class="block py-2 px-4 hover:bg-red-50 hover:text-red-600">Contact</a>
         </div>
-      </div>
+    </nav>
 
-      <!-- Product 2 -->
-      <div class="product-card"
-           data-name="Class 10 Science & Math Notes"
-           data-code="C10-002"
-           data-base-price="99"
-           data-orig-price="250"
-           data-final-price="99"
-           data-cat="school"
-           data-desc="Class 10 board exam complete notes for Science and Mathematics">
-        <div class="product-img-wrap">
-          <img src="images/product2.jpg" alt="Class 10 Science & Math Notes" loading="lazy">
-          <span class="product-badge badge-trending">🔥 Trending</span>
-        </div>
-        <div class="product-body">
-          <span class="product-code">C10-002</span>
-          <h3 class="product-name">Class 10 Science &amp; Math Notes</h3>
-          <p class="product-desc">Board exam ready PDF notes for Class 10 — Science, Maths, key formulas, diagrams &amp; previous year questions.</p>
-          <div class="product-sales"></div>
-          <div class="product-pricing">
-            <span class="price-original">₹250</span>
-            <span class="price-current">₹99</span>
-            <span class="price-discount">60% OFF</span>
-          </div>
-          <button class="btn-buy" onclick="buyNow(this)">
-            <span>💬</span> Buy on WhatsApp
-          </button>
-        </div>
-      </div>
+    <!-- Main Content Area -->
+    <main id="app-content" class="flex-grow">
+        
+        <!-- HOME PAGE -->
+        <section id="home" class="page-section">
+            <div class="hero-bg text-white py-20 px-4 text-center">
+                <h1 class="text-4xl md:text-5xl font-bold mb-4 drop-shadow-lg">Blood Need</h1>
+                <p class="text-xl md:text-2xl mb-8 opacity-90">Find Blood Donors Near You in India. Save a Life Today.</p>
+                <div class="flex flex-col md:flex-row gap-4 justify-center items-center">
+                    <a href="nb.html" class="bg-red-600 text-white font-bold py-3 px-8 rounded-full shadow-lg hover:bg-red-700 transform hover:scale-105 transition duration-300 flex items-center justify-center">
+                        <i class="fa-solid fa-truck-medical mr-2"></i> POST EMERGENCY
+                    </a>
+                    <a href="form.html" class="bg-transparent border-2 border-white text-white font-bold py-3 px-8 rounded-full shadow-lg hover:bg-white hover:text-red-600 transform hover:scale-105 transition duration-300 flex items-center justify-center">
+                        <i class="fa-solid fa-user-plus mr-2"></i> Register as Donor
+                    </a>
+                </div>
+            </div>
 
-      <!-- Product 3 -->
-      <div class="product-card"
-           data-name="ADCA Advanced Computer Course Notes"
-           data-code="ADCA-003"
-           data-base-price="249"
-           data-orig-price="600"
-           data-final-price="249"
-           data-cat="computer"
-           data-desc="Advanced Diploma in Computer Applications full PDF notes">
-        <div class="product-img-wrap">
-          <img src="images/product3.jpg" alt="ADCA Advanced Computer Course Notes" loading="lazy">
-          <span class="product-badge badge-bestseller">🏆 Best Seller</span>
-        </div>
-        <div class="product-body">
-          <span class="product-code">ADCA-003</span>
-          <h3 class="product-name">ADCA Advanced Computer Course Notes</h3>
-          <p class="product-desc">Full ADCA PDF bundle — Programming Basics, Database, Networking, Advanced Excel, Tally ERP &amp; more.</p>
-          <div class="product-sales"></div>
-          <div class="product-pricing">
-            <span class="price-original">₹600</span>
-            <span class="price-current">₹249</span>
-            <span class="price-discount">58% OFF</span>
-          </div>
-          <button class="btn-buy" onclick="buyNow(this)">
-            <span>💬</span> Buy on WhatsApp
-          </button>
-        </div>
-      </div>
+            <!-- SEARCH SECTION ON HOME PAGE -->
+            <div class="container mx-auto px-4 -mt-10 relative z-10 max-w-4xl">
+                <div class="bg-white rounded-2xl shadow-2xl p-6 md:p-8 border border-gray-100">
+                    <h2 class="text-2xl font-bold text-gray-800 mb-6 border-b pb-4 flex items-center">
+                        <i class="fa-solid fa-magnifying-glass text-red-600 mr-3"></i> Find a Blood Donor Fast
+                    </h2>
+                    
+                    <form id="search-form" onsubmit="handleSearch(event)">
+                        <!-- Blood Group Flags -->
+                        <div class="mb-6">
+                            <label class="block text-sm font-bold text-gray-700 mb-3">Which blood group are you looking for?</label>
+                            <div class="grid grid-cols-3 sm:grid-cols-5 md:grid-cols-9 gap-2">
+                                <label class="cursor-pointer">
+                                    <input type="radio" name="bloodGroup" value="any" class="peer sr-only" checked>
+                                    <div class="rounded-lg border-2 border-gray-100 py-3 text-center hover:bg-gray-50 peer-checked:border-red-500 peer-checked:bg-red-50 peer-checked:text-red-700 font-bold transition">Any</div>
+                                </label>
+                                <label class="cursor-pointer"><input type="radio" name="bloodGroup" value="A+" class="peer sr-only"><div class="rounded-lg border-2 border-gray-100 py-3 text-center peer-checked:border-red-500 peer-checked:bg-red-50 peer-checked:text-red-700 font-bold transition">A+</div></label>
+                                <label class="cursor-pointer"><input type="radio" name="bloodGroup" value="A-" class="peer sr-only"><div class="rounded-lg border-2 border-gray-100 py-3 text-center peer-checked:border-red-500 peer-checked:bg-red-50 peer-checked:text-red-700 font-bold transition">A-</div></label>
+                                <label class="cursor-pointer"><input type="radio" name="bloodGroup" value="B+" class="peer sr-only"><div class="rounded-lg border-2 border-gray-100 py-3 text-center peer-checked:border-red-500 peer-checked:bg-red-50 peer-checked:text-red-700 font-bold transition">B+</div></label>
+                                <label class="cursor-pointer"><input type="radio" name="bloodGroup" value="B-" class="peer sr-only"><div class="rounded-lg border-2 border-gray-100 py-3 text-center peer-checked:border-red-500 peer-checked:bg-red-50 peer-checked:text-red-700 font-bold transition">B-</div></label>
+                                <label class="cursor-pointer"><input type="radio" name="bloodGroup" value="O+" class="peer sr-only"><div class="rounded-lg border-2 border-gray-100 py-3 text-center peer-checked:border-red-500 peer-checked:bg-red-50 peer-checked:text-red-700 font-bold transition">O+</div></label>
+                                <label class="cursor-pointer"><input type="radio" name="bloodGroup" value="O-" class="peer sr-only"><div class="rounded-lg border-2 border-gray-100 py-3 text-center peer-checked:border-red-500 peer-checked:bg-red-50 peer-checked:text-red-700 font-bold transition">O-</div></label>
+                                <label class="cursor-pointer"><input type="radio" name="bloodGroup" value="AB+" class="peer sr-only"><div class="rounded-lg border-2 border-gray-100 py-3 text-center peer-checked:border-red-500 peer-checked:bg-red-50 peer-checked:text-red-700 font-bold transition">AB+</div></label>
+                                <label class="cursor-pointer"><input type="radio" name="bloodGroup" value="AB-" class="peer sr-only"><div class="rounded-lg border-2 border-gray-100 py-3 text-center peer-checked:border-red-500 peer-checked:bg-red-50 peer-checked:text-red-700 font-bold transition">AB-</div></label>
+                            </div>
+                        </div>
 
-      <!-- Product 4 -->
-      <div class="product-card"
-           data-name="Class 12 All Subjects Notes"
-           data-code="C12-004"
-           data-base-price="149"
-           data-orig-price="400"
-           data-final-price="149"
-           data-cat="school"
-           data-desc="Class 12 board complete notes for all subjects">
-        <div class="product-img-wrap">
-          <img src="images/product4.jpg" alt="Class 12 All Subjects Notes" loading="lazy">
-          <span class="product-badge badge-new">✨ New</span>
-        </div>
-        <div class="product-body">
-          <span class="product-code">C12-004</span>
-          <h3 class="product-name">Class 12 All Subjects Notes</h3>
-          <p class="product-desc">Comprehensive Class 12 study guide — Physics, Chemistry, Biology, Math &amp; English. Board exam focused revision.</p>
-          <div class="product-sales"></div>
-          <div class="product-pricing">
-            <span class="price-original">₹400</span>
-            <span class="price-current">₹149</span>
-            <span class="price-discount">62% OFF</span>
-          </div>
-          <button class="btn-buy" onclick="buyNow(this)">
-            <span>💬</span> Buy on WhatsApp
-          </button>
-        </div>
-      </div>
+                        <!-- Location Grid -->
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-4">
+                            <div>
+                                <label class="block text-sm font-semibold text-gray-700 mb-1.5">State</label>
+                                <select id="search-state" class="w-full p-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-red-500 outline-none font-medium" onchange="populateDistricts()">
+                                    <option value="">Select State</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-semibold text-gray-700 mb-1.5">District</label>
+                                <select id="search-district" class="w-full p-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-red-500 outline-none font-medium" onchange="populateSubDivisions()" disabled>
+                                    <option value="">All Districts</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-semibold text-gray-700 mb-1.5">Sub Division</label>
+                                <select id="search-subdiv" class="w-full p-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-red-500 outline-none font-medium" disabled>
+                                    <option value="">All Sub Divisions</option>
+                                </select>
+                            </div>
+                        </div>
 
-      <!-- Product 5 -->
-      <div class="product-card"
-           data-name="SSC & Banking Exam Preparation Kit"
-           data-code="COMP-005"
-           data-base-price="199"
-           data-orig-price="500"
-           data-final-price="199"
-           data-cat="competitive"
-           data-desc="SSC CGL Banking Exam complete preparation PDF">
-        <div class="product-img-wrap">
-          <img src="images/product5.jpg" alt="SSC & Banking Exam Preparation Kit" loading="lazy">
-          <span class="product-badge badge-trending">🔥 Trending</span>
-        </div>
-        <div class="product-body">
-          <span class="product-code">COMP-005</span>
-          <h3 class="product-name">SSC &amp; Banking Exam Preparation Kit</h3>
-          <p class="product-desc">All-in-one competitive exam PDF — Reasoning, Maths, GK, English Grammar, current affairs &amp; mock tests.</p>
-          <div class="product-sales"></div>
-          <div class="product-pricing">
-            <span class="price-original">₹500</span>
-            <span class="price-current">₹199</span>
-            <span class="price-discount">60% OFF</span>
-          </div>
-          <button class="btn-buy" onclick="buyNow(this)">
-            <span>💬</span> Buy on WhatsApp
-          </button>
-        </div>
-      </div>
+                        <!-- Advanced Filters Toggle & Section -->
+                        <div class="mb-8">
+                            <button type="button" onclick="document.getElementById('advanced-filters').classList.toggle('hidden')" class="text-sm font-bold text-gray-400 hover:text-red-500 transition flex items-center gap-1 mb-4">
+                                <i class="fa-solid fa-sliders"></i> Advanced Filters
+                            </button>
+                            <div id="advanced-filters" class="hidden grid grid-cols-1 md:grid-cols-2 gap-6 p-4 bg-gray-50 rounded-xl border border-dashed border-gray-200">
+                                <div>
+                                    <label class="block text-sm font-semibold text-gray-700 mb-1.5">Local Body Type</label>
+                                    <select id="search-localbody" class="w-full p-3 bg-white border border-gray-200 rounded-xl focus:ring-2 focus:ring-red-500 outline-none font-medium">
+                                        <option value="">Any</option>
+                                        <option value="Municipality">Municipality</option>
+                                        <option value="Municipal Corporation">Municipal Corporation</option>
+                                        <option value="Gram Panchayat">Gram Panchayat</option>
+                                        <option value="Block">Block</option>
+                                        <option value="Nagar Panchayat">Nagar Panchayat</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-semibold text-gray-700 mb-1.5">PIN Code</label>
+                                    <input type="number" id="search-pin" placeholder="e.g. 799155" class="w-full p-3 bg-white border border-gray-200 rounded-xl focus:ring-2 focus:ring-red-500 outline-none font-medium">
+                                </div>
+                            </div>
+                        </div>
 
-      <!-- Product 6 -->
-      <div class="product-card"
-           data-name="Tally ERP 9 Complete Notes"
-           data-code="TALLY-006"
-           data-base-price="129"
-           data-orig-price="300"
-           data-final-price="129"
-           data-cat="computer"
-           data-desc="Tally ERP 9 accounting software complete PDF notes">
-        <div class="product-img-wrap">
-          <img src="images/product6.jpg" alt="Tally ERP 9 Complete Notes" loading="lazy">
-          <span class="product-badge badge-new">✨ New</span>
-        </div>
-        <div class="product-body">
-          <span class="product-code">TALLY-006</span>
-          <h3 class="product-name">Tally ERP 9 Complete Notes</h3>
-          <p class="product-desc">Master Tally ERP 9 with step-by-step PDF guide — Accounts, GST, Payroll, Inventory &amp; Financial Reports.</p>
-          <div class="product-sales"></div>
-          <div class="product-pricing">
-            <span class="price-original">₹300</span>
-            <span class="price-current">₹129</span>
-            <span class="price-discount">57% OFF</span>
-          </div>
-          <button class="btn-buy" onclick="buyNow(this)">
-            <span>💬</span> Buy on WhatsApp
-          </button>
-        </div>
-      </div>
+                        <button type="submit" class="w-full bg-red-600 text-white font-extrabold py-4 px-6 rounded-xl hover:bg-red-700 shadow-xl transition-all transform hover:-translate-y-1 flex items-center justify-center gap-3 text-lg group">
+                            <i class="fa-solid fa-magnifying-glass group-hover:scale-125 transition"></i> FIND AVAILABLE DONORS NOW
+                        </button>
+                    </form>
+                </div>
+            </div>
+            
+            <div class="container mx-auto px-4 py-12">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
+                    <div class="p-6 bg-white rounded-xl shadow-sm border border-gray-100">
+                        <div class="w-16 h-16 bg-red-100 text-red-600 rounded-full flex items-center justify-center mx-auto mb-4 text-2xl">
+                            <i class="fa-solid fa-hand-holding-heart"></i>
+                        </div>
+                        <h3 class="text-xl font-bold mb-2">Why Donate?</h3>
+                        <p class="text-gray-600">One donation can save up to three lives. Be a hero in someone's story.</p>
+                    </div>
+                    <div class="p-6 bg-white rounded-xl shadow-sm border border-gray-100">
+                        <div class="w-16 h-16 bg-red-100 text-red-600 rounded-full flex items-center justify-center mx-auto mb-4 text-2xl">
+                            <i class="fa-solid fa-users"></i>
+                        </div>
+                        <h3 class="text-xl font-bold mb-2">Find Donors</h3>
+                        <p class="text-gray-600">Easily locate donors in your specific District, Subdivision, or local block.</p>
+                    </div>
+                    <div class="p-6 bg-white rounded-xl shadow-sm border border-gray-100">
+                        <div class="w-16 h-16 bg-red-100 text-red-600 rounded-full flex items-center justify-center mx-auto mb-4 text-2xl">
+                            <i class="fa-brands fa-whatsapp"></i>
+                        </div>
+                        <h3 class="text-xl font-bold mb-2">Connect Instantly</h3>
+                        <p class="text-gray-600">Directly Call or WhatsApp donors. No registration or middlemen involved.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
 
-    </div><!-- /products-grid -->
+        <!-- RESULTS PAGE -->
+        <section id="results" class="page-section hidden-page pb-10">
+            <!-- Map Container -->
+            <div class="w-full bg-gray-200 relative mb-6">
+                 <div id="map"></div>
+                 <div class="absolute bottom-4 left-4 z-[400] bg-white px-3 py-1 rounded shadow text-xs font-semibold">
+                    <i class="fa-solid fa-map-pin text-red-600"></i> Donors Locations — <span class="text-gray-500">Live View</span>
+                 </div>
+                 <button onclick="navTo('home')" class="absolute top-4 right-4 z-[400] bg-white/90 backdrop-blur text-red-600 font-bold px-4 py-2 rounded-lg shadow hover:bg-white transition flex items-center">
+                    <i class="fa-solid fa-arrow-left mr-2"></i> New Search
+                 </button>
+            </div>
 
-    <div id="noResults" class="no-results" style="display:none;">
-      <div class="nr-icon">🔍</div>
-      <h3>No products found</h3>
-      <p>Try a different search term or clear your search.</p>
+            <div class="container mx-auto px-4">
+                <div class="flex flex-col md:flex-row justify-between items-center mb-6 gap-4">
+                    <h2 class="text-2xl font-bold text-gray-800">Available Donors</h2>
+                    <div class="bg-red-50 border border-red-100 px-4 py-1 rounded-full text-red-700 font-bold text-sm shadow-sm" id="result-count">Loading...</div>
+                </div>
+
+                <!-- Results Grid -->
+                <div id="donors-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <!-- Cards injected by JS -->
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-gray-300 py-8">
+        <div class="container mx-auto px-4 text-center">
+            <p class="mb-2">&copy; 2025 Blood Need App. India.</p>
+            <p class="text-sm text-gray-500">Built for humanity.</p>
+        </div>
+    </footer>
+
+    <!-- SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <!-- DONOR DETAIL MODAL -->
+    <div id="donor-modal" class="fixed inset-0 z-[1000] hidden" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+        <!-- Backdrop -->
+        <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" onclick="closeModal()"></div>
+
+        <div class="fixed inset-0 z-10 overflow-y-auto">
+            <div class="flex min-h-full items-center justify-center p-4 text-center sm:p-0">
+                <div class="relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg">
+                    
+                    <!-- Modal Header with Image -->
+                    <div class="bg-red-600 h-24 relative">
+                        <button onclick="closeModal()" class="absolute top-2 right-2 text-white bg-black bg-opacity-20 hover:bg-opacity-40 rounded-full w-8 h-8 flex items-center justify-center">
+                            <i class="fa-solid fa-times"></i>
+                        </button>
+                        <button onclick="openReportForm()" class="absolute top-2 left-2 text-white bg-black bg-opacity-20 hover:bg-opacity-40 rounded-full w-8 h-8 flex items-center justify-center" title="Report this donor">
+                            <i class="fa-solid fa-flag"></i>
+                        </button>
+                    </div>
+                    <div class="px-4 pb-4 sm:p-6 sm:pb-4 relative">
+                        <div class="absolute -top-12 left-6">
+                            <img id="modal-photo" class="h-24 w-24 rounded-full border-4 border-white shadow-md bg-gray-200 object-cover" src="" alt="Donor">
+                        </div>
+                        <div class="mt-12">
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <h3 class="text-2xl font-bold leading-6 text-gray-900" id="modal-name">Name</h3>
+                                    <p class="text-sm text-gray-500 mt-1" id="modal-bio">Age 28, Male</p>
+                                </div>
+                                <div class="bg-red-100 text-red-800 font-bold px-3 py-1 rounded text-lg" id="modal-blood">B+</div>
+                            </div>
+                            
+                            <div class="mt-4 border-t pt-4 grid gap-3 text-sm text-gray-600">
+                                <div class="flex items-start">
+                                    <i class="fa-solid fa-location-dot mt-1 w-5 text-red-500"></i>
+                                    <span id="modal-address">Full Address Here</span>
+                                </div>
+                                <div class="flex items-center">
+                                    <i class="fa-solid fa-building w-5 text-blue-500"></i>
+                                    <span id="modal-localbody">Municipality</span>
+                                </div>
+                                <div class="flex items-center">
+                                    <i class="fa-solid fa-trophy w-5 text-yellow-500"></i>
+                                    <span id="modal-donations">7 Donations</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-gray-50 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6 gap-2">
+                        <a id="modal-call" href="#" class="inline-flex w-full justify-center rounded-md bg-blue-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-500 sm:w-auto items-center">
+                            <i class="fa-solid fa-phone mr-2"></i> Call
+                        </a>
+                        <a id="modal-whatsapp" href="#" target="_blank" class="inline-flex w-full justify-center rounded-md bg-green-500 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-green-400 sm:w-auto items-center mt-2 sm:mt-0">
+                            <i class="fa-brands fa-whatsapp mr-2"></i> WhatsApp
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
-  </div>
-</section>
+    <!-- REPORT DONOR MODAL -->
+    <div id="report-modal" class="fixed inset-0 z-[1001] hidden items-center justify-center bg-gray-900 bg-opacity-60 backdrop-blur-sm overflow-y-auto py-10 px-4">
+        <div class="bg-white rounded-xl shadow-2xl w-full max-w-2xl mx-auto overflow-hidden">
+            <div class="flex justify-between items-center p-6 border-b border-gray-200 bg-red-50">
+                <h3 class="text-xl font-bold flex items-center text-red-700"><i class="fa-solid fa-flag text-red-600 mr-2"></i> Report Donor</h3>
+                <button onclick="closeReportForm()" class="text-gray-400 hover:text-gray-700 text-xl"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            
+            <form id="reportForm" onsubmit="submitReport(event)" class="p-6 bg-gray-50 space-y-5">
+                <input type="hidden" id="reportDonorId">
+                <input type="hidden" id="reportDonorName">
+                
+                <div class="bg-white p-4 border border-red-200 rounded-lg">
+                    <p class="text-sm text-gray-600"><strong>Reporting Donor:</strong> <span id="reportDonorDisplay" class="font-bold text-red-700"></span></p>
+                </div>
 
-<!-- ====== WHY CHOOSE US ====== -->
-<section class="section">
-  <div class="container">
-    <div class="section-header">
-      <span class="section-label">💎 Why Us</span>
-      <h2>Why Students Love Viveka Digital Hub</h2>
-      <p>We make learning affordable, accessible and instant.</p>
-    </div>
-    <div class="features-grid">
-      <div class="feature-card">
-        <div class="feature-icon">⚡</div>
-        <h3>Instant Delivery</h3>
-        <p>Get your PDF notes instantly via WhatsApp within minutes of payment.</p>
-      </div>
-      <div class="feature-card">
-        <div class="feature-icon">💰</div>
-        <h3>Best Prices</h3>
-        <p>Premium quality notes at highly affordable prices, starting at just ₹49.</p>
-      </div>
-      <div class="feature-card">
-        <div class="feature-icon">✅</div>
-        <h3>Trusted Content</h3>
-        <p>Handcrafted notes by experienced educators — accurate &amp; exam-focused.</p>
-      </div>
-      <div class="feature-card">
-        <div class="feature-icon">🎟️</div>
-        <h3>Exclusive Coupons</h3>
-        <p>Save more with coupon codes. Use VIVEKA10, STUDENT20 or RK50!</p>
-      </div>
-    </div>
-  </div>
-</section>
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-1.5">Your Name <span class="text-red-500">*</span></label>
+                    <input type="text" id="reporterName" placeholder="Full name" required class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500">
+                </div>
 
-<!-- ====== FOOTER ====== -->
-<footer>
-  <div class="footer-grid">
-    <div class="footer-brand">
-      <a href="index.html" class="nav-logo">
-        <img src="images/logo.png" alt="Viveka Digital Hub">
-        <div class="nav-logo-text">
-          <span class="brand-name">Viveka Digital Hub</span>
-          <span class="brand-tagline">Digital Study Materials</span>
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-1.5">Mobile Number <span class="text-red-500">*</span></label>
+                    <div class="relative">
+                        <span class="absolute left-3 top-3 text-gray-500 font-semibold">+91</span>
+                        <input type="tel" id="reporterPhone" placeholder="9876543210" maxlength="10" required class="w-full pl-12 pr-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500">
+                    </div>
+                    <p class="text-xs text-gray-500 mt-1">Enter 10-digit number only</p>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-1.5">Report Details <span class="text-red-500">*</span></label>
+                    <textarea id="reportMessage" placeholder="Describe the issue or reason for reporting..." maxlength="500" required rows="4" class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 resize-none"></textarea>
+                    <p class="text-xs text-gray-500 mt-1"><span id="charCount">0</span>/500 characters</p>
+                </div>
+
+                <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 text-xs text-blue-800">
+                    <i class="fa-solid fa-info-circle mr-2"></i>
+                    <strong>Privacy:</strong> Your report will be reviewed by our admin team. Please provide accurate details to help us maintain the quality of our platform.
+                </div>
+
+                <div class="flex justify-end gap-3">
+                    <button type="button" onclick="closeReportForm()" class="px-6 py-2 border rounded-lg font-bold bg-white text-gray-700 hover:bg-gray-50">Cancel</button>
+                    <button type="submit" class="px-8 py-2 bg-red-600 text-white rounded-lg font-bold shadow hover:bg-red-700"><i class="fa-solid fa-paper-plane mr-2"></i> Submit Report</button>
+                </div>
+            </form>
         </div>
-      </a>
-      <p>Your trusted partner for affordable digital study notes &amp; PDFs. Helping students achieve more with less stress.</p>
     </div>
-    <div class="footer-col">
-      <h4>Quick Links</h4>
-      <ul>
-        <li><a href="index.html">🏠 Home</a></li>
-        <li><a href="category.html">📂 Category</a></li>
-        <li><a href="about.html">ℹ️ About Us</a></li>
-        <li><a href="contact.html">📞 Contact</a></li>
-        <li><a href="privacy.html">🔐 Privacy Policy</a></li>
-      </ul>
-    </div>
-    <div class="footer-col">
-      <h4>Contact Us</h4>
-      <ul>
-        <li><a href="tel:9362719399">📱 9362719399</a></li>
-        <li><a href="https://wa.me/919362719399" target="_blank">💬 WhatsApp Us</a></li>
-        <li><a href="contact.html">✉️ Send a Message</a></li>
-      </ul>
-      <br>
-      <h4>Coupon Codes</h4>
-      <ul>
-        <li><a href="#">🎟️ VIVEKA10 — 10% OFF</a></li>
-        <li><a href="#">🎟️ STUDENT20 — 20% OFF</a></li>
-        <li><a href="#">🎟️ RK50 — 50% OFF</a></li>
-      </ul>
-    </div>
-  </div>
-  <div class="footer-bottom">
-    <p>© 2026 Viveka Digital Hub. All Rights Reserved.</p>
-    <a href="privacy.html">Privacy Policy</a>
-  </div>
-</footer>
 
-<script src="js/script.js"></script>
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+
+    <!-- Firebase SDK Modular v9+ -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
+        import { getDatabase, ref, onValue, push, set } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-database.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyD_MKiHwtrmkdfZTh3e9IZ1oe1WEZM4Xto",
+            authDomain: "need-blood-41aff.firebaseapp.com",
+            databaseURL: "https://need-blood-41aff-default-rtdb.firebaseio.com",
+            projectId: "need-blood-41aff"
+        };
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+        window.firebaseDB = db;
+        window.firebaseRef = ref;
+        window.firebaseOnValue = onValue;
+        window.firebasePush = push;
+        window.firebaseSet = set;
+    </script>
+
+    <script>
+
+        // ========== UTILITY FUNCTIONS ==========
+        // Phone validation - ensure 10 digits and format with +91
+        function validateAndFormatPhone(phone) {
+            // Remove all non-digits
+            const digits = phone.replace(/\D/g, '');
+            
+            // If it's 11 digits and starts with 91, remove the 91
+            if (digits.length === 11 && digits.startsWith('91')) {
+                return {
+                    valid: true,
+                    formatted: '+91 ' + digits.slice(2).replace(/(\d{4})(\d{3})(\d{3})/, '$1 $2 $3'),
+                    raw: digits.slice(2)
+                };
+            }
+            
+            // If it's exactly 10 digits
+            if (digits.length === 10) {
+                return {
+                    valid: true,
+                    formatted: '+91 ' + digits.replace(/(\d{4})(\d{3})(\d{3})/, '$1 $2 $3'),
+                    raw: digits
+                };
+            }
+            
+            // Invalid
+            return {
+                valid: false,
+                formatted: null,
+                raw: null,
+                error: 'Phone number must be exactly 10 digits'
+            };
+        }
+
+        let locationData = {};
+
+        function buildLocationData(snapshot) {
+            locationData = {};
+            const items = snapshot || {};
+            Object.values(items).forEach(item => {
+                const { state, district, subdivision, pinCode } = item;
+                if (!state || !district || !subdivision || !pinCode) return;
+                
+                if (!locationData[state]) locationData[state] = {};
+                if (!locationData[state][district]) locationData[state][district] = {};
+                if (!locationData[state][district][subdivision]) locationData[state][district][subdivision] = [];
+                if (!locationData[state][district][subdivision].includes(pinCode)) {
+                    locationData[state][district][subdivision].push(pinCode);
+                }
+            });
+            initDropdowns();
+        }
+
+        function initLocationData() {
+            const wait = setInterval(() => {
+                if (window.firebaseDB && window.firebaseRef && window.firebaseOnValue) {
+                    clearInterval(wait);
+                    const locationsRef = window.firebaseRef(window.firebaseDB, 'locations');
+                    window.firebaseOnValue(locationsRef, snapshot => {
+                        buildLocationData(snapshot.val());
+                    }, error => {
+                        console.error('Firebase location read failed:', error);
+                    });
+                }
+            }, 100);
+        }
+
+                // --- LOAD DONORS DATA FROM FIREBASE (With JSON Fallback) ---
+                let donorsDB = [];
+                let isDataLoaded = false;
+
+                function fallbackLoadJson() {
+                    if(isDataLoaded) return;
+                    fetch('donors.json')
+                        .then(response => response.json())
+                        .then(data => { donorsDB = data; isDataLoaded = true; })
+                        .catch(() => { donorsDB = []; });
+                }
+
+                let listenerInterval = setInterval(() => {
+                    if(window.firebaseDB && window.firebaseRef && window.firebaseOnValue) {
+                        clearInterval(listenerInterval);
+                        const donorsRef = window.firebaseRef(window.firebaseDB, 'donors');
+                        window.firebaseOnValue(donorsRef, (snapshot) => {
+                            const data = snapshot.val();
+                            let donorsArray = [];
+                            if (data) {
+                                if (Array.isArray(data)) {
+                                    donorsArray = data.filter(d => d).map((d, index) => ({ id: d.id || index, ...d }));
+                                } else {
+                                    donorsArray = Object.keys(data).map(key => ({
+                                        id: key,
+                                        ...data[key]
+                                    }));
+                                }
+                            }
+                            
+                            if(donorsArray.length > 0) {
+                                donorsDB = donorsArray;
+                                isDataLoaded = true;
+                            } else {
+                                fallbackLoadJson();
+                            }
+                            
+                            // Data is loaded and ready
+                        }, (error) => {
+                            console.error("Firebase Read Error:", error);
+                            fallbackLoadJson();
+                        });
+                    }
+                }, 100);
+                
+                // Fallback timeout in case Firebase is blocked
+                setTimeout(fallbackLoadJson, 3000);
+
+               
+        // --- GLOBAL VARIABLES ---
+        let map;
+        let markers = [];
+        let currentResults = [];
+
+        // --- NAVIGATION LOGIC ---
+        function navTo(pageId) {
+            // Hide all pages
+            document.querySelectorAll('.page-section').forEach(section => {
+                section.classList.add('hidden-page');
+            });
+            
+            // Show target page
+            const target = document.getElementById(pageId);
+            if(target) {
+                target.classList.remove('hidden-page');
+            }
+
+            // Scroll to top
+            window.scrollTo(0, 0);
+
+            // Special initializers: Refresh Map when results are shown
+            if (pageId === 'results') {
+                setTimeout(() => {
+                    if(map) map.invalidateSize();
+                }, 100);
+            }
+
+            // Close mobile menu if open
+            const menu = document.getElementById('mobile-menu');
+            if (menu && !menu.classList.contains('hidden')) {
+                menu.classList.add('hidden');
+            }
+        }
+
+        // --- FORM & DROPDOWN LOGIC ---
+        function initDropdowns() {
+            const stateSelect = document.getElementById('search-state');
+            
+            // Populate States
+            stateSelect.innerHTML = '<option value="">All States</option>';
+            Object.keys(locationData).forEach(state => {
+                const option = document.createElement('option');
+                option.value = state;
+                option.textContent = state;
+                stateSelect.appendChild(option);
+            });
+        }
+
+        function populateDistricts() {
+            const state = document.getElementById('search-state').value;
+            const districtSelect = document.getElementById('search-district');
+            const subDivSelect = document.getElementById('search-subdiv');
+
+            // Reset
+            districtSelect.innerHTML = '<option value="">All Districts</option>';
+            subDivSelect.innerHTML = '<option value="">All Sub Divisions</option>';
+            subDivSelect.disabled = true;
+
+            if (state && locationData[state]) {
+                districtSelect.disabled = false;
+                Object.keys(locationData[state]).forEach(district => {
+                    const option = document.createElement('option');
+                    option.value = district;
+                    option.textContent = district;
+                    districtSelect.appendChild(option);
+                });
+            } else {
+                districtSelect.disabled = true;
+            }
+        }
+
+        function populateSubDivisions() {
+            const state = document.getElementById('search-state').value;
+            const district = document.getElementById('search-district').value;
+            const subDivSelect = document.getElementById('search-subdiv');
+
+            subDivSelect.innerHTML = '<option value="">All Sub Divisions</option>';
+
+            if (state && district && locationData[state] && locationData[state][district]) {
+                subDivSelect.disabled = false;
+                Object.keys(locationData[state][district]).forEach(subDiv => {
+                    const option = document.createElement('option');
+                    option.value = subDiv;
+                    option.textContent = subDiv;
+                    subDivSelect.appendChild(option);
+                });
+            } else {
+                subDivSelect.disabled = true;
+            }
+        }
+
+        // --- SEARCH LOGIC ---
+        function handleSearch(e) {
+            e.preventDefault();
+
+            // 1. Get Values
+            const form = document.getElementById('search-form');
+            const formData = new FormData(form);
+            const criteria = {
+                bloodGroup: formData.get('bloodGroup'),
+                state: document.getElementById('search-state')?.value || '',
+                district: document.getElementById('search-district')?.value || '',
+                subDivision: document.getElementById('search-subdiv')?.value || '',
+                localBody: document.getElementById('search-localbody')?.value || '',
+                pin: document.getElementById('search-pin')?.value.trim() || ''
+            };
+
+            // 2. Filter Data
+            currentResults = donorsDB.filter(donor => {
+                let match = true;
+
+                // Blood Group
+                if (criteria.bloodGroup !== 'any' && donor.bloodGroup !== criteria.bloodGroup) match = false;
+                
+                // Location Cascade
+                if (criteria.state && donor.state !== criteria.state) match = false;
+                if (criteria.district && donor.district !== criteria.district) match = false;
+                if (criteria.subDivision && donor.subDivision !== criteria.subDivision) match = false;
+                
+                // Advanced
+                if (criteria.localBody && donor.localBodyType !== criteria.localBody) match = false;
+                if (criteria.pin && donor.pinCode !== criteria.pin) match = false;
+
+                return match;
+            });
+
+            // 3. Render Results
+            renderResults(currentResults);
+            
+            // 4. Navigate
+            navTo('results');
+        }
+
+        function renderResults(data) {
+            const grid = document.getElementById('donors-grid');
+            const countLabel = document.getElementById('result-count');
+            grid.innerHTML = '';
+
+            countLabel.textContent = `${data.length} donors found`;
+
+            if (data.length === 0) {
+                grid.innerHTML = `<div class="col-span-3 text-center py-10 text-gray-500">No donors found matching your criteria. Try broader filters.</div>`;
+                updateMap([]);
+                return;
+            }
+
+            data.forEach(donor => {
+                const card = document.createElement('div');
+                card.className = "bg-white rounded-lg shadow-md hover:shadow-lg transition p-4 border-l-4 border-red-500 flex flex-col justify-between";
+                card.innerHTML = `
+                    <div>
+                        <div class="flex items-start justify-between space-x-4">
+                            <div class="flex items-start space-x-4 flex-1">
+                                <img src="${donor.photoUrl}" alt="${donor.name}" class="w-16 h-16 rounded-full object-cover bg-gray-200 flex-shrink-0">
+                                <div class="flex-1">
+                                    <h3 class="font-bold text-lg text-gray-800">${donor.name}</h3>
+                                    <p class="text-sm text-gray-500">${donor.age} Yrs, ${donor.gender}</p>
+                                    <div class="mt-1 inline-block bg-red-100 text-red-700 text-xs font-bold px-2 py-0.5 rounded">${donor.bloodGroup}</div>
+                                </div>
+                            </div>
+                            <button onclick="openReportFormWithDonor('${donor.id}', '${donor.name}')" class="px-2 py-1 text-gray-500 hover:text-red-600 hover:bg-red-50 rounded text-sm transition" title="Report this donor">
+                                <i class="fa-solid fa-flag"></i>
+                            </button>
+                        </div>
+                        <div class="mt-4 text-sm text-gray-600 space-y-1">
+                            <p><i class="fa-solid fa-location-dot text-gray-400 mr-2"></i> ${donor.cityOrVillage}, ${donor.district}</p>
+                            <p><i class="fa-solid fa-map text-gray-400 mr-2"></i> ${donor.state} (${donor.pinCode})</p>
+                        </div>
+                    </div>
+                    <button onclick="openModal('${donor.id}')" class="mt-4 w-full bg-gray-100 hover:bg-gray-200 text-gray-800 font-medium py-2 rounded transition text-sm">
+                        View Details
+                    </button>
+                `;
+                grid.appendChild(card);
+            });
+
+            updateMap(data);
+        }
+
+        // --- MAP LOGIC ---
+        function initMap() {
+            if (map) return; // Prevent re-initialization error
+            // Center of India roughly
+            map = L.map('map').setView([22.5937, 82.9629], 5);
+            
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '&copy; OpenStreetMap contributors'
+            }).addTo(map);
+        }
+
+        function updateMap(data) {
+            if (!map) return;
+
+            // Clear existing markers
+            markers.forEach(m => map.removeLayer(m));
+            markers = [];
+
+            if (data.length === 0) return;
+
+            const bounds = L.latLngBounds();
+
+            data.forEach(donor => {
+                if (donor.latitude && donor.longitude) {
+                    const marker = L.marker([donor.latitude, donor.longitude])
+                        .addTo(map)
+                        .bindPopup(`
+                            <b>${donor.name}</b><br>
+                            Blood Group: ${donor.bloodGroup}<br>
+                            <button onclick="openModal('${donor.id}')" style="color:blue; text-decoration:underline;">View Details</button>
+                        `);
+                    markers.push(marker);
+                    bounds.extend([donor.latitude, donor.longitude]);
+                }
+            });
+
+            if (markers.length > 0) {
+                map.fitBounds(bounds, { padding: [50, 50] });
+            }
+        }
+
+        // --- REPORT LOGIC ---
+        let currentReportDonorId = null;
+
+        function openReportFormWithDonor(donorId, donorName) {
+            currentReportDonorId = donorId;
+            document.getElementById('reportDonorId').value = donorId;
+            document.getElementById('reportDonorName').value = donorName;
+            document.getElementById('reportDonorDisplay').textContent = donorName;
+            document.getElementById('reportForm').reset();
+            document.getElementById('charCount').textContent = '0';
+            document.getElementById('report-modal').classList.remove('hidden');
+            document.getElementById('donor-modal').classList.add('hidden');
+        }
+
+        function openReportForm() {
+            // Called from the donor modal
+            const donorId = currentReportDonorId;
+            const donor = donorsDB.find(d => String(d.id) === String(donorId));
+            if(donor) {
+                openReportFormWithDonor(donorId, donor.name);
+            }
+        }
+
+        function closeReportForm() {
+            document.getElementById('report-modal').classList.add('hidden');
+        }
+
+        function submitReport(event) {
+            event.preventDefault();
+
+            if(!window.firebaseDB) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Connecting...',
+                    text: 'Please wait for database connection and try again.'
+                });
+                return;
+            }
+
+            const reporterName = document.getElementById('reporterName').value.trim();
+            const reporterPhone = document.getElementById('reporterPhone').value.trim();
+            const reportMessage = document.getElementById('reportMessage').value.trim();
+            const donorId = document.getElementById('reportDonorId').value;
+            const donorName = document.getElementById('reportDonorName').value;
+
+            // Validate phone
+            const phoneValidation = validateAndFormatPhone(reporterPhone);
+            if (!phoneValidation.valid) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Invalid Phone',
+                    text: phoneValidation.error
+                });
+                return;
+            }
+
+            Swal.fire({
+                title: 'Submitting Report...',
+                text: 'Your report is being submitted to our team.',
+                allowOutsideClick: false,
+                didOpen: () => {
+                    Swal.showLoading();
+                }
+            });
+
+            const reportData = {
+                donorId: donorId,
+                donorName: donorName,
+                reporterName: reporterName,
+                reporterPhone: phoneValidation.raw,
+                reporterPhoneFormatted: phoneValidation.formatted,
+                message: reportMessage,
+                status: 'pending',
+                submittedAt: new Date().toISOString()
+            };
+
+            const reportsRef = window.firebaseRef(window.firebaseDB, 'donor_reports');
+            const newReport = window.firebasePush(reportsRef);
+            
+            window.firebaseSet(newReport, reportData).then(() => {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Report Submitted!',
+                    text: 'Thank you for helping us maintain quality. Your report will be reviewed shortly.',
+                    confirmButtonColor: '#dc2626'
+                }).then(() => {
+                    closeReportForm();
+                    document.getElementById('reportForm').reset();
+                });
+            }).catch(error=> {
+                Swal.fire( {
+                    icon: 'error',
+                    title: 'Submission Error',
+                    text: error.message
+                });
+            });
+        }
+
+        // Character counter for report message
+        document.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('reportMessage')?.addEventListener('input', function() {
+                document.getElementById('charCount').textContent = this.value.length;
+            });
+        });
+
+        // --- MODAL LOGIC ---
+        function openModal(id) {
+            currentReportDonorId = id;
+            const donor = donorsDB.find(d => String(d.id) === String(id));
+            if (!donor) return;
+
+            document.getElementById('modal-name').textContent = donor.name;
+            document.getElementById('modal-bio').textContent = `${donor.age} Yrs, ${donor.gender}`;
+            document.getElementById('modal-blood').textContent = donor.bloodGroup;
+            document.getElementById('modal-photo').src = donor.photoUrl;
+            document.getElementById('modal-address').textContent = `${donor.cityOrVillage}, ${donor.subDivision}, ${donor.district}, ${donor.state}, ${donor.country} - ${donor.pinCode}`;
+            document.getElementById('modal-localbody').textContent = donor.localBodyType;
+            document.getElementById('modal-donations').textContent = `${donor.donationCount} Times Donated`;
+            
+            // Links
+            document.getElementById('modal-call').href = `tel:+${donor.phone}`;
+            document.getElementById('modal-whatsapp').href = `https://wa.me/${donor.whatsappNumber}?text=Hi ${donor.name}, I found you on Blood Need App. Is it possible for you to donate blood?`;
+
+            // Show
+            document.getElementById('donor-modal').classList.remove('hidden');
+        }
+
+        function closeModal() {
+            document.getElementById('donor-modal').classList.add('hidden');
+        }
+
+        
+       // --- INITIALIZATION ---
+        document.addEventListener('DOMContentLoaded', () => {
+            // Mobile Menu Toggle
+            document.getElementById('mobile-menu-btn').addEventListener('click', () => {
+                document.getElementById('mobile-menu').classList.toggle('hidden');
+            });
+
+            initLocationData();
+            initDropdowns();
+            initMap();
+            
+            // Check if we need to show results (if URL has query, for future)
+            navTo('home');
+        });
+
+    </script>
 </body>
 </html>

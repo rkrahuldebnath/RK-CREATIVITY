@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>About - Blood Need App</title>
+    <title>Gallery - Blood Need App</title>
     
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -30,9 +30,9 @@
                 <div class="hidden md:flex space-x-6 font-medium text-gray-600">
                     <a href="index.html" class="hover:text-red-600 transition">Home</a>
                     <a href="nb.html" class="text-red-600 font-bold hover:text-red-700 transition"><i class="fa-solid fa-truck-medical mr-1"></i> Blood Need</a>
-                    <a href="gallery.html" class="hover:text-red-600 transition">Gallery</a>
+                    <a href="gallery.html" class="text-red-600 transition">Gallery</a>
                     <a href="top-donors.html" class="hover:text-red-600 transition">Top Donors</a>
-                    <a href="about.html" class="text-red-600 transition">About</a>
+                    <a href="about.html" class="hover:text-red-600 transition">About</a>
                     <a href="contact.html" class="hover:text-red-600 transition">Contact</a>
                 </div>
 
@@ -46,37 +46,58 @@
         <div id="mobile-menu" class="hidden md:hidden bg-white border-t">
             <a href="index.html" class="block py-2 px-4 hover:bg-red-50 hover:text-red-600">Home</a>
             <a href="nb.html" class="block py-2 px-4 bg-red-600 text-white font-bold"><i class="fa-solid fa-truck-medical mr-2"></i> Blood Need NOW</a>
-            <a href="gallery.html" class="block py-2 px-4 hover:bg-red-50 hover:text-red-600">Gallery</a>
+            <a href="gallery.html" class="block py-2 px-4 text-red-600">Gallery</a>
             <a href="top-donors.html" class="block py-2 px-4 hover:bg-red-50 hover:text-red-600">Top Donors</a>
-            <a href="about.html" class="block py-2 px-4 bg-red-50 text-red-600">About</a>
+            <a href="about.html" class="block py-2 px-4 hover:bg-red-50 hover:text-red-600">About</a>
             <a href="contact.html" class="block py-2 px-4 hover:bg-red-50 hover:text-red-600">Contact</a>
         </div>
     </nav>
 
     <!-- Main Content Area -->
-    <main class="flex-grow py-16">
-        <div class="container mx-auto px-4 max-w-3xl text-center">
-            <i class="fa-solid fa-circle-info text-5xl text-red-600 mb-6"></i>
-            <h2 class="text-3xl font-bold text-gray-800 mb-6">About Blood Need App</h2>
-            <div class="text-left bg-white p-8 rounded-xl shadow-sm space-y-4 text-gray-700 leading-relaxed border border-gray-100">
-                <p>
-                    <strong>Blood Need App</strong> is a community-driven initiative designed to bridge the gap between blood donors and those in need across India.
-                </p>
-                <p>
-                    We operate on a simple principle: <strong>No Registration Required</strong>. In emergencies, you shouldn't have to fill out forms or wait for OTPs. We provide direct access to donor contact information.
-                </p>
-                <div class="bg-red-50 p-4 rounded-lg border-l-4 border-red-500 my-4">
-                    <h4 class="font-bold text-red-800">Privacy & Responsibility</h4>
-                    <p class="text-sm text-red-700 mt-1">
-                        The donor data listed here is provided voluntarily. Please respect the privacy of donors. Use the contact details ONLY for blood donation requests. Misuse of data is strictly prohibited.
-                    </p>
+    <main class="flex-grow py-12">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl md:text-4xl font-bold text-gray-800 mb-4">Our Gallery</h2>
+                <p class="text-gray-600 max-w-2xl mx-auto">Moments of hope, community service, and life-saving donations captured across our regions.</p>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div class="aspect-square bg-gray-200 rounded-xl overflow-hidden shadow-sm relative group">
+                    <img src="resocos/nb1.jpg" alt="Gallery Image 1" class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
+                    <div class="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition duration-300 flex items-center justify-center">
+                        <i class="fa-solid fa-expand text-white text-2xl"></i>
+                    </div>
                 </div>
-                <p>
-                    Our database is currently managed manually for quality assurance. We ensure that every donor registered on our platform is genuine and ready to help.
-                </p>
-                <p>
-                    Founded with the mission to make blood donation accessible and instant, Blood Need App has helped hundreds of families find life-saving support in their most critical hours.
-                </p>
+                <div class="aspect-square bg-gray-200 rounded-xl overflow-hidden shadow-sm relative group">
+                    <img src="resocos/nb2.jpg" alt="Gallery Image 2" class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
+                    <div class="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition duration-300 flex items-center justify-center">
+                        <i class="fa-solid fa-expand text-white text-2xl"></i>
+                    </div>
+                </div>
+                <div class="aspect-square bg-gray-200 rounded-xl overflow-hidden shadow-sm relative group">
+                    <img src="resocos/nb3.jpg" alt="Gallery Image 3" class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
+                    <div class="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition duration-300 flex items-center justify-center">
+                        <i class="fa-solid fa-expand text-white text-2xl"></i>
+                    </div>
+                </div>
+                <div class="aspect-square bg-gray-200 rounded-xl overflow-hidden shadow-sm relative group">
+                    <img src="resocos/nb4.jpg" alt="Gallery Image 4" class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
+                    <div class="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition duration-300 flex items-center justify-center">
+                        <i class="fa-solid fa-expand text-white text-2xl"></i>
+                    </div>
+                </div>
+                <div class="aspect-square bg-gray-200 rounded-xl overflow-hidden shadow-sm relative group">
+                    <img src="resocos/nb5.jpg" alt="Gallery Image 5" class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
+                    <div class="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition duration-300 flex items-center justify-center">
+                        <i class="fa-solid fa-expand text-white text-2xl"></i>
+                    </div>
+                </div>
+                <div class="sm:col-span-2 aspect-video bg-gray-800 rounded-xl overflow-hidden shadow-sm relative flex items-center justify-center text-white"> 
+                     <div class="text-center">
+                         <h4 class="text-4xl font-extrabold mb-2">2024</h4>
+                         <p class="text-red-400 font-bold tracking-widest uppercase">Community Drive</p>
+                     </div>
+                </div>
             </div>
         </div>
     </main>

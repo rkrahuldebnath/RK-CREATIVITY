@@ -1,0 +1,32 @@
+{
+  "rules": {
+    "donors": {
+      ".read": "auth != null && auth.token.phone_number == '+919863918519'",
+      ".write": "auth != null && auth.token.phone_number == '+919863918519'"
+    },
+    "pending_donors": {
+      ".read": "auth != null && auth.token.phone_number == '+919863918519'",
+      ".write": true
+    },
+    "contact_requests": {
+      ".read": "auth != null && auth.token.phone_number == '+919863918519'",
+      ".write": true
+    },
+    "emergency_requests": {
+      ".read": "auth != null && auth.token.phone_number == '+919863918519'",
+      ".write": true
+    },
+    "locations": {
+      ".read": true,
+      ".write": "auth != null && auth.token.phone_number == '+919863918519'"
+    },
+    "donor_reports": {
+      ".read": "auth != null && auth.token.phone_number == '+919863918519'",
+      ".write": true
+    },
+    "completed_reports": {
+      ".read": "auth != null && auth.token.phone_number == '+919863918519'",
+      ".write": "auth != null && auth.token.phone_number == '+919863918519'"
+    }
+  }
+}

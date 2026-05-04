@@ -1,292 +1,214 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Contact Viveka Digital Hub — reach us via WhatsApp at 9362719399 for instant support and order inquiries.">
-  <title>Contact Us | Viveka Digital Hub</title>
-  <link rel="stylesheet" href="css/style.css">
-  <link rel="icon" href="images/logo.png" type="image/png">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Us - Blood Need App</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Custom Styles -->
+    <link rel="stylesheet" href="styles.css">
+    
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
+        import { getDatabase, ref, push, set } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-database.js";
 
+        const firebaseConfig = {
+            apiKey: "AIzaSyD_MKiHwtrmkdfZTh3e9IZ1oe1WEZM4Xto",
+            authDomain: "need-blood-41aff.firebaseapp.com",
+            databaseURL: "https://need-blood-41aff-default-rtdb.firebaseio.com",
+            projectId: "need-blood-41aff"
+        };
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+        
+        window.firebaseDB = db;
+        window.firebaseRef = ref;
+        window.firebasePush = push;
+        window.firebaseSet = set;
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
-<body>
+<body class="bg-gray-50 text-gray-800 flex flex-col min-h-screen">
 
-<!-- ====== FLOATING WHATSAPP ====== -->
-<a href="https://wa.me/919362719399" class="wa-fab" target="_blank" title="Chat on WhatsApp">
-  <span class="wa-fab-tooltip">Chat with us!</span>
-  💬
-</a>
-<!-- ====== NAVBAR ====== -->
-<nav class="navbar">
-  <div class="nav-container">
-    <a href="index.html" class="nav-logo">
-      <img src="images/logo.png" alt="Viveka Digital Hub Logo">
-      <div class="nav-logo-text">
-        <span class="brand-name">Viveka Digital Hub</span>
-        <span class="brand-tagline">Digital Study Materials</span>
-      </div>
-    </a>
-    <ul class="nav-menu" id="navMenu">
-      <li><a href="index.html"    class="nav-link">🏠 Home</a></li>
-      <li><a href="category.html" class="nav-link">📂 Category</a></li>
-      <li><a href="about.html"    class="nav-link">ℹ️ About</a></li>
-      <li><a href="contact.html"  class="nav-link active">📞 Contact</a></li>
-    </ul>
-    <button class="nav-toggle" id="navToggle" aria-label="Toggle menu">
-      <span></span><span></span><span></span>
-    </button>
-  </div>
-</nav>
+    <!-- Navbar -->
+    <nav class="bg-white shadow-md sticky top-0 z-50">
+        <div class="container mx-auto px-4">
+            <div class="flex justify-between items-center h-16">
+                <!-- Logo -->
+                <a href="index.html" class="flex items-center gap-3 text-red-600 font-bold text-xl">
+                    <img src="resocos/logo.gif" alt="Logo" class="h-14 w-14 object-contain bg-white rounded-full border border-gray-300 shadow" style="min-width:3.5rem; min-height:3.5rem; display:block; margin-right:0.5rem;">
+                    <span class="ml-2">Blood Need</span>
+                </a>
 
-<!-- ====== CONTACT HERO ====== -->
-<section class="contact-hero">
-  <h1>📞 Get In Touch</h1>
-  <p>Have a question or need help with an order? We're just a WhatsApp message away!</p>
-</section>
+                <!-- Desktop Menu -->
+                <div class="hidden md:flex space-x-6 font-medium text-gray-600">
+                    <a href="index.html" class="hover:text-red-600 transition">Home</a>
+                    <a href="nb.html" class="text-red-600 font-bold hover:text-red-700 transition"><i class="fa-solid fa-truck-medical mr-1"></i> Blood Need</a>
+                    <a href="gallery.html" class="hover:text-red-600 transition">Gallery</a>
+                    <a href="top-donors.html" class="hover:text-red-600 transition">Top Donors</a>
+                    <a href="about.html" class="hover:text-red-600 transition">About</a>
+                    <a href="contact.html" class="text-red-600 transition">Contact</a>
+                </div>
 
-<!-- ====== CONTACT CONTENT ====== -->
-<section class="section">
-  <div class="container">
-    <div class="contact-grid">
-
-      <!-- Info Card -->
-      <div class="contact-info-card">
-        <h2>Contact Information</h2>
-
-        <div class="contact-item">
-          <div class="contact-icon-box">📱</div>
-          <div class="contact-detail">
-            <h4>Phone / WhatsApp</h4>
-            <p><a href="tel:9362719399" style="color: var(--primary); font-weight: 700;">9362719399</a></p>
-            <p style="font-size: 0.8rem; color: var(--gray-400); margin-top: 2px;">Available: Mon–Sat, 9AM–8PM</p>
-          </div>
+                <!-- Mobile Menu Button -->
+                <button id="mobile-menu-btn" class="md:hidden text-gray-600 hover:text-red-600 focus:outline-none">
+                    <i class="fa-solid fa-bars text-2xl"></i>
+                </button>
+            </div>
         </div>
-
-        <div class="contact-item">
-          <div class="contact-icon-box">💬</div>
-          <div class="contact-detail">
-            <h4>WhatsApp (Preferred)</h4>
-            <p>Send us a message for instant replies</p>
-          </div>
+        <!-- Mobile Dropdown -->
+        <div id="mobile-menu" class="hidden md:hidden bg-white border-t">
+            <a href="index.html" class="block py-2 px-4 hover:bg-red-50 hover:text-red-600">Home</a>
+            <a href="nb.html" class="block py-2 px-4 bg-red-600 text-white font-bold"><i class="fa-solid fa-truck-medical mr-2"></i> Blood Need NOW</a>
+            <a href="gallery.html" class="block py-2 px-4 hover:bg-red-50 hover:text-red-600">Gallery</a>
+            <a href="top-donors.html" class="block py-2 px-4 hover:bg-red-50 hover:text-red-600">Top Donors</a>
+            <a href="about.html" class="block py-2 px-4 hover:bg-red-50 hover:text-red-600">About</a>
+            <a href="contact.html" class="block py-2 px-4 text-red-600">Contact</a>
         </div>
+    </nav>
 
-        <div class="contact-item">
-          <div class="contact-icon-box">⏰</div>
-          <div class="contact-detail">
-            <h4>Response Time</h4>
-            <p>Typically within <strong>15 minutes</strong></p>
-          </div>
+    <!-- Main Content Area -->
+    <main class="flex-grow py-12">
+        <div class="container mx-auto px-4 max-w-4xl">
+            <div class="text-center mb-10">
+                <h2 class="text-3xl font-bold text-gray-800 mb-2">Get in Touch</h2>
+                <p class="text-gray-600">Have questions or want to help? We'd love to hear from you.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <!-- Info Section -->
+                <div class="space-y-6">
+                    <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 flex items-start">
+                        <div class="bg-blue-100 p-3 rounded-full text-blue-600 mr-4">
+                            <i class="fa-solid fa-envelope text-xl"></i>
+                        </div>
+                        <div>
+                            <p class="text-xs font-bold text-gray-400 border-b border-gray-100 pb-1 mb-2 uppercase">Official Email</p>
+                            <p class="font-bold text-gray-800"><a href="mailto:needblood.in@gmail.com" class="text-blue-600 hover:underline">needblood.in@gmail.com</a></p>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 flex items-start">
+                        <div class="bg-green-100 p-3 rounded-full text-green-600 mr-4">
+                            <i class="fa-brands fa-whatsapp text-xl"></i>
+                        </div>
+                        <div>
+                            <p class="text-xs font-bold text-gray-400 border-b border-gray-100 pb-1 mb-2 uppercase">WhatsApp Helpline</p>
+                            <p class="font-bold text-gray-800"><a href="https://wa.me/919362719399" target="_blank" class="text-green-600 hover:underline">+91 93627 19399</a></p>
+                        </div>
+                    </div>
+
+                    <div class="bg-red-50 rounded-2xl p-6 border border-red-100">
+                        <h4 class="font-bold text-red-800 mb-2"><i class="fa-solid fa-shield-heart mr-2"></i>Emergency Help</h4>
+                        <p class="text-sm text-red-700">If you are facing a medical emergency and cannot find a donor through the search tool, please message us on WhatsApp immediately.</p>
+                    </div>
+                </div>
+
+                <!-- Form Section -->
+                <div class="bg-white rounded-2xl shadow-lg border border-gray-100 p-8">
+                    <h3 class="font-bold text-xl mb-6 text-gray-800 flex items-center">
+                        <i class="fa-solid fa-paper-plane mr-3 text-red-600"></i>Send a Message
+                    </h3>
+                    <form id="contact-form" onsubmit="event.preventDefault(); submitContactRequest();" class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-1">Full Name</label>
+                            <input type="text" id="contact-name" placeholder="Rahul Debnath" class="w-full p-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-red-500 outline-none transition" required>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-1">Email Address</label>
+                            <input type="email" id="contact-email" placeholder="rahul@example.com" class="w-full p-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-red-500 outline-none transition" required>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-1">Your Message</label>
+                            <textarea id="contact-message" rows="4" placeholder="How can we help you?" class="w-full p-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-red-500 outline-none transition" required></textarea>
+                        </div>
+                        <button type="submit" class="bg-red-600 text-white font-bold py-4 px-6 rounded-xl hover:bg-red-700 w-full flex justify-center items-center shadow-lg transform hover:-translate-y-1 transition duration-300">
+                            <i class="fa-solid fa-paper-plane mr-2"></i> Send Message
+                        </button>
+                    </form>
+                </div>
+            </div>
         </div>
+    </main>
 
-        <div class="contact-item">
-          <div class="contact-icon-box">📦</div>
-          <div class="contact-detail">
-            <h4>Delivery</h4>
-            <p>Instant PDF delivery via WhatsApp</p>
-          </div>
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-white py-10">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8 border-b border-gray-800 pb-8">
+                <div>
+                    <h4 class="text-xl font-bold mb-4 text-red-500">Blood Need</h4>
+                    <p class="text-gray-400 text-sm">Saving lives by connecting people. Our mission is to ensure no one suffers due to lack of blood donors.</p>
+                </div>
+                <div>
+                    <h4 class="text-xl font-bold mb-4">Quick Links</h4>
+                    <ul class="text-gray-400 text-sm space-y-2">
+                        <li><a href="index.html" class="hover:text-white transition">Home</a></li>
+                        <li><a href="about.html" class="hover:text-white transition">About Us</a></li>
+                        <li><a href="gallery.html" class="hover:text-white transition">Gallery</a></li>
+                        <li><a href="contact.html" class="hover:text-white transition">Contact Us</a></li>
+                        <li><a href="form.html" class="hover:text-white transition">Register as Donor</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-xl font-bold mb-4">Admin</h4>
+                    <a href="admin.html" class="text-gray-500 hover:text-white text-sm transition">Admin Dashboard Login</a>
+                </div>
+            </div>
+            <div class="text-center text-gray-500 text-xs">
+                &copy; 2025 Blood Need App. India. Built for humanity.
+            </div>
         </div>
+    </footer>
 
-        <!-- WhatsApp CTA -->
-        <a href="https://wa.me/919362719399?text=Hello%2C%20I%20need%20help%20with%20Viveka%20Digital%20Hub." target="_blank" class="btn btn-whatsapp" style="width: 100%; justify-content: center; margin-top: 8px;">
-          💬 Open WhatsApp Chat
-        </a>
+    <script>
+        // Mobile Menu Toggle
+        document.getElementById('mobile-menu-btn').addEventListener('click', () => {
+            document.getElementById('mobile-menu').classList.toggle('hidden');
+        });
 
-        <!-- Info Box -->
-        <div class="contact-map-placeholder">
-          <span>🇮🇳</span>
-          <p>Serving Students All Across India</p>
-        </div>
-      </div>
+        function submitContactRequest() {
+            if(!window.firebaseDB) {
+                Swal.fire('Connecting...', 'Please wait for database connection and try again.', 'info');
+                return;
+            }
 
-      <!-- Message Form -->
-      <div class="contact-form-card">
-        <h2>Send Us a Message</h2>
-        <p style="font-size: 0.88rem; color: var(--gray-600); margin-bottom: 24px;">
-          Fill the form below and we'll connect with you via WhatsApp instantly.
-        </p>
+            const name = document.getElementById('contact-name').value.trim();
+            const email = document.getElementById('contact-email').value.trim();
+            const message = document.getElementById('contact-message').value.trim();
 
-        <form id="contactForm" novalidate>
-          <div class="form-group">
-            <label for="contactName">Your Name *</label>
-            <input
-              type="text"
-              id="contactName"
-              class="form-control"
-              placeholder="e.g. Rahul Kumar"
-              required
-              autocomplete="name"
-            >
-          </div>
+            Swal.fire({
+                title: 'Sending...',
+                text: 'Please wait',
+                allowOutsideClick: false,
+                didOpen: () => { Swal.showLoading(); }
+            });
 
-          <div class="form-group">
-            <label for="contactPhone">Phone Number</label>
-            <input
-              type="tel"
-              id="contactPhone"
-              class="form-control"
-              placeholder="e.g. 9876543210"
-              autocomplete="tel"
-            >
-          </div>
-
-          <div class="form-group">
-            <label for="contactSubject">Subject</label>
-            <select id="contactSubject" class="form-control" style="cursor: pointer;">
-              <option value="">-- Select a Subject --</option>
-              <option value="Order Inquiry">Order Inquiry</option>
-              <option value="Product Information">Product Information</option>
-              <option value="Coupon Help">Coupon Help</option>
-              <option value="Feedback">Feedback</option>
-              <option value="Other">Other</option>
-            </select>
-          </div>
-
-          <div class="form-group">
-            <label for="contactMsg">Your Message *</label>
-            <textarea
-              id="contactMsg"
-              class="form-control"
-              placeholder="Tell us how we can help you..."
-              required
-              rows="5"
-            ></textarea>
-          </div>
-
-          <div id="formSuccess" class="form-success">
-            ✅ Redirecting to WhatsApp with your message...
-          </div>
-
-          <button type="submit" class="btn btn-whatsapp" style="width: 100%; justify-content: center; margin-top: 6px; padding: 14px;">
-            💬 Send via WhatsApp
-          </button>
-        </form>
-
-        <!-- Coupon reminder -->
-        <div style="margin-top: 24px; background: var(--gray-100); border-radius: var(--radius-md); padding: 16px; font-size: 0.85rem; color: var(--gray-600); border-left: 3px solid var(--accent);">
-          <strong style="color: var(--primary-dark);">🎟️ Active Coupons:</strong><br>
-          VIVEKA10 (10% OFF) &nbsp;|&nbsp; STUDENT20 (20% OFF) &nbsp;|&nbsp; RK50 (50% OFF)
-        </div>
-      </div>
-
-    </div><!-- /contact-grid -->
-
-    <!-- FAQ Section -->
-    <div style="max-width: 780px; margin: 60px auto 0;">
-      <div class="section-header">
-        <span class="section-label">❓ FAQ</span>
-        <h2>Frequently Asked Questions</h2>
-      </div>
-
-      <div style="display: flex; flex-direction: column; gap: 14px;">
-
-        <details style="background: var(--white); border: 1px solid var(--gray-200); border-radius: var(--radius-md); padding: 18px 20px; cursor: pointer;">
-          <summary style="font-weight: 700; color: var(--primary-dark); font-size: 0.95rem; list-style: none; display: flex; justify-content: space-between;">
-            How do I receive my PDF after purchase? <span>▼</span>
-          </summary>
-          <p style="margin-top: 12px; font-size: 0.88rem; color: var(--gray-600); line-height: 1.7;">
-            After you click "Buy on WhatsApp" and complete the payment, we will send your PDF file directly to your WhatsApp number — usually within 15 minutes!
-          </p>
-        </details>
-
-        <details style="background: var(--white); border: 1px solid var(--gray-200); border-radius: var(--radius-md); padding: 18px 20px; cursor: pointer;">
-          <summary style="font-weight: 700; color: var(--primary-dark); font-size: 0.95rem; list-style: none; display: flex; justify-content: space-between;">
-            How do coupon codes work? <span>▼</span>
-          </summary>
-          <p style="margin-top: 12px; font-size: 0.88rem; color: var(--gray-600); line-height: 1.7;">
-            Enter your coupon code in the coupon box on the Home or Category page, then click "Apply". The discount will be automatically applied to all product prices. The final discounted price will be sent in your WhatsApp order message.
-          </p>
-        </details>
-
-        <details style="background: var(--white); border: 1px solid var(--gray-200); border-radius: var(--radius-md); padding: 18px 20px; cursor: pointer;">
-          <summary style="font-weight: 700; color: var(--primary-dark); font-size: 0.95rem; list-style: none; display: flex; justify-content: space-between;">
-            Is the content accurate and up to date? <span>▼</span>
-          </summary>
-          <p style="margin-top: 12px; font-size: 0.88rem; color: var(--gray-600); line-height: 1.7;">
-            Yes! All our PDFs are prepared by experienced educators and are aligned with the latest syllabus. We regularly update content to ensure accuracy.
-          </p>
-        </details>
-
-        <details style="background: var(--white); border: 1px solid var(--gray-200); border-radius: var(--radius-md); padding: 18px 20px; cursor: pointer;">
-          <summary style="font-weight: 700; color: var(--primary-dark); font-size: 0.95rem; list-style: none; display: flex; justify-content: space-between;">
-            What payment methods do you accept? <span>▼</span>
-          </summary>
-          <p style="margin-top: 12px; font-size: 0.88rem; color: var(--gray-600); line-height: 1.7;">
-            We accept UPI, Google Pay, PhonePe, Paytm, and bank transfer. Payment details will be shared on WhatsApp after you place your order.
-          </p>
-        </details>
-
-      </div>
-    </div>
-
-  </div>
-</section>
-
-<!-- ====== FOOTER ====== -->
-<footer>
-  <div class="footer-grid">
-    <div class="footer-brand">
-      <a href="index.html" class="nav-logo">
-        <img src="images/logo.png" alt="Viveka Digital Hub">
-        <div class="nav-logo-text">
-          <span class="brand-name">Viveka Digital Hub</span>
-          <span class="brand-tagline">Digital Study Materials</span>
-        </div>
-      </a>
-      <p>Affordable digital study notes for every student's journey.</p>
-    </div>
-    <div class="footer-col">
-      <h4>Quick Links</h4>
-      <ul>
-        <li><a href="index.html">🏠 Home</a></li>
-        <li><a href="category.html">📂 Category</a></li>
-        <li><a href="about.html">ℹ️ About Us</a></li>
-        <li><a href="contact.html">📞 Contact</a></li>
-        <li><a href="privacy.html">🔐 Privacy Policy</a></li>
-      </ul>
-    </div>
-    <div class="footer-col">
-      <h4>Contact</h4>
-      <ul>
-        <li><a href="tel:9362719399">📱 9362719399</a></li>
-        <li><a href="https://wa.me/919362719399" target="_blank">💬 WhatsApp Us</a></li>
-      </ul>
-    </div>
-  </div>
-  <div class="footer-bottom">
-    <p>© 2026 Viveka Digital Hub. All Rights Reserved.</p>
-    <a href="privacy.html">Privacy Policy</a>
-  </div>
-</footer>
-
-<script src="js/script.js"></script>
-<script>
-  // Enhanced contact form with subject
-  document.getElementById('contactForm').addEventListener('submit', function(e) {
-    e.preventDefault();
-    const name    = document.getElementById('contactName').value.trim();
-    const phone   = document.getElementById('contactPhone').value.trim();
-    const subject = document.getElementById('contactSubject').value;
-    const msg     = document.getElementById('contactMsg').value.trim();
-
-    if (!name || !msg) {
-      showToast('⚠️ Please fill your Name and Message.');
-      return;
-    }
-
-    let text = `Hello Viveka Digital Hub! 👋\n\nName: ${name}`;
-    if (phone) text += `\nPhone: ${phone}`;
-    if (subject) text += `\nSubject: ${subject}`;
-    text += `\n\nMessage:\n${msg}`;
-
-    const url = `https://wa.me/919362719399?text=${encodeURIComponent(text)}`;
-
-    document.getElementById('formSuccess').style.display = 'block';
-    setTimeout(() => {
-      window.open(url, '_blank');
-      document.getElementById('formSuccess').style.display = 'none';
-      document.getElementById('contactForm').reset();
-    }, 800);
-  });
-</script>
+            const contactRef = window.firebaseRef(window.firebaseDB, 'contact_requests');
+            const newReq = window.firebasePush(contactRef);
+            
+            window.firebaseSet(newReq, {
+                name: name,
+                email: email,
+                message: message,
+                timestamp: new Date().toISOString()
+            }).then(() => {
+                document.getElementById('contact-form').reset();
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Message Sent!',
+                    text: 'We have received your message and will get back to you shortly.',
+                    confirmButtonColor: '#dc2626'
+                });
+            }).catch(err => {
+                Swal.fire('Error', err.message, 'error');
+            });
+        }
+    </script>
 </body>
 </html>

@@ -1,0 +1,2046 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blood Need - Admin Panel</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Custom Styles -->
+    <link rel="stylesheet" href="styles.css">
+    <script type="module">
+        // Import Firebase App
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
+
+        // Import Firebase Auth & Database modules
+        import { getAuth, onAuthStateChanged, signInWithPhoneNumber, RecaptchaVerifier, signOut } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
+        import { getDatabase, ref, onValue, push, set, remove, update, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-database.js";
+
+        // Initialize Firebase Project
+        const firebaseConfig = {
+            apiKey: "AIzaSyD_MKiHwtrmkdfZTh3e9IZ1oe1WEZM4Xto",
+            authDomain: "need-blood-41aff.firebaseapp.com",
+            databaseURL: "https://need-blood-41aff-default-rtdb.firebaseio.com",
+            projectId: "need-blood-41aff",
+            storageBucket: "need-blood-41aff.firebasestorage.app",
+            messagingSenderId: "304290800921",
+            appId: "1:304290800921:web:a9d78402cdbb3c62bd9188",
+            measurementId: "G-XD1X4JFHP7"
+        };
+        const app = initializeApp(firebaseConfig);
+
+        // Expose Firebase APIs to global scope
+        window.auth = getAuth(app);
+        window.signInWithPhoneNumber = signInWithPhoneNumber;
+        window.RecaptchaVerifier = RecaptchaVerifier;
+        window.signOut = signOut;
+        window.onAuthStateChanged = onAuthStateChanged;
+
+        window.db = getDatabase(app);
+        window.ref = ref;
+        window.onValue = onValue;
+        window.push = push;
+        window.set = set;
+        window.remove = remove;
+        window.update = update;
+        window.serverTimestamp = serverTimestamp;
+
+        // --- Auth State Listener ---
+        const waitForInit = setInterval(() => {
+            if (typeof initAuthListener === 'function') {
+                clearInterval(waitForInit);
+                initAuthListener();
+            }
+        }, 50);
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+
+    <style>
+        body {
+            font-family: 'Hind Siliguri', sans-serif;
+        }
+
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #dc2626;
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #b91c1c;
+        }
+
+        .view-section {
+            display: none;
+        }
+
+        .view-section.active {
+            display: block;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50 text-gray-800 h-screen overflow-hidden">
+
+    <!-- USERNAME/PASSWORD LOGIN OVERLAY -->
+    <div id="loginOverlay"
+        class="fixed inset-0 z-[1000] flex items-center justify-center bg-gray-900 bg-opacity-95 backdrop-blur-sm transition-opacity duration-300">
+        <div class="bg-white p-8 rounded-xl shadow-2xl max-w-sm w-full text-center border-t-4 border-red-600">
+            <div class="mb-6 flex justify-center">
+                <div class="bg-red-100 p-4 rounded-full text-red-600 text-4xl">
+                    <i class="fa-solid fa-user-shield"></i>
+                </div>
+            </div>
+
+            <div id="login-form-container">
+                <h2 class="text-2xl font-bold mb-2">Admin Login</h2>
+                <p class="text-gray-500 mb-6 text-sm">Sign in to access the dashboard</p>
+
+                <!-- Phone Number Section -->
+                <div id="phone-section">
+                    <div class="mb-4 text-left">
+                        <label class="block text-xs font-bold text-gray-400 uppercase mb-1 ml-1">Phone Number</label>
+                        <div
+                            class="flex items-center border border-gray-300 rounded-lg overflow-hidden focus-within:ring-2 focus-within:ring-red-500 transition-all">
+                            <span class="bg-gray-50 px-3 py-3 text-gray-400 border-r"><i
+                                    class="fa-solid fa-phone"></i></span>
+                            <input type="tel" id="adminPhone" placeholder="+91 00000 00000"
+                                class="w-full px-4 py-3 focus:outline-none font-bold text-lg" required
+                                autocomplete="off">
+                        </div>
+                    </div>
+                    <div id="recaptcha-container" class="hidden"></div>
+                    <button type="button" id="sendOtpBtn" onclick="handleSendOTP()"
+                        class="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-3.5 px-4 rounded-lg flex justify-center items-center transition shadow-lg shadow-red-200">
+                        Get Verification Code <i class="fa-solid fa-paper-plane ml-2"></i>
+                    </button>
+                </div>
+
+                <!-- OTP Section (Hidden) -->
+                <div id="otp-section" class="hidden animate-fade-in">
+                    <div class="mb-6 text-left">
+                        <label class="block text-xs font-bold text-gray-400 uppercase mb-1 ml-1">Verification
+                            Code</label>
+                        <div
+                            class="flex items-center border border-gray-300 rounded-lg overflow-hidden focus-within:ring-2 focus-within:ring-green-500 transition-all">
+                            <span class="bg-gray-50 px-3 py-3 text-gray-400 border-r"><i
+                                    class="fa-solid fa-key"></i></span>
+                            <input type="text" id="adminOtp" placeholder="••••••"
+                                class="w-full px-4 py-3 focus:outline-none font-bold text-center text-2xl tracking-[0.4em]"
+                                maxlength="6" required autocomplete="off">
+                        </div>
+                        <p class="text-xs text-gray-400 mt-2 text-center font-medium">Please enter the 6-digit code sent
+                            to your phone</p>
+                    </div>
+                    <button type="button" id="verifyOtpBtn" onclick="handleVerifyOTP()"
+                        class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3.5 px-4 rounded-lg flex justify-center items-center transition shadow-lg shadow-green-100">
+                        Login Dashboard <i class="fa-solid fa-shield-check ml-2"></i>
+                    </button>
+                    <button type="button" onclick="location.reload()"
+                        class="w-full mt-4 text-gray-400 hover:text-red-600 text-xs font-bold uppercase tracking-wider transition">
+                        <i class="fa-solid fa-rotate-left mr-1 text-[10px]"></i> Change Phone Number
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MAIN APP STRUCTURE -->
+    <div class="flex h-full w-full">
+        <!-- Sidebar -->
+        <aside class="w-20 md:w-64 bg-white border-r border-gray-200 flex flex-col shadow-sm z-10 transition-all">
+            <div class="h-16 flex items-center justify-center md:justify-start md:px-6 border-b border-gray-200">
+                <i class="fa-solid fa-droplet text-red-600 text-2xl"></i>
+                <span class="ml-3 font-bold text-xl hidden md:block">Blood Need</span>
+            </div>
+            <nav class="flex-1 py-4 flex flex-col gap-2 relative">
+                <!-- Navigation Tabs -->
+                <a href="#" onclick="switchTab('insights')" id="tab-insights"
+                    class="nav-btn flex items-center px-6 py-3 border-r-4 text-gray-600 hover:bg-gray-50 hover:text-indigo-700 font-semibold border-transparent">
+                    <i class="fa-solid fa-chart-line text-lg w-6 text-center"></i>
+                    <span class="ml-3 hidden md:block">Analysis &amp; Insights</span>
+                </a>
+                <a href="#" onclick="switchTab('emergency')" id="tab-emergency"
+                    class="nav-btn flex items-center px-6 py-3 border-r-4 text-gray-600 hover:bg-gray-50 hover:text-red-600 font-semibold border-transparent relative">
+                    <i class="fa-solid fa-truck-medical text-lg w-6 text-center"></i>
+                    <span class="ml-3 hidden md:block font-bold">Emergency Feed</span>
+                    <span id="badge-emergency"
+                        class="absolute right-4 bg-red-600 text-white text-xs font-bold px-2 py-0.5 rounded-full hidden">0</span>
+                </a>
+                <a href="#" onclick="switchTab('donors')" id="tab-donors"
+                    class="nav-btn flex items-center px-6 py-3 border-r-4 text-gray-600 hover:bg-gray-50 hover:text-red-600 font-semibold border-transparent">
+                    <i class="fa-solid fa-users text-lg w-6 text-center"></i>
+                    <span class="ml-3 hidden md:block">Active Donors</span>
+                </a>
+                <a href="#" onclick="switchTab('locations')" id="tab-locations"
+                    class="nav-btn flex items-center px-6 py-3 border-r-4 text-gray-600 hover:bg-gray-50 hover:text-red-600 font-semibold border-transparent">
+                    <i class="fa-solid fa-map-location-dot text-lg w-6 text-center"></i>
+                    <span class="ml-3 hidden md:block">Locations</span>
+                </a>
+                <a href="#" onclick="switchTab('completed')" id="tab-completed"
+                    class="nav-btn flex items-center px-6 py-3 border-r-4 text-gray-600 hover:bg-gray-50 hover:text-green-600 font-semibold border-transparent">
+                    <i class="fa-solid fa-circle-check text-lg w-6 text-center"></i>
+                    <span class="ml-3 hidden md:block">Completed Donations</span>
+                </a>
+                <a href="#" onclick="switchTab('pending')" id="tab-pending"
+                    class="nav-btn flex items-center px-6 py-3 border-r-4 text-gray-600 hover:bg-gray-50 hover:text-orange-500 font-semibold border-transparent relative">
+                    <i class="fa-solid fa-clipboard-question text-lg w-6 text-center"></i>
+                    <span class="ml-3 hidden md:block">Pending</span>
+                    <span id="badge-pending"
+                        class="absolute right-4 bg-orange-500 text-white text-xs font-bold px-2 py-0.5 rounded-full hidden">0</span>
+                </a>
+                <a href="#" onclick="switchTab('messages')" id="tab-messages"
+                    class="nav-btn flex items-center px-6 py-3 border-r-4 text-gray-600 hover:bg-gray-50 hover:text-blue-600 font-semibold border-transparent relative">
+                    <i class="fa-solid fa-envelope text-lg w-6 text-center"></i>
+                    <span class="ml-3 hidden md:block">Messages</span>
+                    <span id="badge-messages"
+                        class="absolute right-4 bg-blue-500 text-white text-xs font-bold px-2 py-0.5 rounded-full hidden">0</span>
+                </a>
+                <a href="#" onclick="switchTab('reports')" id="tab-reports"
+                    class="nav-btn flex items-center px-6 py-3 border-r-4 text-gray-600 hover:bg-gray-50 hover:text-purple-600 font-semibold border-transparent relative">
+                    <i class="fa-solid fa-flag text-lg w-6 text-center"></i>
+                    <span class="ml-3 hidden md:block">Active Reports</span>
+                    <span id="badge-reports"
+                        class="absolute right-4 bg-purple-500 text-white text-xs font-bold px-2 py-0.5 rounded-full hidden">0</span>
+                </a>
+                <a href="#" onclick="switchTab('reports-completed')" id="tab-reports-completed"
+                    class="nav-btn flex items-center px-6 py-3 border-r-4 text-gray-600 hover:bg-gray-50 hover:text-purple-700 font-semibold border-transparent relative">
+                    <i class="fa-solid fa-check-double text-lg w-6 text-center"></i>
+                    <span class="ml-3 hidden md:block">Completed Reports</span>
+                </a>
+
+                <a href="#" onclick="handleLogout()"
+                    class="flex items-center px-6 py-4 text-gray-600 hover:bg-gray-100 hover:text-red-600 font-semibold mt-auto absolute bottom-0 w-full border-t border-gray-200">
+                    <i class="fa-solid fa-power-off text-lg w-6 text-center"></i>
+                    <span class="ml-3 hidden md:block">Logout</span>
+                </a>
+            </nav>
+        </aside>
+
+        <!-- Main Content area -->
+        <main class="flex-1 flex flex-col overflow-hidden bg-gray-50 relative">
+            <header class="h-16 bg-white border-b border-gray-200 flex items-center justify-between px-6 shadow-sm z-0">
+                <h1 class="text-xl font-bold text-gray-800" id="header-title">Admin Dashboard</h1>
+                <div
+                    class="bg-red-50 text-red-800 px-4 py-1.5 rounded-full text-sm font-semibold flex items-center border border-red-100 shadow-sm">
+                    <span class="w-2.5 h-2.5 bg-green-500 rounded-full mr-2 animate-pulse shadow"></span>Live Sync
+                </div>
+            </header>
+
+            <div class="flex-1 overflow-y-auto p-4 md:p-6 pb-24 h-full relative">
+
+                <!-- ANALYSIS & INSIGHTS -->
+                <div id="view-insights" class="view-section w-full fade-in">
+                    <div class="mb-6">
+                        <h2 class="text-lg font-bold text-gray-900">Platform performance</h2>
+                        <p class="text-sm text-gray-500">Live metrics from Firebase (read-only). Updates as data
+                            changes.</p>
+                    </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 mb-8">
+                        <div
+                            class="bg-white rounded-xl border-l-4 border-red-600 shadow-md border border-gray-100 p-5 flex items-center justify-between gap-3">
+                            <div>
+                                <p class="text-xs font-bold uppercase tracking-wide text-gray-500">Total donors</p>
+                                <p class="text-3xl font-black text-gray-900 tabular-nums" id="insight-donors">0</p>
+                            </div>
+                            <div class="w-14 h-14 rounded-full bg-red-100 text-red-600 flex items-center justify-center text-2xl shrink-0"
+                                aria-hidden="true"><i class="fa-solid fa-heart"></i></div>
+                        </div>
+                        <div
+                            class="bg-white rounded-xl border-l-4 border-blue-600 shadow-md border border-gray-100 p-5 flex items-center justify-between gap-3">
+                            <div>
+                                <p class="text-xs font-bold uppercase tracking-wide text-gray-500">Covered areas</p>
+                                <p class="text-3xl font-black text-gray-900 tabular-nums" id="insight-areas">0</p>
+                                <p class="text-[11px] text-gray-400 mt-0.5">Unique subdivision + PIN</p>
+                            </div>
+                            <div class="w-14 h-14 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center text-2xl shrink-0"
+                                aria-hidden="true"><i class="fa-solid fa-map-pin"></i></div>
+                        </div>
+                        <div
+                            class="bg-white rounded-xl border-l-4 border-green-600 shadow-md border border-gray-100 p-5 flex items-center justify-between gap-3">
+                            <div>
+                                <p class="text-xs font-bold uppercase tracking-wide text-gray-500">Complete donations
+                                </p>
+                                <p class="text-3xl font-black text-green-800 tabular-nums"
+                                    id="insight-complete-donations">0</p>
+                            </div>
+                            <div class="w-14 h-14 rounded-full bg-green-100 text-green-600 flex items-center justify-center text-2xl shrink-0"
+                                aria-hidden="true"><i class="fa-solid fa-circle-check"></i></div>
+                        </div>
+                        <div
+                            class="bg-white rounded-xl border-l-4 border-emerald-600 shadow-md border border-gray-100 p-5 flex items-center justify-between gap-3">
+                            <div>
+                                <p class="text-xs font-bold uppercase tracking-wide text-gray-500">Yearly donations</p>
+                                <p class="text-3xl font-black text-emerald-800 tabular-nums" id="insight-yearly">0</p>
+                                <p class="text-[11px] text-gray-400 mt-0.5" id="insight-yearly-label">Calendar year</p>
+                            </div>
+                            <div class="w-14 h-14 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center text-2xl shrink-0"
+                                aria-hidden="true"><i class="fa-solid fa-calendar-check"></i></div>
+                        </div>
+                        <div
+                            class="bg-white rounded-xl border-l-4 border-amber-500 shadow-md border border-gray-100 p-5 flex items-center justify-between gap-3">
+                            <div>
+                                <p class="text-xs font-bold uppercase tracking-wide text-gray-500">Pending workload</p>
+                                <p class="text-3xl font-black text-amber-900 tabular-nums" id="insight-pending">0</p>
+                                <p class="text-[11px] text-amber-800/90 mt-1 font-medium"
+                                    id="insight-pending-breakdown"></p>
+                            </div>
+                            <div class="w-14 h-14 rounded-full bg-amber-100 text-amber-600 flex items-center justify-center text-2xl shrink-0"
+                                aria-hidden="true"><i class="fa-solid fa-hourglass-half"></i></div>
+                        </div>
+                        <div
+                            class="bg-white rounded-xl border-l-4 border-purple-600 shadow-md border border-gray-100 p-5 flex items-center justify-between gap-3">
+                            <div>
+                                <p class="text-xs font-bold uppercase tracking-wide text-gray-500">Active reports</p>
+                                <p class="text-3xl font-black text-purple-900 tabular-nums" id="insight-reports-active">
+                                    0</p>
+                            </div>
+                            <div class="w-14 h-14 rounded-full bg-purple-100 text-purple-600 flex items-center justify-center text-2xl shrink-0"
+                                aria-hidden="true"><i class="fa-solid fa-flag"></i></div>
+                        </div>
+                        <div
+                            class="bg-white rounded-xl border-l-4 border-violet-500 shadow-md border border-gray-100 p-5 flex items-center justify-between gap-3">
+                            <div>
+                                <p class="text-xs font-bold uppercase tracking-wide text-gray-500">Complete reports</p>
+                                <p class="text-3xl font-black text-violet-900 tabular-nums"
+                                    id="insight-reports-complete">0</p>
+                            </div>
+                            <div class="w-14 h-14 rounded-full bg-violet-100 text-violet-600 flex items-center justify-center text-2xl shrink-0"
+                                aria-hidden="true"><i class="fa-solid fa-check-double"></i></div>
+                        </div>
+                        <div
+                            class="bg-white rounded-xl border-l-4 border-gray-600 shadow-md border border-gray-100 p-5 flex items-center justify-between gap-3">
+                            <div>
+                                <p class="text-xs font-bold uppercase tracking-wide text-gray-500">All emergency records
+                                </p>
+                                <p class="text-3xl font-black text-gray-900 tabular-nums" id="insight-emergency-total">0
+                                </p>
+                                <p class="text-[11px] text-gray-400 mt-0.5">Historical request rows</p>
+                            </div>
+                            <div class="w-14 h-14 rounded-full bg-gray-100 text-gray-700 flex items-center justify-center text-2xl shrink-0"
+                                aria-hidden="true"><i class="fa-solid fa-truck-medical"></i></div>
+                        </div>
+                    </div>
+                    <div class="bg-white rounded-xl shadow-md border border-gray-200 p-5 md:p-6">
+                        <h3 class="text-base font-bold text-gray-800 mb-1">Completed donations by month</h3>
+                        <p class="text-xs text-gray-500 mb-4" id="insight-chart-caption">Current calendar year</p>
+                        <div class="relative h-64 w-full min-h-[16rem]">
+                            <canvas id="yearlyDonationsChart" aria-label="Monthly completed donations chart"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- DATA EXPORT SECTION -->
+                    <div class="mt-8 bg-white rounded-xl shadow-md border border-gray-200 p-5 md:p-6">
+                        <div class="flex items-center justify-between mb-5">
+                            <div>
+                                <h3 class="text-base font-bold text-gray-800 flex items-center gap-2">
+                                    <i class="fa-solid fa-download text-indigo-600"></i> Data Management & Export
+                                </h3>
+                                <p class="text-xs text-gray-500 mt-1">Download records as CSV files for external
+                                    analysis</p>
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                            <button onclick="exportDonorsCSV()"
+                                class="flex items-center justify-center gap-2 px-5 py-3 bg-red-50 hover:bg-red-100 border border-red-200 rounded-lg text-red-700 font-semibold transition">
+                                <i class="fa-solid fa-users"></i> Export Donor List
+                            </button>
+                            <button onclick="exportMonthlyDonationCSV()"
+                                class="flex items-center justify-center gap-2 px-5 py-3 bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 rounded-lg text-emerald-700 font-semibold transition">
+                                <i class="fa-solid fa-calendar-check"></i> Monthly Donations
+                            </button>
+                            <button onclick="exportLocationDirectoryCSV()"
+                                class="flex items-center justify-center gap-2 px-5 py-3 bg-blue-50 hover:bg-blue-100 border border-blue-200 rounded-lg text-blue-700 font-semibold transition">
+                                <i class="fa-solid fa-map-pin"></i> Location Directory
+                            </button>
+                        </div>
+                        <p class="text-xs text-gray-400 mt-4 text-center">Files are generated on-demand. All timestamps
+                            are in IST (Indian Standard Time).</p>
+                    </div>
+                </div>
+
+                <!-- HOME PAGE: APPROVED DONORS -->
+                <div id="view-donors" class="view-section active w-full fade-in">
+                    <!-- Stat Cards -->
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-6">
+                        <div
+                            class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 flex items-center justify-between hover:shadow-md transition">
+                            <div>
+                                <p class="text-xs font-bold text-gray-400 uppercase">Total Donors</p>
+                                <h3 class="text-3xl font-bold text-gray-800" id="stat-donors">0</h3>
+                            </div>
+                            <div
+                                class="w-12 h-12 bg-red-50 text-red-600 rounded-full flex items-center justify-center text-xl shadow-inner">
+                                <i class="fa-solid fa-user-check"></i></div>
+                        </div>
+                        <div
+                            class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 flex items-center justify-between hover:shadow-md transition">
+                            <div>
+                                <p class="text-xs font-bold text-gray-400 uppercase">Districts Covered</p>
+                                <h3 class="text-3xl font-bold text-gray-800" id="stat-districts">0</h3>
+                            </div>
+                            <div
+                                class="w-12 h-12 bg-blue-50 text-blue-600 rounded-full flex items-center justify-center text-xl shadow-inner">
+                                <i class="fa-solid fa-map-location-dot"></i></div>
+                        </div>
+                        <div
+                            class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 flex items-center justify-between hover:shadow-md transition">
+                            <div>
+                                <p class="text-xs font-bold text-gray-400 uppercase">Total Donations</p>
+                                <h3 class="text-3xl font-bold text-gray-800" id="stat-donations">0</h3>
+                            </div>
+                            <div
+                                class="w-12 h-12 bg-green-50 text-green-600 rounded-full flex items-center justify-center text-xl shadow-inner">
+                                <i class="fa-solid fa-hand-holding-heart"></i></div>
+                        </div>
+                    </div>
+
+                    <!-- Search / Add -->
+                    <div
+                        class="bg-white rounded-xl shadow-sm border border-gray-100 p-5 mb-6 flex flex-col md:flex-row gap-4 justify-between items-center">
+                        <div class="w-full md:w-3/4 flex flex-col sm:flex-row gap-3">
+                            <div class="relative flex-1">
+                                <i class="fa-solid fa-search absolute left-4 top-3 text-gray-400"></i>
+                                <input type="text" id="searchInput" placeholder="Search Donors by Name, District..."
+                                    class="w-full pl-10 pr-10 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 outline-none">
+                                <button onclick="clearSearch('searchInput')" id="clear-searchInput"
+                                    class="hidden absolute right-3 top-2.5 text-gray-400 hover:text-gray-600"><i
+                                        class="fa-solid fa-circle-xmark"></i></button>
+                            </div>
+                            <select id="filterBloodGroup" onchange="renderViews()"
+                                class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 outline-none bg-white font-bold text-red-600">
+                                <option value="">All Groups</option>
+                                <option>A+</option>
+                                <option>A-</option>
+                                <option>B+</option>
+                                <option>B-</option>
+                                <option>O+</option>
+                                <option>O-</option>
+                                <option>AB+</option>
+                                <option>AB-</option>
+                            </select>
+                        </div>
+                        <button onclick="openDonorModal()"
+                            class="bg-red-600 hover:bg-red-700 text-white font-bold py-2.5 px-6 rounded-lg w-full md:w-auto shadow whitespace-nowrap"><i
+                                class="fa-solid fa-plus mr-2"></i> Add Donor</button>
+                    </div>
+
+                    <!-- Table -->
+                    <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-x-auto">
+                        <table class="w-full text-left">
+                            <thead class="bg-gray-50 border-b border-gray-200">
+                                <tr>
+                                    <th class="px-6 py-4 font-bold text-gray-700 uppercase tracking-wide text-xs">Donor
+                                    </th>
+                                    <th class="px-6 py-4 font-bold text-gray-700 uppercase tracking-wide text-xs">Blood
+                                        Group</th>
+                                    <th class="px-6 py-4 font-bold text-gray-700 uppercase tracking-wide text-xs">
+                                        Contact & Location</th>
+                                    <th
+                                        class="px-6 py-4 font-bold text-gray-700 uppercase tracking-wide text-xs text-right">
+                                        Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="donorsTableBody" class="divide-y divide-gray-100"></tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- VIEW 2: LOCATIONS MANAGEMENT -->
+                <div id="view-locations" class="view-section w-full fade-in">
+                    <div class="grid grid-cols-1 xl:grid-cols-3 gap-6 mb-6">
+                        <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+                            <div class="flex items-center justify-between mb-5">
+                                <div>
+                                    <h3 class="text-xl font-bold text-gray-800">Location Management</h3>
+                                    <p class="text-sm text-gray-500">State → District → Subdivision → PIN</p>
+                                </div>
+                                <span id="locationCount" class="text-sm text-gray-500">0 locations</span>
+                            </div>
+
+                            <form id="locationForm" onsubmit="saveLocation(event)" class="space-y-4">
+                                <input type="hidden" id="originalLocationKey" value="">
+
+                                <div>
+                                    <label class="block text-sm font-semibold text-gray-700 mb-1.5">State</label>
+                                    <input type="text" id="locationState" placeholder="State" required
+                                        onchange="populateLocationDistricts()"
+                                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500">
+                                </div>
+
+                                <div>
+                                    <label class="block text-sm font-semibold text-gray-700 mb-1.5">District</label>
+                                    <input type="text" id="locationDistrict" placeholder="District" required
+                                        onchange="populateLocationSubdivisions()"
+                                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500">
+                                </div>
+
+                                <div>
+                                    <label class="block text-sm font-semibold text-gray-700 mb-1.5">Subdivision</label>
+                                    <input type="text" id="locationSubdivision" placeholder="Subdivision" required
+                                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500">
+                                </div>
+
+                                <div>
+                                    <label class="block text-sm font-semibold text-gray-700 mb-1.5">PIN Code</label>
+                                    <input type="text" id="locationPinCode" placeholder="e.g. 799001" required
+                                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500">
+                                </div>
+
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    <div>
+                                        <label class="block text-sm font-semibold text-gray-700 mb-1.5">Latitude</label>
+                                        <input type="text" id="locationLatitude" placeholder="e.g. 23.8365" required
+                                            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500">
+                                    </div>
+                                    <div>
+                                        <label
+                                            class="block text-sm font-semibold text-gray-700 mb-1.5">Longitude</label>
+                                        <input type="text" id="locationLongitude" placeholder="e.g. 91.2794" required
+                                            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500">
+                                    </div>
+                                </div>
+
+                                <div class="flex flex-col sm:flex-row gap-3">
+                                    <button type="submit" id="locationSubmitButton"
+                                        class="w-full sm:w-auto bg-red-600 hover:bg-red-700 text-white font-bold py-3 px-6 rounded-lg">Add
+                                        Location</button>
+                                    <button type="button" onclick="resetLocationForm()"
+                                        class="w-full sm:w-auto border border-gray-300 text-gray-700 font-bold py-3 px-6 rounded-lg bg-white hover:bg-gray-50">Clear</button>
+                                </div>
+                            </form>
+                        </div>
+
+                        <div class="xl:col-span-2 bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+                            <div class="flex items-center justify-between mb-5">
+                                <h3 class="text-xl font-bold text-gray-800">Stored Locations</h3>
+                                <span class="text-sm text-gray-500">Manage all Firebase locations from here</span>
+                            </div>
+                            <div class="overflow-x-auto">
+                                <table class="w-full text-left">
+                                    <thead class="bg-gray-50 border-b border-gray-200">
+                                        <tr>
+                                            <th class="px-5 py-3 text-xs font-bold uppercase text-gray-500">State</th>
+                                            <th class="px-5 py-3 text-xs font-bold uppercase text-gray-500">District
+                                            </th>
+                                            <th class="px-5 py-3 text-xs font-bold uppercase text-gray-500">Subdivision
+                                            </th>
+                                            <th class="px-5 py-3 text-xs font-bold uppercase text-gray-500">PIN</th>
+                                            <th class="px-5 py-3 text-xs font-bold uppercase text-gray-500">Lat / Long
+                                            </th>
+                                            <th class="px-5 py-3 text-xs font-bold uppercase text-gray-500 text-right">
+                                                Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="locationsTableBody" class="divide-y divide-gray-100"></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- VIEW 2: PENDING DONORS -->
+                <div id="view-pending" class="view-section w-full fade-in">
+                    <!-- Search Pending -->
+                    <div
+                        class="bg-white rounded-xl shadow-sm border border-gray-100 p-4 mb-6 flex flex-col md:flex-row gap-4 items-center">
+                        <div class="relative flex-1 w-full">
+                            <i class="fa-solid fa-clipboard-question absolute left-4 top-3 text-orange-400"></i>
+                            <input type="text" id="searchPending" placeholder="Search applicants by Name or District..."
+                                oninput="renderViews()"
+                                class="w-full pl-10 pr-10 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 outline-none">
+                            <button onclick="clearSearch('searchPending')" id="clear-searchPending"
+                                class="hidden absolute right-3 top-2.5 text-gray-400 hover:text-gray-600"><i
+                                    class="fa-solid fa-circle-xmark"></i></button>
+                        </div>
+                    </div>
+                    <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-x-auto">
+                        <table class="w-full text-left">
+                            <thead class="bg-orange-50 border-b border-orange-100">
+                                <tr>
+                                    <th class="px-6 py-4 font-bold text-orange-900 uppercase tracking-wide text-xs">
+                                        Applicant</th>
+                                    <th
+                                        class="px-6 py-4 font-bold text-orange-900 uppercase tracking-wide text-xs text-center">
+                                        Group</th>
+                                    <th class="px-6 py-4 font-bold text-orange-900 uppercase tracking-wide text-xs">
+                                        Location / Date</th>
+                                    <th
+                                        class="px-6 py-4 font-bold text-orange-900 uppercase tracking-wide text-xs text-right">
+                                        Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="pendingTableBody" class="divide-y divide-gray-100 bg-white"></tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- VIEW 3: CONTACT REQUESTS -->
+                <div id="view-messages" class="view-section w-full fade-in">
+                    <!-- Search Messages -->
+                    <div
+                        class="bg-white rounded-xl shadow-sm border border-gray-100 p-4 mb-6 flex flex-col md:flex-row gap-4 items-center">
+                        <div class="relative flex-1 w-full">
+                            <i class="fa-solid fa-envelope absolute left-4 top-3 text-blue-400"></i>
+                            <input type="text" id="searchMessages"
+                                placeholder="Search messages by Name, Email or Content..." oninput="renderViews()"
+                                class="w-full pl-10 pr-10 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none">
+                            <button onclick="clearSearch('searchMessages')" id="clear-searchMessages"
+                                class="hidden absolute right-3 top-2.5 text-gray-400 hover:text-gray-600"><i
+                                    class="fa-solid fa-circle-xmark"></i></button>
+                        </div>
+                    </div>
+                    <div id="messages-empty"
+                        class="hidden p-8 text-center text-gray-500 bg-white rounded-xl shadow-sm border border-gray-100 w-full">
+                        <i class="fa-solid fa-inbox text-4xl mb-3 text-gray-300"></i>
+                        <p>Inbox is entirely empty!</p>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="messagesGrid">
+                        <!-- Messages Injected Here -->
+                    </div>
+                </div>
+
+                <!-- VIEW 4: EMERGENCY REQUESTS -->
+                <div id="view-emergency" class="view-section w-full fade-in">
+                    <!-- Search Emergency -->
+                    <div
+                        class="bg-white rounded-xl shadow-sm border border-gray-100 p-4 mb-6 flex flex-col md:flex-row gap-4 items-center">
+                        <div class="relative flex-1 w-full">
+                            <i class="fa-solid fa-magnifying-glass absolute left-4 top-3 text-gray-400"></i>
+                            <input type="text" id="searchEmergency" placeholder="Search by Patient, Hospital or ID..."
+                                oninput="renderViews()"
+                                class="w-full pl-10 pr-10 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 outline-none">
+                            <button onclick="clearSearch('searchEmergency')" id="clear-searchEmergency"
+                                class="hidden absolute right-3 top-2.5 text-gray-400 hover:text-gray-600"><i
+                                    class="fa-solid fa-circle-xmark"></i></button>
+                        </div>
+                    </div>
+                    <div id="emergency-empty"
+                        class="hidden p-8 text-center text-gray-500 bg-white rounded-xl shadow-sm border border-gray-100 w-full">
+                        <i class="fa-solid fa-check-circle text-4xl mb-3 text-green-300"></i>
+                        <p>No active emergency requests.</p>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="emergencyGrid">
+                        <!-- Emergency Cards Injected Here -->
+                    </div>
+                </div>
+
+                <!-- VIEW 5: COMPLETED REQUESTS -->
+                <div id="view-completed" class="view-section w-full fade-in">
+                    <div id="completed-empty"
+                        class="hidden p-8 text-center text-gray-500 bg-white rounded-xl shadow-sm border border-gray-100 w-full">
+                        <i class="fa-solid fa-clipboard-list text-4xl mb-3 text-gray-300"></i>
+                        <p>No completed donations logged yet.</p>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="completedGrid">
+                        <!-- Completed Cards Injected Here -->
+                    </div>
+                </div>
+
+                <!-- VIEW 6: REPORTED CASES (ACTIVE) -->
+                <div id="view-reports" class="view-section w-full fade-in">
+                    <!-- Search Reports -->
+                    <div
+                        class="bg-white rounded-xl shadow-sm border border-gray-100 p-4 mb-6 flex flex-col md:flex-row gap-4 items-center">
+                        <div class="relative flex-1 w-full">
+                            <i class="fa-solid fa-filter absolute left-4 top-3 text-gray-400"></i>
+                            <input type="text" id="searchReports" placeholder="Search by Donor, Reporter or Details..."
+                                oninput="renderViews()"
+                                class="w-full pl-10 pr-10 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 outline-none">
+                            <button onclick="clearSearch('searchReports')" id="clear-searchReports"
+                                class="hidden absolute right-3 top-2.5 text-gray-400 hover:text-gray-600"><i
+                                    class="fa-solid fa-circle-xmark"></i></button>
+                        </div>
+                    </div>
+                    <div id="reports-empty"
+                        class="hidden p-8 text-center text-gray-500 bg-white rounded-xl shadow-sm border border-gray-100 w-full">
+                        <i class="fa-solid fa-check-circle text-4xl mb-3 text-green-300"></i>
+                        <p>No active donor reports.</p>
+                    </div>
+                    <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-x-auto">
+                        <table class="w-full text-left">
+                            <thead class="bg-purple-50 border-b border-purple-100">
+                                <tr>
+                                    <th class="px-6 py-4 font-bold text-purple-900 uppercase tracking-wide text-xs">
+                                        Report ID</th>
+                                    <th class="px-6 py-4 font-bold text-purple-900 uppercase tracking-wide text-xs">
+                                        Donor Name</th>
+                                    <th class="px-6 py-4 font-bold text-purple-900 uppercase tracking-wide text-xs">
+                                        Reporter</th>
+                                    <th class="px-6 py-4 font-bold text-purple-900 uppercase tracking-wide text-xs">
+                                        Report Details</th>
+                                    <th class="px-6 py-4 font-bold text-purple-900 uppercase tracking-wide text-xs">
+                                        Status</th>
+                                    <th
+                                        class="px-6 py-4 font-bold text-purple-900 uppercase tracking-wide text-xs text-right">
+                                        Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="reportsTableBody" class="divide-y divide-gray-100 bg-white"></tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- VIEW 7: COMPLETED REPORTS -->
+                <div id="view-reports-completed" class="view-section w-full fade-in">
+                    <!-- Search Completed Reports -->
+                    <div
+                        class="bg-white rounded-xl shadow-sm border border-gray-100 p-4 mb-6 flex flex-col md:flex-row gap-4 items-center">
+                        <div class="relative flex-1 w-full">
+                            <i class="fa-solid fa-file-circle-check absolute left-4 top-3 text-gray-400"></i>
+                            <input type="text" id="searchReportsCompleted" placeholder="Search historical reports..."
+                                oninput="renderViews()"
+                                class="w-full pl-10 pr-10 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 outline-none">
+                            <button onclick="clearSearch('searchReportsCompleted')" id="clear-searchReportsCompleted"
+                                class="hidden absolute right-3 top-2.5 text-gray-400 hover:text-gray-600"><i
+                                    class="fa-solid fa-circle-xmark"></i></button>
+                        </div>
+                    </div>
+                    <div id="reports-completed-empty"
+                        class="hidden p-8 text-center text-gray-500 bg-white rounded-xl shadow-sm border border-gray-100 w-full">
+                        <i class="fa-solid fa-clipboard-check text-4xl mb-3 text-gray-300"></i>
+                        <p>No completed reports found.</p>
+                    </div>
+                    <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-x-auto">
+                        <table class="w-full text-left">
+                            <thead class="bg-green-50 border-b border-green-100">
+                                <tr>
+                                    <th class="px-6 py-4 font-bold text-green-900 uppercase tracking-wide text-xs">
+                                        Report ID</th>
+                                    <th class="px-6 py-4 font-bold text-green-900 uppercase tracking-wide text-xs">Donor
+                                        Name</th>
+                                    <th class="px-6 py-4 font-bold text-green-900 uppercase tracking-wide text-xs">
+                                        Reporter</th>
+                                    <th class="px-6 py-4 font-bold text-green-900 uppercase tracking-wide text-xs">
+                                        Resolution Details</th>
+                                    <th
+                                        class="px-6 py-4 font-bold text-green-900 uppercase tracking-wide text-xs text-right">
+                                        Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="reportsCompletedTableBody" class="divide-y divide-gray-100 bg-white"></tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+        </main>
+    </div>
+
+    <!-- ADD/EDIT DONOR MODAL -->
+    <div id="donorModal"
+        class="fixed inset-0 z-[100] hidden items-center justify-center bg-gray-900 bg-opacity-60 backdrop-blur-sm overflow-y-auto py-10 px-4">
+        <div class="bg-white rounded-xl shadow-2xl w-full max-w-4xl mx-auto overflow-hidden flex flex-col">
+            <div class="flex justify-between items-center p-5 border-b border-gray-200">
+                <h3 class="text-xl font-bold flex items-center" id="modalTitle"><i
+                        class="fa-solid fa-pen-to-square text-red-600 mr-2"></i> Edit Donor</h3>
+                <button onclick="closeDonorModal()" class="text-gray-400 hover:text-gray-700 text-xl"><i
+                        class="fa-solid fa-xmark"></i></button>
+            </div>
+
+            <form id="donorForm" onsubmit="saveDonor(event)" class="p-6 bg-gray-50 space-y-6 overflow-y-auto">
+                <input type="hidden" id="donorId">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+
+                    <div class="space-y-4 bg-white p-5 rounded-lg shadow-sm border border-gray-100">
+                        <h4 class="font-bold border-b pb-3 text-lg"><i
+                                class="fa-solid fa-user text-red-500 mr-2"></i>Personal Info</h4>
+                        <input type="text" id="name" placeholder="Full Name" required
+                            class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-red-500">
+                        <div class="grid grid-cols-2 gap-4">
+                            <input type="number" id="age" placeholder="Age" required
+                                class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-red-500">
+                            <select id="gender"
+                                class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-red-500 bg-white">
+                                <option>Male</option>
+                                <option>Female</option>
+                                <option>Other</option>
+                            </select>
+                        </div>
+                        <select id="bloodGroup"
+                            class="w-full px-4 py-2 border border-red-200 rounded-lg text-red-700 font-bold bg-red-50">
+                            <option>A+</option>
+                            <option>A-</option>
+                            <option>B+</option>
+                            <option>B-</option>
+                            <option>O+</option>
+                            <option>O-</option>
+                            <option>AB+</option>
+                            <option>AB-</option>
+                        </select>
+                        <input type="number" id="donationCount" placeholder="Donation Count"
+                            class="w-full px-4 py-2 border rounded-lg">
+                        <input type="url" id="photoUrl" placeholder="Photo URL"
+                            class="w-full px-4 py-2 border rounded-lg">
+                    </div>
+
+                    <div class="space-y-4 bg-white p-5 rounded-lg shadow-sm border border-gray-100">
+                        <h4 class="font-bold border-b pb-3 text-lg"><i
+                                class="fa-solid fa-address-book text-blue-500 mr-2"></i>Contact</h4>
+                        <input type="tel" id="phone" placeholder="Phone" required
+                            class="w-full px-4 py-2 border rounded-lg">
+                        <input type="tel" id="whatsappNumber" placeholder="WhatsApp"
+                            class="w-full px-4 py-2 border rounded-lg">
+                        <div class="grid grid-cols-2 gap-4">
+                            <input type="text" id="district" placeholder="District" required
+                                class="w-full px-4 py-2 border rounded-lg">
+                            <input type="text" id="subDivision" placeholder="Sub Division" required
+                                class="w-full px-4 py-2 border rounded-lg">
+                        </div>
+                        <input type="text" id="cityOrVillage" placeholder="City/Village" required
+                            class="w-full px-4 py-2 border rounded-lg">
+                        <input type="text" id="pinCode" placeholder="PIN Code" required
+                            class="w-full px-4 py-2 border rounded-lg">
+                        <select id="localBodyType" class="w-full px-4 py-2 border rounded-lg bg-white">
+                            <option>Municipality</option>
+                            <option>Municipal Corporation</option>
+                            <option>Gram Panchayat</option>
+                            <option>Block</option>
+                            <option>Nagar Panchayat</option>
+                        </select>
+                    </div>
+
+                </div>
+                <div class="flex justify-end gap-3 mt-6">
+                    <button type="button" onclick="closeDonorModal()"
+                        class="px-6 py-2 border rounded-lg font-bold bg-white text-gray-700">Cancel</button>
+                    <button type="submit"
+                        class="px-8 py-2 bg-red-600 text-white rounded-lg font-bold shadow hover:bg-red-700">Save
+                        Data</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+
+    <script>
+        // --- STATE DEFS ---
+        let dbDonors = [];
+        let dbPending = [];
+        let dbMessages = [];
+        let dbEmergency = [];
+        let dbReports = [];
+        let dbLocations = [];
+        let locationsMap = {};
+        let currentEditingLocation = null;
+        const AUTHORIZED_ADMIN_PHONE = '+919863918519';
+        const LOCATION_ROOT = 'locations';
+        let unsubscribeActive = false;
+        let lastEmergencyCount = -1;
+        let yearlyDonationsChart = null;
+
+        // --- SECURITY: BLOCK INSPECT MODE ---
+        // Prevents common ways to open Developer Tools or view source
+        (function () {
+            // 1. Disable Right Click
+            document.addEventListener('contextmenu', e => e.preventDefault());
+
+            // 2. Disable Common Shortcuts (F12, Ctrl+Shift+I, Ctrl+Shift+J, Ctrl+U)
+            document.addEventListener('keydown', e => {
+                if (
+                    e.keyCode === 123 || // F12
+                    (e.ctrlKey && e.shiftKey && (e.keyCode === 73 || e.keyCode === 74)) || // Ctrl+Shift+I/J
+                    (e.ctrlKey && e.keyCode === 85) // Ctrl+U
+                ) {
+                    e.preventDefault();
+                    return false;
+                }
+            });
+        })();
+
+        // --- AUTHENTICATION & LOGIN LOGIC (LOCAL) ---
+        // --- AUTHENTICATION & LOGIN LOGIC (FIREBASE) ---
+        function initAuthListener() {
+            window.onAuthStateChanged(window.auth, (user) => {
+                const overlay = document.getElementById('loginOverlay');
+                if (user) {
+                    // Whitelisted Admin Number
+                    const allowedNumber = '+919863918519';
+
+                    if (user.phoneNumber === allowedNumber) {
+                        overlay.style.opacity = '0';
+                        setTimeout(() => {
+                            overlay.style.display = 'none';
+                            initFirebaseListeners();
+                        }, 300);
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Access Denied',
+                            text: 'This phone number (' + user.phoneNumber + ') is not authorized for Admin access.',
+                            confirmButtonColor: '#dc2626',
+                            confirmButtonText: 'Logout'
+                        }).then(() => {
+                            handleLogout();
+                        });
+                    }
+                } else {
+                    overlay.style.display = 'flex';
+                    setTimeout(() => { overlay.style.opacity = '1'; }, 10);
+                    unsubscribeActive = false;
+                }
+            });
+        }
+
+        window.confirmationResult = null;
+        window.recaptchaVerifier = null;
+
+        async function handleSendOTP() {
+            const phoneInput = document.getElementById('adminPhone');
+            let phoneNumber = phoneInput.value.trim();
+
+            if (!phoneNumber) {
+                Swal.fire({ icon: 'warning', title: 'Required', text: 'Please enter your phone number.' });
+                return;
+            }
+
+            // Simple formatting check/fix
+            if (!phoneNumber.startsWith('+')) {
+                // If it starts with 0, remove it and add +91
+                if (phoneNumber.startsWith('0')) phoneNumber = phoneNumber.substring(1);
+                phoneNumber = '+91' + phoneNumber;
+            }
+
+            // --- TEST MODE OVERRIDE ---
+            // This allows bypassing reCAPTCHA for phone numbers added as 'Test Numbers' in Firebase Console.
+            // Note: Real numbers will fail if this is true and you're on the Spark (Free) plan.
+            window.auth.settings.appVerificationDisabledForTesting = true;
+
+            const btn = document.getElementById('sendOtpBtn');
+            const originalContent = btn.innerHTML;
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-2"></i> Sending...';
+            btn.disabled = true;
+
+            try {
+                if (!window.recaptchaVerifier) {
+                    window.recaptchaVerifier = new window.RecaptchaVerifier(window.auth, 'recaptcha-container', {
+                        'size': 'invisible'
+                    });
+                }
+
+                const result = await window.signInWithPhoneNumber(window.auth, phoneNumber, window.recaptchaVerifier);
+                window.confirmationResult = result;
+
+                document.getElementById('phone-section').classList.add('hidden');
+                document.getElementById('otp-section').classList.remove('hidden');
+
+                Swal.fire({ icon: 'success', title: 'SMS Sent!', text: 'Verification code sent to ' + phoneNumber, timer: 2000, showConfirmButton: false });
+            } catch (error) {
+                console.error("Auth Error:", error);
+                let msg = 'Failed to send verification code. Please try again.';
+
+                if (error.code === 'auth/invalid-phone-number') msg = 'The phone number provided is invalid.';
+                if (error.code === 'auth/too-many-requests') msg = 'Too many requests. Please try again later.';
+
+                // Specific fix for Billing Error (Spark vs Blaze Plan)
+                if (error.code === 'auth/billing-not-enabled' || error.message.includes('billing')) {
+                    msg = 'Verification failed because "Billing" is not enabled in Firebase. \n\n**FIX**: Please add your number to "Phone numbers for testing" in the Firebase Console to test for free.';
+                }
+
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Verification Error',
+                    html: `<div class="text-sm text-left opacity-90 leading-relaxed">${msg.replace('\n\n', '<br><br>')}</div>`,
+                    confirmButtonText: 'Got it'
+                });
+
+                // Reset reCAPTCHA if error
+                if (window.recaptchaVerifier) {
+                    try { window.recaptchaVerifier.clear(); } catch (e) { }
+                    window.recaptchaVerifier = null;
+                    document.getElementById('recaptcha-container').innerHTML = '';
+                }
+            } finally {
+                btn.innerHTML = originalContent;
+                btn.disabled = false;
+            }
+        }
+
+        async function handleVerifyOTP() {
+            const otpInput = document.getElementById('adminOtp');
+            const code = otpInput.value.trim();
+
+            if (code.length !== 6) {
+                Swal.fire({ icon: 'warning', title: 'Invalid OTP', text: 'Please enter the 6-digit verification code.' });
+                return;
+            }
+
+            const btn = document.getElementById('verifyOtpBtn');
+            const originalContent = btn.innerHTML;
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-2"></i> Verifying...';
+            btn.disabled = true;
+
+            try {
+                await window.confirmationResult.confirm(code);
+                Swal.fire({ icon: 'success', title: 'Logged In', text: 'Access Granted Successfully.', timer: 1500, showConfirmButton: false });
+            } catch (error) {
+                console.error("Verification Error:", error);
+                Swal.fire({ icon: 'error', title: 'Invalid Code', text: 'The verification code you entered is incorrect.' });
+                otpInput.value = '';
+            } finally {
+                btn.innerHTML = originalContent;
+                btn.disabled = false;
+            }
+        }
+
+        function handleLogout() {
+            window.signOut(window.auth).then(() => {
+                dbDonors = []; dbPending = []; dbMessages = []; dbEmergency = []; dbReports = [];
+                unsubscribeActive = false;
+                renderViews();
+                setTimeout(() => { location.reload(); }, 100);
+            }).catch(e => {
+                console.error("Logout Error:", e);
+                location.reload();
+            });
+        }
+
+
+        // --- FIREBASE DB SYNC ---
+        function initFirebaseListeners() {
+            if (unsubscribeActive) return; // prevent duplicate subscriptions
+
+            let iv = setInterval(() => {
+                if (window.db && window.ref && window.onValue) {
+                    clearInterval(iv);
+                    unsubscribeActive = true;
+                    // Live Donors Subscription (Approved base)
+                    window.onValue(window.ref(window.db, 'donors'), snap => {
+                        dbDonors = snap.val() ? Object.keys(snap.val()).map(k => {
+                            const data = snap.val()[k];
+                            // If data already has an 'id' field, keep it as 'internalId'
+                            const internalId = data.id || null;
+                            return { ...data, id: k, internalId };
+                        }) : [];
+                        renderViews();
+                    });
+                    // Pending Donors Subscription
+                    window.onValue(window.ref(window.db, 'pending_donors'), snap => {
+                        dbPending = snap.val() ? Object.keys(snap.val()).map(k => {
+                            const data = snap.val()[k];
+                            const internalId = data.id || null;
+                            return { ...data, id: k, internalId };
+                        }) : [];
+                        const b = document.getElementById('badge-pending');
+                        if (dbPending.length > 0) { b.textContent = dbPending.length; b.classList.remove('hidden'); } else { b.classList.add('hidden'); }
+                        renderViews();
+                    });
+                    // Contact Requests (Messages) Subscription
+                    window.onValue(window.ref(window.db, 'contact_requests'), snap => {
+                        dbMessages = snap.val() ? Object.keys(snap.val()).map(k => ({ ...snap.val()[k], id: k })) : [];
+                        const b = document.getElementById('badge-messages');
+                        if (dbMessages.length > 0) { b.textContent = dbMessages.length; b.classList.remove('hidden'); } else { b.classList.add('hidden'); }
+                        renderViews();
+                    });
+                    // Emergency Requests Subscription
+                    window.onValue(window.ref(window.db, 'emergency_requests'), snap => {
+                        dbEmergency = snap.val() ? Object.keys(snap.val()).map(k => {
+                            const data = snap.val()[k];
+                            const internalId = data.id || null;
+                            return { ...data, id: k, internalId };
+                        }) : [];
+
+                        // Handle Alerts for new items
+                        if (lastEmergencyCount !== -1 && dbEmergency.length > lastEmergencyCount) {
+                            triggerEmergencyAlert();
+                        }
+                        lastEmergencyCount = dbEmergency.length;
+
+                        const b = document.getElementById('badge-emergency');
+                        const pendingReqs = dbEmergency.filter(r => r.status === 'pending').length;
+                        if (pendingReqs > 0) { b.textContent = pendingReqs; b.classList.remove('hidden'); } else { b.classList.add('hidden'); }
+                        renderViews();
+                    });
+                    // Donor Reports Subscription
+                    window.onValue(window.ref(window.db, 'donor_reports'), snap => {
+                        dbReports = snap.val() ? Object.keys(snap.val()).map(k => ({ ...snap.val()[k], id: k })) : [];
+                        const b = document.getElementById('badge-reports');
+                        const activeReportsCount = dbReports.filter(r => r.status !== 'completed').length;
+                        if (activeReportsCount > 0) { b.textContent = activeReportsCount; b.classList.remove('hidden'); } else { b.classList.add('hidden'); }
+                        renderViews();
+                    });
+                    window.onValue(window.ref(window.db, LOCATION_ROOT), snap => {
+                        const raw = snap.val();
+                        locationsMap = buildLocationsMap(raw);
+                        dbLocations = flattenLocations(raw);
+                        renderLocationTable();
+                    });
+                }
+            }, 100);
+        }
+
+
+
+        // --- CORE ACTIONS (Move Logic) ---
+        function approveDonor(id) {
+            const donor = dbPending.find(d => String(d.id) === String(id));
+            if (!donor) return;
+
+            let liveData = { ...donor };
+            // Remove the mapped keys before saving to the new location
+            delete liveData.id;
+            delete liveData.internalId;
+
+            liveData.status = 'approved';
+            liveData.createdAt = new Date().toISOString();
+
+            Swal.fire({
+                title: 'Approving...',
+                allowOutsideClick: false,
+                didOpen: () => { Swal.showLoading(); }
+            });
+
+            // Generate a fresh unique ID for the approved node
+            const liveRef = window.push(window.ref(window.db, 'donors'));
+
+            // Step 1: Copy
+            window.set(liveRef, liveData).then(() => {
+                // Step 2: Remove Source (using the original Firebase Key 'id')
+                return window.remove(window.ref(window.db, `pending_donors/${id}`));
+            }).then(() => {
+                Swal.fire({ icon: 'success', title: 'Approved!', text: 'Donor mapped to approved_donors seamlessly.', timer: 1500, showConfirmButton: false });
+            }).catch(e => Swal.fire('Data Transaction Error', e.message, 'error'));
+        }
+
+        // Standard Deletion Logic handles rejecting unverified pending_donors, and trashing contact messages.
+        function deleteDonor(id, node) {
+            Swal.fire({
+                title: 'Confirm Deletion',
+                text: "This data will be permanently removed.",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#dc2626',
+                confirmButtonText: 'Yes, delete it!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    window.remove(window.ref(window.db, `${node}/${id}`))
+                        .then(() => {
+                            Swal.fire({ icon: 'success', title: 'Deleted', timer: 1000, showConfirmButton: false });
+                        }).catch(e => Swal.fire('Error', e.message, 'error'));
+                }
+            });
+        }
+
+        function isAuthorizedAdmin() {
+            return window.auth?.currentUser?.phoneNumber === AUTHORIZED_ADMIN_PHONE;
+        }
+
+        function flattenLocations(snapshot) {
+            const items = [];
+            const data = snapshot || {};
+            Object.entries(data).forEach(([key, value]) => {
+                items.push({
+                    id: key,
+                    state: value.state || '',
+                    district: value.district || '',
+                    subdivision: value.subdivision || '',
+                    pinCode: value.pinCode || '',
+                    latitude: value.latitude ?? '',
+                    longitude: value.longitude ?? '',
+                    isRedAlert: value.isRedAlert === true
+                });
+            });
+            return items;
+        }
+
+        function buildLocationsMap(snapshot) {
+            const map = {};
+            Object.values(snapshot || {}).forEach(item => {
+                const { state, district, subdivision, pinCode } = item;
+                if (!state || !district || !subdivision || !pinCode) return;
+
+                if (!map[state]) map[state] = {};
+                if (!map[state][district]) map[state][district] = {};
+                if (!map[state][district][subdivision]) map[state][district][subdivision] = [];
+                if (!map[state][district][subdivision].includes(pinCode)) {
+                    map[state][district][subdivision].push(pinCode);
+                }
+            });
+            return map;
+        }
+
+        function renderLocationTable() {
+            const tbody = document.getElementById('locationsTableBody');
+            const count = document.getElementById('locationCount');
+            tbody.innerHTML = '';
+            if (dbLocations.length === 0) {
+                count.textContent = 'No locations configured.';
+                tbody.innerHTML = '<tr><td colspan="6" class="p-8 text-center text-gray-500">No locations available. Add a new location to get started.</td></tr>';
+                return;
+            }
+            count.textContent = `${dbLocations.length} location${dbLocations.length === 1 ? '' : 's'}`;
+            dbLocations.sort((a, b) => (`${a.state}${a.district}${a.subdivision}${a.pinCode}`).localeCompare(`${b.state}${b.district}${b.subdivision}${b.pinCode}`)).forEach(location => {
+                const safeState = location.state.replace(/'/g, '\\\'');
+                const safeDistrict = location.district.replace(/'/g, '\\\'');
+                const safeSub = location.subdivision.replace(/'/g, '\\\'');
+                const locId = location.id || `${location.state}_${location.district}_${location.subdivision}_${location.pinCode}`;
+
+                tbody.innerHTML += `
+                    <tr class="hover:bg-gray-50 ${location.isRedAlert ? 'bg-red-50' : ''}">
+                        <td class="px-5 py-4 text-sm font-medium text-gray-700">${location.state}</td>
+                        <td class="px-5 py-4 text-sm text-gray-600">${location.district}</td>
+                        <td class="px-5 py-4 text-sm text-gray-600">${location.subdivision}</td>
+                        <td class="px-5 py-4 text-sm text-gray-600">${location.pinCode}</td>
+                        <td class="px-5 py-4 text-sm text-gray-600">${location.latitude}, ${location.longitude}</td>
+                        <td class="px-5 py-4 text-right space-x-1">
+                            <button type="button" onclick="editLocation('${locId}')" class="px-3 py-2 text-xs font-semibold rounded-lg bg-blue-50 text-blue-700 hover:bg-blue-100">Edit</button>
+                            <button type="button" onclick="deleteLocation('${locId}')" class="px-3 py-2 text-xs font-semibold rounded-lg bg-gray-100 text-gray-700 hover:bg-gray-200">Delete</button>
+                            <button type="button" onclick="toggleLocationRedAlert('${locId}', ${location.isRedAlert})" class="px-3 py-2 text-xs font-semibold rounded-lg ${location.isRedAlert ? 'bg-red-600 text-white' : 'bg-yellow-50 text-yellow-700 hover:bg-yellow-100'}">${location.isRedAlert ? 'Clear Alert' : 'Red Alert'}</button>
+                        </td>
+                    </tr>`;
+            });
+        }
+
+        function populateLocationStates() {
+            const stateInput = document.getElementById('locationState');
+            const districtInput = document.getElementById('locationDistrict');
+            const subdivisionInput = document.getElementById('locationSubdivision');
+            const pinSelect = document.getElementById('locationPinCode');
+
+            if (!stateInput.value) {
+                pinSelect.innerHTML = '<option value="">Select PIN Code</option>';
+                pinSelect.disabled = true;
+            }
+        }
+
+        function populateLocationDistricts() {
+            // For this management interface we accept freeform district values
+            document.getElementById('locationSubdivision').value = '';
+            document.getElementById('locationPinCode').value = '';
+        }
+
+        function populateLocationSubdivisions() {
+            document.getElementById('locationPinCode').value = '';
+        }
+
+        function resetLocationForm() {
+            currentEditingLocation = null;
+            document.getElementById('locationForm').reset();
+            document.getElementById('originalLocationKey').value = '';
+            document.getElementById('locationSubmitButton').textContent = 'Add Location';
+        }
+
+        function editLocation(id) {
+            const location = dbLocations.find(loc => loc.id === id);
+            if (!location) return;
+            currentEditingLocation = { ...location };
+            document.getElementById('originalLocationKey').value = id;
+            document.getElementById('locationState').value = location.state;
+            document.getElementById('locationDistrict').value = location.district;
+            document.getElementById('locationSubdivision').value = location.subdivision;
+            document.getElementById('locationLatitude').value = location.latitude;
+            document.getElementById('locationLongitude').value = location.longitude;
+            document.getElementById('locationPinCode').value = location.pinCode;
+            document.getElementById('locationSubmitButton').textContent = 'Save Location';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function deleteLocation(id) {
+            if (!isAuthorizedAdmin()) {
+                Swal.fire({ icon: 'error', title: 'Unauthorized', text: 'You are not authorized to delete locations.' });
+                return;
+            }
+            Swal.fire({
+                title: 'Confirm Deletion',
+                text: 'This location will be permanently removed.',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#dc2626',
+                confirmButtonText: 'Delete'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    window.remove(window.ref(window.db, `${LOCATION_ROOT}/${id}`))
+                        .then(() => {
+                            Swal.fire({ icon: 'success', title: 'Deleted', timer: 1000, showConfirmButton: false });
+                        }).catch(e => Swal.fire('Error', e.message, 'error'));
+                }
+            });
+        }
+
+        function toggleLocationRedAlert(id, currentStatus) {
+            if (!isAuthorizedAdmin()) {
+                Swal.fire({ icon: 'error', title: 'Unauthorized', text: 'You are not authorized to update alert status.' });
+                return;
+            }
+            const path = `${LOCATION_ROOT}/${id}`;
+            window.update(window.ref(window.db, path), { isRedAlert: !currentStatus })
+                .then(() => {
+                    Swal.fire({ icon: 'success', title: 'Updated', timer: 1000, showConfirmButton: false });
+                }).catch(e => Swal.fire('Error', e.message, 'error'));
+        }
+
+        function saveLocation(e) {
+            e.preventDefault();
+            if (!isAuthorizedAdmin()) {
+                Swal.fire({ icon: 'error', title: 'Unauthorized', text: 'Only the admin can save locations.' });
+                return;
+            }
+
+            const state = document.getElementById('locationState').value.trim().toUpperCase();
+            const district = document.getElementById('locationDistrict').value.trim().toUpperCase();
+            const subdivision = document.getElementById('locationSubdivision').value.trim().toUpperCase();
+            const pinCode = document.getElementById('locationPinCode').value.trim();
+            const latitude = document.getElementById('locationLatitude').value.trim();
+            const longitude = document.getElementById('locationLongitude').value.trim();
+            const originalKey = document.getElementById('originalLocationKey').value;
+
+            if (!state || !district || !subdivision || !pinCode || !latitude || !longitude) {
+                Swal.fire({ icon: 'warning', title: 'Missing Fields', text: 'All fields are required.' });
+                return;
+            }
+
+            if (!/^[0-9]{6}$/.test(pinCode)) {
+                Swal.fire({ icon: 'warning', title: 'Invalid PIN Code', text: 'PIN Code must be exactly 6 digits.' });
+                return;
+            }
+
+            const latNum = parseFloat(latitude);
+            const lngNum = parseFloat(longitude);
+            if (!Number.isFinite(latNum) || !Number.isFinite(lngNum)) {
+                Swal.fire({ icon: 'warning', title: 'Invalid Coordinates', text: 'Latitude and Longitude must be valid decimal numbers.' });
+                return;
+            }
+
+            // Use a composite key for the flat structure
+            const compositeKey = `${state}_${district}_${subdivision}_${pinCode}`.replace(/[\s\.]/g, '_');
+            const path = `${LOCATION_ROOT}/${compositeKey}`;
+
+            const payload = {
+                state,
+                district,
+                subdivision,
+                pinCode,
+                latitude: latNum,
+                longitude: lngNum,
+                isRedAlert: currentEditingLocation?.id === originalKey ? (dbLocations.find(loc => loc.id === originalKey)?.isRedAlert === true) : false
+            };
+
+            const operation = window.set(window.ref(window.db, path), payload)
+                .then(() => {
+                    // If the key changed (Edit), remove the old one
+                    if (originalKey && originalKey !== compositeKey) {
+                        return window.remove(window.ref(window.db, `${LOCATION_ROOT}/${originalKey}`));
+                    }
+                });
+
+            operation.then(() => {
+                Swal.fire({ icon: 'success', title: 'Saved', text: 'Location has been saved successfully.', timer: 1400, showConfirmButton: false });
+                resetLocationForm();
+            }).catch(e => Swal.fire('Error', e.message, 'error'));
+        }
+
+        // --- TAB & UI LOGIC ---
+        function switchTab(tabId) {
+            document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active'));
+            document.getElementById(`view-${tabId}`).classList.add('active');
+
+            document.querySelectorAll('.nav-btn').forEach(el => {
+                el.classList.remove('bg-red-50', 'text-red-600', 'border-red-600', 'bg-orange-50', 'text-orange-600', 'border-orange-500', 'bg-blue-50', 'text-blue-600', 'border-blue-600', 'bg-green-50', 'text-green-600', 'border-green-600', 'bg-purple-50', 'text-purple-600', 'border-purple-600', 'text-purple-700', 'border-purple-700', 'bg-indigo-50', 'text-indigo-800', 'border-indigo-600');
+                el.classList.add('border-transparent');
+            });
+
+            const link = document.getElementById(`tab-${tabId}`);
+            if (tabId === 'insights') { link.classList.add('bg-indigo-50', 'text-indigo-800', 'border-indigo-600'); document.getElementById('header-title').innerText = "Analysis & Insights"; }
+            if (tabId === 'donors') { link.classList.add('bg-red-50', 'text-red-600', 'border-red-600'); document.getElementById('header-title').innerText = "Active Donors"; }
+            if (tabId === 'locations') { link.classList.add('bg-red-50', 'text-red-600', 'border-red-600'); document.getElementById('header-title').innerText = "Location Management"; }
+            if (tabId === 'pending') { link.classList.add('bg-orange-50', 'text-orange-600', 'border-orange-500'); document.getElementById('header-title').innerText = "Registration Applications"; }
+            if (tabId === 'messages') { link.classList.add('bg-blue-50', 'text-blue-600', 'border-blue-600'); document.getElementById('header-title').innerText = "Contact Messages"; }
+            if (tabId === 'emergency') { link.classList.add('bg-red-50', 'text-red-600', 'border-red-600'); document.getElementById('header-title').innerText = "Emergency Blood Requests"; }
+            if (tabId === 'completed') { link.classList.add('bg-green-50', 'text-green-600', 'border-green-600'); document.getElementById('header-title').innerText = "Completed Donations"; }
+            if (tabId === 'reports') { link.classList.add('bg-purple-50', 'text-purple-600', 'border-purple-600'); document.getElementById('header-title').innerText = "Active Reports"; }
+            if (tabId === 'reports-completed') { link.classList.add('bg-purple-50', 'text-purple-700', 'border-purple-700'); document.getElementById('header-title').innerText = "Completed Reports"; }
+
+            renderViews();
+        }
+
+        document.getElementById('searchInput').addEventListener('input', () => { renderViews(); toggleClearBtn('searchInput'); });
+
+        function toggleClearBtn(id) {
+            const btn = document.getElementById(`clear-${id}`);
+            if (btn) {
+                if (document.getElementById(id).value) btn.classList.remove('hidden');
+                else btn.classList.add('hidden');
+            }
+        }
+
+        function clearSearch(id) {
+            document.getElementById(id).value = '';
+            toggleClearBtn(id);
+            renderViews();
+        }
+
+        function getCompletedEffectiveMs(r) {
+            if (!r || r.status !== 'completed') return null;
+            if (r.completedAt != null && typeof r.completedAt === 'number') return r.completedAt;
+            if (r.timestamp != null) {
+                if (typeof r.timestamp === 'number') return r.timestamp;
+                const p = Date.parse(r.timestamp);
+                return Number.isFinite(p) ? p : null;
+            }
+            return null;
+        }
+
+        function updateInsightsMetrics() {
+            const $ = (id) => document.getElementById(id);
+            if (!$('insight-donors')) return;
+
+            const year = new Date().getFullYear();
+            const completed = dbEmergency.filter((r) => r.status === 'completed');
+            const yearlyCount = completed.filter((r) => {
+                const ms = getCompletedEffectiveMs(r);
+                if (ms == null) return false;
+                return new Date(ms).getFullYear() === year;
+            }).length;
+
+            const areaKeys = new Set();
+            dbLocations.forEach((l) => {
+                const sub = (l.subdivision || '').trim().toLowerCase();
+                const pin = (l.pinCode || '').trim();
+                if (!pin) return;
+                areaKeys.add(`${sub}|${pin}`);
+            });
+
+            const emergencyOpen = dbEmergency.filter((r) => r.status !== 'completed').length;
+            const pendingRegs = dbPending.length;
+            const pendingTotal = emergencyOpen + pendingRegs;
+
+            const activeReports = dbReports.filter((r) => r.status !== 'completed').length;
+            const doneReports = dbReports.filter((r) => r.status === 'completed').length;
+
+            $('insight-donors').textContent = dbDonors.length;
+            $('insight-areas').textContent = areaKeys.size;
+            $('insight-complete-donations').textContent = completed.length;
+            $('insight-yearly').textContent = yearlyCount;
+            const yLabel = $('insight-yearly-label');
+            if (yLabel) yLabel.textContent = `Jan–Dec ${year}`;
+            $('insight-pending').textContent = pendingTotal;
+            const br = $('insight-pending-breakdown');
+            if (br) br.textContent = `${emergencyOpen} open request${emergencyOpen === 1 ? '' : 's'} · ${pendingRegs} registration${pendingRegs === 1 ? '' : 's'}`;
+            $('insight-reports-active').textContent = activeReports;
+            $('insight-reports-complete').textContent = doneReports;
+            $('insight-emergency-total').textContent = dbEmergency.length;
+
+            const cap = document.getElementById('insight-chart-caption');
+            if (cap) cap.textContent = `Completed in ${year} (by completion or request date)`;
+
+            refreshYearlyDonationsChart();
+        }
+
+        // --- DATA EXPORT FUNCTIONS ---
+        function downloadCSV(data, filename) {
+            if (!data || Object.keys(data).length === 0) {
+                Swal.fire({ icon: 'warning', title: 'No Data', text: 'There is no data to export.' });
+                return;
+            }
+
+            const csvRows = [];
+            const keys = Object.keys(data[Object.keys(data)[0]]);
+            csvRows.push(keys.join(','));
+
+            for (const rowId in data) {
+                const values = keys.map(key => {
+                    let val = data[rowId][key];
+                    if (val === null || val === undefined) return '';
+                    val = String(val).replace(/"/g, '""');
+                    return val.includes(',') || val.includes('"') || val.includes('\n') ? `"${val}"` : val;
+                });
+                csvRows.push(values.join(','));
+            }
+
+            const blob = new Blob([csvRows.join('\n')], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            const url = URL.createObjectURL(blob);
+            link.setAttribute('href', url);
+            link.setAttribute('download', filename);
+            link.style.visibility = 'hidden';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+
+            Swal.fire({ icon: 'success', title: 'Exported', text: `${filename} downloaded successfully.`, timer: 1500, showConfirmButton: false });
+        }
+
+        function exportDonorsCSV() {
+            if (dbDonors.length === 0) {
+                Swal.fire({ icon: 'warning', title: 'No Donors', text: 'There are no donors to export.' });
+                return;
+            }
+
+            const dataObj = {};
+            dbDonors.forEach((donor, index) => {
+                dataObj[index] = {
+                    Name: donor.name || '',
+                    Age: donor.age || '',
+                    Gender: donor.gender || '',
+                    'Blood Group': donor.bloodGroup || '',
+                    Phone: donor.phone || '',
+                    'WhatsApp': donor.whatsappNumber || '',
+                    State: donor.state || '',
+                    District: donor.district || '',
+                    Subdivision: donor.subDivision || '',
+                    'City/Village': donor.cityOrVillage || '',
+                    'PIN Code': donor.pinCode || '',
+                    'Donation Count': donor.donationCount || 0,
+                    'Last Updated': donor.createdAt || new Date().toISOString()
+                };
+            });
+
+            const now = new Date();
+            const monthYear = now.toLocaleString('en-IN', { month: 'long', year: 'numeric' });
+            downloadCSV(dataObj, `Donors_Export_${monthYear}.csv`);
+        }
+
+        function exportMonthlyDonationCSV() {
+            const monthCounts = {};
+            const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+
+            months.forEach(month => {
+                monthCounts[month] = 0;
+            });
+
+            const currentYear = new Date().getFullYear();
+            const completed = dbEmergency.filter((r) => r.status === 'completed');
+
+            completed.forEach(donation => {
+                let dateToUse = null;
+                if (donation.completedAt) {
+                    dateToUse = new Date(donation.completedAt);
+                } else if (donation.createdAt) {
+                    dateToUse = new Date(donation.createdAt);
+                }
+                if (dateToUse && dateToUse.getFullYear() === currentYear) {
+                    const monthIndex = dateToUse.getMonth();
+                    monthCounts[months[monthIndex]]++;
+                }
+            });
+
+            const dataObj = {};
+            months.forEach((month, index) => {
+                dataObj[index] = {
+                    Month: month,
+                    'Donations Completed': monthCounts[month] || 0,
+                    Year: currentYear
+                };
+            });
+
+            const now = new Date();
+            const monthYear = now.toLocaleString('en-IN', { month: 'long', year: 'numeric' });
+            downloadCSV(dataObj, `Monthly_Donations_${monthYear}.csv`);
+        }
+
+        function exportLocationDirectoryCSV() {
+            if (dbLocations.length === 0) {
+                Swal.fire({ icon: 'warning', title: 'No Locations', text: 'There are no locations to export.' });
+                return;
+            }
+
+            const dataObj = {};
+            dbLocations.forEach((location, index) => {
+                dataObj[index] = {
+                    State: location.state || '',
+                    District: location.district || '',
+                    Subdivision: location.subdivision || '',
+                    'PIN Code': location.pinCode || '',
+                    Latitude: location.latitude || '',
+                    Longitude: location.longitude || '',
+                    'Red Alert': location.isRedAlert ? 'Yes' : 'No',
+                    'Updated': new Date().toISOString()
+                };
+            });
+
+            const now = new Date();
+            const monthYear = now.toLocaleString('en-IN', { month: 'long', year: 'numeric' });
+            downloadCSV(dataObj, `Location_Directory_${monthYear}.csv`);
+        }
+
+        function refreshYearlyDonationsChart() {
+            if (typeof Chart === 'undefined') return;
+            const canvas = document.getElementById('yearlyDonationsChart');
+            if (!canvas) return;
+
+            const year = new Date().getFullYear();
+            const monthCounts = Array(12).fill(0);
+            dbEmergency.forEach((r) => {
+                if (r.status !== 'completed') return;
+                const ms = getCompletedEffectiveMs(r);
+                if (ms == null) return;
+                const d = new Date(ms);
+                if (d.getFullYear() !== year) return;
+                monthCounts[d.getMonth()]++;
+            });
+
+            const labels = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+            const dataset = {
+                label: 'Completed',
+                data: monthCounts,
+                backgroundColor: 'rgba(22, 163, 74, 0.65)',
+                borderColor: 'rgb(21, 128, 61)',
+                borderWidth: 1,
+                borderRadius: 4
+            };
+
+            if (yearlyDonationsChart) {
+                yearlyDonationsChart.data.labels = labels;
+                yearlyDonationsChart.data.datasets[0].data = monthCounts;
+                yearlyDonationsChart.update();
+            } else {
+                yearlyDonationsChart = new Chart(canvas, {
+                    type: 'bar',
+                    data: { labels, datasets: [dataset] },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: { legend: { display: false } },
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                ticks: { precision: 0, stepSize: 1 }
+                            }
+                        }
+                    }
+                });
+            }
+        }
+
+        // --- RENDERING VIEWS ---
+        function renderViews() {
+            // Stats (Mapping to total Approved Donors)
+            document.getElementById('stat-donors').textContent = dbDonors.length;
+            document.getElementById('stat-districts').textContent = new Set(dbDonors.map(d => d.district).filter(Boolean)).size;
+            document.getElementById('stat-donations').textContent = dbDonors.reduce((a, b) => a + (parseInt(b.donationCount) || 0), 0);
+
+            // ACTIVE DONORS
+            const dTb = document.getElementById('donorsTableBody');
+            dTb.innerHTML = '';
+            const query = document.getElementById('searchInput').value.toLowerCase().trim();
+            const groupFilter = document.getElementById('filterBloodGroup').value;
+
+            const filtered = dbDonors.filter(d => {
+                const searchMatch = (`${d.name || ''} ${d.district || ''} ${d.phone || ''}`).toLowerCase().includes(query);
+                const groupMatch = !groupFilter || d.bloodGroup === groupFilter;
+                return searchMatch && groupMatch;
+            }).sort((a, b) => (b.createdAt || b.id).localeCompare(a.createdAt || a.id));
+
+            if (filtered.length === 0) dTb.innerHTML = `<tr><td colspan="4" class="p-8 text-center text-gray-500">No active donors found.</td></tr>`;
+
+            filtered.forEach(d => {
+                const img = (d.photoUrl && d.photoUrl.includes('http')) ? d.photoUrl : 'https://ui-avatars.com/api/?name=' + encodeURI(d.name) + '&color=b91c1c&background=fee2e2';
+                dTb.innerHTML += `
+                    <tr class="hover:bg-red-50/40">
+                        <td class="px-6 py-4 flex items-center">
+                            <img class="h-10 w-10 rounded-full object-cover border" src="${img}">
+                            <div class="ml-3 font-bold">${d.name || '-'}<div class="text-xs text-gray-500 font-medium">${d.age} Yrs • ${d.gender}</div></div>
+                        </td>
+                        <td class="px-6 py-4"><span class="px-3 border border-red-200 py-1 bg-red-100 text-red-800 rounded-full font-bold text-xs">${d.bloodGroup || '-'}</span></td>
+                        <td class="px-6 py-4 text-sm"><div class="font-medium"><i class="fa-solid fa-phone w-4 text-gray-400"></i>${d.phone || '-'}</div><div class="text-xs text-gray-500 truncate max-w-[200px] mt-1"><i class="fa-solid fa-map-pin w-4 text-gray-400"></i>${d.cityOrVillage}, ${d.district}</div></td>
+                        <td class="px-6 py-4 text-right">
+                            <button onclick="editDonor('${d.id}')" class="text-blue-500 bg-blue-50 p-2 rounded-md hover:bg-blue-100 mx-1"><i class="fa-solid fa-pen"></i></button>
+                            <button onclick="deleteDonor('${d.id}', 'donors')" class="text-red-500 bg-red-50 p-2 rounded-md hover:bg-red-100 mx-1"><i class="fa-solid fa-trash"></i></button>
+                        </td>
+                    </tr>
+                `;
+            });
+
+            // PENDING DONORS
+            const pTb = document.getElementById('pendingTableBody');
+            pTb.innerHTML = '';
+
+            const pQuery = document.getElementById('searchPending').value.toLowerCase().trim();
+            toggleClearBtn('searchPending');
+
+            const pendingSort = [...dbPending].filter(d => {
+                return (`${d.name || ''} ${d.district || ''} ${d.phone || ''}`).toLowerCase().includes(pQuery);
+            }).sort((a, b) => (a.submittedAt || '').localeCompare(b.submittedAt || ''));
+            if (pendingSort.length === 0) pTb.innerHTML = `<tr><td colspan="4" class="p-8 text-center text-gray-500">All caught up! No pending registrations.</td></tr>`;
+
+            pendingSort.forEach(d => {
+                const img = (d.photoUrl && d.photoUrl.includes('http')) ? d.photoUrl : 'https://ui-avatars.com/api/?name=' + encodeURI(d.name) + '&color=ea580c&background=ffedd5';
+                const date = d.submittedAt ? new Date(d.submittedAt).toLocaleDateString() : 'Unknown Date';
+                pTb.innerHTML += `
+                    <tr class="hover:bg-orange-50/40">
+                        <td class="px-6 py-4 flex items-center">
+                            <img class="h-10 w-10 rounded-full object-cover border" src="${img}">
+                            <div class="ml-3 font-semibold text-gray-900">${d.name || '-'}</div>
+                        </td>
+                        <td class="px-6 py-4 text-center"><span class="px-3 border border-red-200 py-1 bg-red-50 text-red-700 rounded-full font-bold text-xs shadow-sm">${d.bloodGroup || '-'}</span></td>
+                        <td class="px-6 py-4 text-sm font-medium text-gray-600">${d.district}<div class="text-xs text-gray-400 mt-1">${date}</div></td>
+                        <td class="px-6 py-4 text-right">
+                            <button onclick="approveDonor('${d.id}')" class="bg-green-100 text-green-700 hover:bg-green-600 hover:text-white px-3 py-1.5 rounded-md font-bold text-xs mx-1 transition"><i class="fa-solid fa-check mr-1"></i> Approve</button>
+                            <button onclick="deleteDonor('${d.id}', 'pending_donors')" class="bg-red-100 text-red-600 hover:bg-red-600 hover:text-white px-3 py-1.5 rounded-md font-bold text-xs mx-1 transition"><i class="fa-solid fa-xmark mr-1"></i> Reject</button>
+                        </td>
+                    </tr>
+                `;
+            });
+
+            // MESSAGES
+            const mGrid = document.getElementById('messagesGrid');
+            const mEmpty = document.getElementById('messages-empty');
+            mGrid.innerHTML = '';
+
+            const mQuery = document.getElementById('searchMessages').value.toLowerCase().trim();
+            toggleClearBtn('searchMessages');
+
+            const msgSort = [...dbMessages].filter(m => {
+                return (`${m.name || ''} ${m.email || ''} ${m.message || ''}`).toLowerCase().includes(mQuery);
+            }).sort((a, b) => (b.timestamp || '').localeCompare(a.timestamp || ''));
+
+            if (msgSort.length === 0) {
+                mEmpty.classList.remove('hidden');
+                mGrid.classList.add('hidden');
+            } else {
+                mEmpty.classList.add('hidden');
+                mGrid.classList.remove('hidden');
+                msgSort.forEach(m => {
+                    const date = m.timestamp ? new Date(m.timestamp).toLocaleString() : 'Just now';
+                    mGrid.innerHTML += `
+                       <div class="bg-white p-6 rounded-xl shadow-sm border border-l-4 border-blue-500 relative flex flex-col hover:shadow-md transition">
+                           <button onclick="deleteDonor('${m.id}', 'contact_requests')" class="absolute top-3 right-3 text-gray-300 hover:text-red-500"><i class="fa-solid fa-trash"></i></button>
+                           <h4 class="font-bold text-gray-800 text-lg">${m.name}</h4>
+                           <a href="mailto:${m.email}" class="text-sm text-blue-600 hover:underline mb-3"><i class="fa-solid fa-envelope mr-1"></i>${m.email}</a>
+                           <div class="bg-gray-50 p-3 rounded border text-gray-700 text-sm mb-4 leading-relaxed flex-1">${m.message}</div>
+                           <p class="text-xs text-gray-400 font-medium text-right mt-auto">${date}</p>
+                       </div>
+                   `;
+                });
+            }
+
+            // EMERGENCY REQUESTS
+            const eGrid = document.getElementById('emergencyGrid');
+            const eEmpty = document.getElementById('emergency-empty');
+            eGrid.innerHTML = '';
+
+            const eQuery = document.getElementById('searchEmergency').value.toLowerCase().trim();
+            toggleClearBtn('searchEmergency');
+
+            const emAll = [...dbEmergency].sort((a, b) => (b.timestamp || '').localeCompare(a.timestamp || ''));
+            const emActive = emAll.filter(r => r.status !== 'completed').filter(r => {
+                return (`${r.patientName || ''} ${r.hospital || ''} ${r.internalId || ''} ${r.bloodGroup || ''}`).toLowerCase().includes(eQuery);
+            });
+            const emCompleted = emAll.filter(r => r.status === 'completed');
+
+            // Render Active Feed
+            if (emActive.length === 0) {
+                eEmpty.classList.remove('hidden');
+                eGrid.classList.add('hidden');
+            } else {
+                eEmpty.classList.add('hidden');
+                eGrid.classList.remove('hidden');
+                emActive.forEach(r => {
+                    const date = r.timestamp ? new Date(r.timestamp).toLocaleString() : 'Just now';
+                    const statusClass = r.status === 'accepted' ? 'bg-green-100 text-green-800' : (r.status === 'on_the_way' ? 'bg-blue-100 text-blue-800' : 'bg-red-100 text-red-800 animate-pulse');
+                    const statusIcon = r.status === 'accepted' ? 'fa-check-circle' : (r.status === 'on_the_way' ? 'fa-truck-fast' : 'fa-clock');
+
+                    eGrid.innerHTML += `
+                        <div class="bg-white rounded-xl shadow-md border-t-4 border-red-600 p-5 flex flex-col hover:shadow-lg transition relative">
+                            <div class="flex justify-between items-start mb-4">
+                                <div>
+                                    <h4 class="font-bold text-gray-900 text-lg">${r.patientName}</h4>
+                                    <p class="text-xs text-gray-400 font-medium">${date} • ID: ${r.internalId || 'N/A'}</p>
+                                </div>
+                                <span class="px-3 py-1 rounded-full text-xs font-bold flex items-center ${statusClass} mr-8">
+                                    <i class="fa-solid ${statusIcon} mr-1"></i> ${r.status.replace('_', ' ').toUpperCase()}
+                                </span>
+                            </div>
+                            <button onclick="deleteDonor('${r.id}', 'emergency_requests')" class="absolute top-2 right-2 text-gray-400 hover:text-red-500 p-2 z-10 transition-colors">
+                                <i class="fa-solid fa-trash-can text-sm"></i>
+                            </button>
+                            
+                            <div class="grid grid-cols-2 gap-4 mb-4">
+                                <div class="bg-red-50 p-2 rounded text-center">
+                                    <p class="text-[10px] uppercase font-bold text-red-400">Blood Group</p>
+                                    <p class="text-xl font-black text-red-700">${r.bloodGroup}</p>
+                                </div>
+                                <div class="bg-gray-50 p-2 rounded text-center">
+                                    <p class="text-[10px] uppercase font-bold text-gray-400">Units</p>
+                                    <p class="text-xl font-black text-gray-700">${r.units}</p>
+                                </div>
+                            </div>
+                            
+                            <div class="space-y-2 mb-6 text-sm">
+                                <p class="flex items-start"><i class="fa-solid fa-hospital w-5 text-gray-400 mt-0.5"></i><span class="font-medium">${r.hospital}</span></p>
+                                <p class="flex items-center"><i class="fa-solid fa-phone w-5 text-gray-400"></i><span class="font-medium">${r.contact}</span></p>
+                            </div>
+                            
+                            <!-- ADMIN ACTIONS -->
+                            <div class="grid grid-cols-2 gap-2 mt-auto pt-4 border-t border-gray-100">
+                                <button onclick="sendToWhatsApp('${r.id}')" class="flex items-center justify-center bg-green-500 hover:bg-green-600 text-white rounded-lg py-2 text-xs font-bold transition">
+                                    <i class="fa-brands fa-whatsapp mr-1 text-sm"></i> WhatsApp
+                                </button>
+                                <button onclick="copyToStatus('${r.id}')" class="flex items-center justify-center bg-gray-800 hover:bg-black text-white rounded-lg py-2 text-xs font-bold transition">
+                                    <i class="fa-solid fa-copy mr-1 text-sm"></i> Copy Status
+                                </button>
+                                <button onclick="updateEmergencyStatus('${r.id}', 'accepted')" class="flex items-center justify-center bg-green-100 text-green-700 hover:bg-green-200 rounded-lg py-2 text-xs font-bold transition">
+                                    <i class="fa-solid fa-check mr-1"></i> Accept
+                                </button>
+                                <button onclick="updateEmergencyStatus('${r.id}', 'on_the_way')" class="flex items-center justify-center bg-blue-100 text-blue-700 hover:bg-blue-200 rounded-lg py-2 text-xs font-bold transition">
+                                    <i class="fa-solid fa-truck-fast mr-1"></i> On the Way
+                                </button>
+                                <button onclick="updateEmergencyStatus('${r.id}', 'completed')" class="flex items-center justify-center bg-green-600 hover:bg-green-700 text-white rounded-lg py-2.5 text-xs font-bold transition col-span-2 mt-2">
+                                    <i class="fa-solid fa-circle-check mr-1"></i> MARK AS COMPLETED
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                });
+            }
+
+            // Render Completed Feed
+            const cGrid = document.getElementById('completedGrid');
+            const cEmpty = document.getElementById('completed-empty');
+            cGrid.innerHTML = '';
+
+            if (emCompleted.length === 0) {
+                cEmpty.classList.remove('hidden');
+                cGrid.classList.add('hidden');
+            } else {
+                cEmpty.classList.add('hidden');
+                cGrid.classList.remove('hidden');
+                emCompleted.forEach(r => {
+                    const date = r.timestamp ? new Date(r.timestamp).toLocaleString() : 'Just now';
+                    cGrid.innerHTML += `
+                        <div class="bg-white rounded-xl shadow-sm border border-green-100 p-5 flex flex-col relative opacity-80 hover:opacity-100 transition">
+                            <div class="flex justify-between items-start mb-4">
+                                <div>
+                                    <h4 class="font-bold text-gray-900 text-lg">${r.patientName}</h4>
+                                    <p class="text-xs text-gray-400 font-medium">${date}</p>
+                                </div>
+                                <span class="px-3 py-1 rounded-full text-[10px] font-black bg-green-100 text-green-700 mr-8">
+                                    <i class="fa-solid fa-circle-check mr-1"></i> COMPLETED
+                                </span>
+                            </div>
+                            <button onclick="deleteDonor('${r.id}', 'emergency_requests')" class="absolute top-2 right-2 text-gray-400 hover:text-red-500 p-2 z-10 transition-colors">
+                                <i class="fa-solid fa-trash-can text-sm"></i>
+                            </button>
+                            <div class="grid grid-cols-2 gap-2 mb-4">
+                                <div class="bg-gray-50 p-2 rounded text-center">
+                                    <p class="text-[10px] uppercase font-bold text-gray-400">Group</p>
+                                    <p class="text-lg font-black text-gray-700">${r.bloodGroup}</p>
+                                </div>
+                                <div class="bg-gray-50 p-2 rounded text-center">
+                                    <p class="text-[10px] uppercase font-bold text-gray-400">Units</p>
+                                    <p class="text-lg font-black text-gray-700">${r.units}</p>
+                                </div>
+                            </div>
+                            <p class="text-xs text-gray-500 italic mb-4">Hospital: ${r.hospital}</p>
+                        </div>
+                    `;
+                });
+            }
+
+            // REPORTS (ACTIVE)
+            const rTb = document.getElementById('reportsTableBody');
+            const rEmpty = document.getElementById('reports-empty');
+            rTb.innerHTML = '';
+
+            const rQuery = document.getElementById('searchReports').value.toLowerCase().trim();
+            toggleClearBtn('searchReports');
+
+            const reportsSort = [...dbReports].filter(rpt => rpt.status !== 'completed').filter(rpt => {
+                return (`${rpt.donorName || ''} ${rpt.reporterName || ''} ${rpt.message || ''} ${rpt.id || ''}`).toLowerCase().includes(rQuery);
+            }).sort((a, b) => (b.submittedAt || '').localeCompare(a.submittedAt || ''));
+
+            if (reportsSort.length === 0) {
+                rEmpty.classList.remove('hidden');
+                rTb.parentElement.classList.add('hidden');
+            } else {
+                rEmpty.classList.add('hidden');
+                rTb.parentElement.classList.remove('hidden');
+                reportsSort.forEach(rpt => {
+                    const date = rpt.submittedAt ? new Date(rpt.submittedAt).toLocaleDateString() : 'Unknown';
+                    const statusBg = (rpt.status === 'pending' || !rpt.status) ? 'bg-red-100 text-red-800' : (rpt.status === 'processing' ? 'bg-yellow-100 text-yellow-800' : 'bg-green-100 text-green-800');
+                    const statusText = rpt.status === 'processing' ? 'Processing' : (rpt.status === 'completed' ? 'Completed' : 'Pending');
+                    const shortId = rpt.id ? rpt.id.substring(0, 8) : 'N/A';
+
+                    rTb.innerHTML += `
+                        <tr class="hover:bg-purple-50/40">
+                            <td class="px-6 py-3 text-sm font-mono font-bold text-gray-700">#${shortId}</td>
+                            <td class="px-6 py-3 font-semibold text-gray-900">${rpt.donorName || '-'}</td>
+                            <td class="px-6 py-3">
+                                <div class="font-semibold text-gray-800">${rpt.reporterName || '-'}</div>
+                                <div class="text-xs text-gray-500">${rpt.reporterPhoneFormatted || rpt.reporterPhone || '-'}</div>
+                            </td>
+                            <td class="px-6 py-3 text-sm">
+                                <div class="max-w-xs truncate text-gray-700 font-medium" title="${rpt.message || ''}">${rpt.message || '-'}</div>
+                                <div class="text-xs text-gray-500 mt-1">${date}</div>
+                            </td>
+                            <td class="px-6 py-3">
+                                <span class="px-2 py-1 rounded-full text-xs font-bold ${statusBg}">${statusText}</span>
+                            </td>
+                            <td class="px-6 py-3 text-right">
+                                <button onclick="updateReportStatus('${rpt.id}', 'processing')" class="text-yellow-600 bg-yellow-50 hover:bg-yellow-100 px-2 py-1 rounded text-xs font-bold mx-1 transition"><i class="fa-solid fa-clock mr-1"></i> Review</button>
+                                <button onclick="updateReportStatus('${rpt.id}', 'completed')" class="text-green-600 bg-green-50 hover:bg-green-100 px-2 py-1 rounded text-xs font-bold mx-1 transition"><i class="fa-solid fa-check mr-1"></i> Complete</button>
+                                <button onclick="deleteReport('${rpt.id}')" class="text-red-600 bg-red-50 hover:bg-red-100 px-2 py-1 rounded text-xs font-bold mx-1 transition"><i class="fa-solid fa-trash mr-1"></i> Delete</button>
+                            </td>
+                        </tr>
+                    `;
+                });
+            }
+
+            // REPORTS (COMPLETED)
+            const rcTb = document.getElementById('reportsCompletedTableBody');
+            const rcEmpty = document.getElementById('reports-completed-empty');
+            rcTb.innerHTML = '';
+
+            const rcQuery = document.getElementById('searchReportsCompleted').value.toLowerCase().trim();
+            toggleClearBtn('searchReportsCompleted');
+
+            const reportsCompletedSort = [...dbReports].filter(rpt => rpt.status === 'completed').filter(rpt => {
+                return (`${rpt.donorName || ''} ${rpt.reporterName || ''} ${rpt.message || ''} ${rpt.id || ''}`).toLowerCase().includes(rcQuery);
+            }).sort((a, b) => (b.submittedAt || '').localeCompare(a.submittedAt || ''));
+
+            if (reportsCompletedSort.length === 0) {
+                rcEmpty.classList.remove('hidden');
+                rcTb.parentElement.classList.add('hidden');
+            } else {
+                rcEmpty.classList.add('hidden');
+                rcTb.parentElement.classList.remove('hidden');
+                reportsCompletedSort.forEach(rpt => {
+                    const date = rpt.submittedAt ? new Date(rpt.submittedAt).toLocaleDateString() : 'Unknown';
+                    const shortId = rpt.id ? rpt.id.substring(0, 8) : 'N/A';
+
+                    rcTb.innerHTML += `
+                        <tr class="hover:bg-green-50/40">
+                            <td class="px-6 py-3 text-sm font-mono font-bold text-gray-700">#${shortId}</td>
+                            <td class="px-6 py-3 font-semibold text-gray-900">${rpt.donorName || '-'}</td>
+                            <td class="px-6 py-3">
+                                <div class="font-semibold text-gray-800">${rpt.reporterName || '-'}</div>
+                                <div class="text-xs text-gray-500">${rpt.reporterPhoneFormatted || rpt.reporterPhone || '-'}</div>
+                            </td>
+                            <td class="px-6 py-3 text-sm">
+                                <div class="max-w-xs truncate text-gray-700 font-medium" title="${rpt.message || ''}">${rpt.message || '-'}</div>
+                                <div class="text-xs text-gray-500 mt-1">Resolved: ${date}</div>
+                            </td>
+                            <td class="px-6 py-3 text-right">
+                                <button onclick="updateReportStatus('${rpt.id}', 'processing')" class="text-yellow-600 bg-yellow-50 hover:bg-yellow-100 px-2 py-1 rounded text-xs font-bold mx-1 transition"><i class="fa-solid fa-clock-rotate-left mr-1"></i> Re-open</button>
+                                <button onclick="deleteReport('${rpt.id}')" class="text-red-600 bg-red-50 hover:bg-red-100 px-2 py-1 rounded text-xs font-bold mx-1 transition"><i class="fa-solid fa-trash mr-1"></i> Trash</button>
+                            </td>
+                        </tr>
+                    `;
+                });
+            }
+            updateInsightsMetrics();
+        }
+
+        // --- REPORT ACTIONS ---
+        function updateReportStatus(reportId, newStatus) {
+            Swal.fire({ title: 'Updating...', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
+
+            window.update(window.ref(window.db, `donor_reports/${reportId}`), { status: newStatus })
+                .then(() => { Swal.fire({ icon: 'success', title: 'Status Updated', text: `Report marked as ${newStatus}`, timer: 1000, showConfirmButton: false }); });
+        }
+
+        function deleteReport(reportId) {
+            deleteDonor(reportId, 'donor_reports');
+        }
+
+        // --- EMERGENCY ACTIONS ---
+        function sendToWhatsApp(reqId) {
+            const r = dbEmergency.find(x => x.id === reqId);
+            if (!r) return;
+            const text = encodeURIComponent(`🚨 Blood Required!\n\nGroup: ${r.bloodGroup}\nUnits: ${r.units}\nLocation: ${r.hospital}\n\nContact: ${r.contact}\n\nShared via Blood Need App`);
+            window.open(`https://wa.me/?text=${text}`, '_blank');
+        }
+
+        function copyToStatus(reqId) {
+            const r = dbEmergency.find(x => x.id === reqId);
+            if (!r) return;
+            const text = `🚨 BLOOD REQUIRED 🚨\n\n🔴 GROUP: ${r.bloodGroup}\n📦 UNITS: ${r.units}\n🏥 HOSPITAL: ${r.hospital}\n\n📞 CONTACT: ${r.contact}\n\n🙏 PLEASE SHARE`;
+            navigator.clipboard.writeText(text).then(() => {
+                Swal.fire({ icon: 'success', title: 'Copied to Clipboard', text: 'Template ready for Social Media Status!', timer: 1500, showConfirmButton: false });
+            });
+        }
+
+        function updateEmergencyStatus(reqId, newStatus) {
+            Swal.fire({ title: 'Updating...', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
+
+            const payload = { status: newStatus };
+            if (newStatus === 'completed') {
+                payload.completedAt = window.serverTimestamp();
+            }
+            window.update(window.ref(window.db, `emergency_requests/${reqId}`), payload)
+                .then(() => { Swal.fire({ icon: 'success', title: 'Status Updated', text: `Request set to ${newStatus.replace('_', ' ')}`, timer: 1000, showConfirmButton: false }); });
+        }
+
+
+        // --- EDITOR MODAL (For existing active donors or manual new entry) ---
+        function openDonorModal() {
+            document.getElementById('donorForm').reset();
+            document.getElementById('donorId').value = '';
+            document.getElementById('donorModal').style.display = 'flex';
+        }
+        function closeDonorModal() {
+            document.getElementById('donorModal').style.display = 'none';
+        }
+
+        function editDonor(id) {
+            const donor = dbDonors.find(d => String(d.id) === String(id));
+            if (!donor) return;
+            document.getElementById('donorId').value = donor.id;
+            document.getElementById('name').value = donor.name || '';
+            document.getElementById('age').value = donor.age || '';
+            document.getElementById('gender').value = donor.gender || 'Male';
+            document.getElementById('bloodGroup').value = donor.bloodGroup || 'A+';
+            document.getElementById('donationCount').value = donor.donationCount || 0;
+            document.getElementById('photoUrl').value = donor.photoUrl || '';
+            document.getElementById('phone').value = donor.phone || '';
+            document.getElementById('whatsappNumber').value = donor.whatsappNumber || '';
+            document.getElementById('district').value = donor.district || '';
+            document.getElementById('subDivision').value = donor.subDivision || '';
+            document.getElementById('cityOrVillage').value = donor.cityOrVillage || '';
+            document.getElementById('pinCode').value = donor.pinCode || '';
+            document.getElementById('localBodyType').value = donor.localBodyType || 'Municipality';
+
+            document.getElementById('donorModal').style.display = 'flex';
+        }
+
+        function saveDonor(e) {
+            e.preventDefault();
+            const id = document.getElementById('donorId').value;
+            const data = {
+                name: document.getElementById('name').value.trim(),
+                age: parseInt(document.getElementById('age').value),
+                gender: document.getElementById('gender').value,
+                bloodGroup: document.getElementById('bloodGroup').value,
+                donationCount: parseInt(document.getElementById('donationCount').value) || 0,
+                photoUrl: document.getElementById('photoUrl').value.trim(),
+                phone: document.getElementById('phone').value.trim(),
+                whatsappNumber: document.getElementById('whatsappNumber').value.trim(),
+                district: document.getElementById('district').value.trim(),
+                subDivision: document.getElementById('subDivision').value.trim(),
+                cityOrVillage: document.getElementById('cityOrVillage').value.trim(),
+                pinCode: document.getElementById('pinCode').value.trim(),
+                localBodyType: document.getElementById('localBodyType').value
+            };
+
+            Swal.fire({ title: 'Saving...', allowOutsideClick: false, didOpen: () => { Swal.showLoading(); } });
+
+            if (id) {
+                window.update(window.ref(window.db, `donors/${id}`), data)
+                    .then(() => { Swal.fire({ icon: 'success', title: 'Saved!', timer: 1000, showConfirmButton: false }); closeDonorModal(); });
+            } else {
+                data.createdAt = new Date().toISOString();
+                window.set(window.push(window.ref(window.db, 'donors')), data)
+                    .then(() => { Swal.fire({ icon: 'success', title: 'Added!', timer: 1000, showConfirmButton: false }); closeDonorModal(); });
+            }
+        }
+
+        // Init Layout Defaults
+        switchTab('insights');
+    </script>
+</body>
+
+</html>
